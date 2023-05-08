@@ -1,0 +1,2328 @@
+\part{Slurm作业管理系统\label{slurm}}
+
+Slurm（Simple Linux Utility for Resource Management，\url{http://slurm.schedmd.com/}）是开源的、具有容错性和高度可扩展大型和小型Linux集群资源管理和作业调度系统。超级计算系统可利用Slurm进行资源和作业管理，以避免相互干扰，提高运行效率。所有需运行的作业无论是用于程序调试还是业务计算均必须通过交互式并行\LS{srun}、批处理式\LS{sbatch}或分配式\LS{salloc}等命令提交，提交后可以利用相关命令查询作业状态等。请不要在登录节点直接运行作业（日常查看、编辑、编译等除外），以免影响其余用户的正常使用。
+
+本系统安装的Slurm版本为16.05.7，安装在\fl{/usr/}等系统默认目录，用户无需自己设置即可使用。
+
+\section{基本概念}
+Slurm利用分区(partition)对CPU、内存、网络等资源进行分类，以便将不同需求的作业运行到不同计算节点上。用户需利用slurm命令将该作业所需要的CPU核等资源等提交到特定的分区中，等作业申请的资源得到满足后，作业才开始运行。作业运行受分区、账户、服务质量(QOS)等限制。
+
+\subsection{基本术语}
+\begin{itemize}
+	\item user：用户名，一般为系统登录名，如hmli。
+	\item account：账户，记账账户，多个用户可以在同一个账户下，一般为用户所在的组，如task1。
+	\item core：CPU核，单颗CPU可以具有多颗CPU核。
+	\item job：作业。
+	\item job step：作业步，单个作业（job）可以有多个作业步。
+	\item partition：分区(可理解为LSF、PBS等作业调度系统中的队列)。作业需在特定分区中运行，一般不同分区允许的资源不一样，比如单作业核数等。
+	\item qos：服务质量(Quality of Service)，可以理解为用户可使用的CPU、内存等资源限制。
+	\item rank：秩，如MPI进程号。
+	\item tasks：任务数，单个作业或作业步可有多个任务，一般一个任务需一个CPU核，可理解为所需的CPU核数。
+	\item socket：CPU插槽，可以简单理解为CPU。
+	\item stdin：标准输入文件，一般指可以通过屏幕输入或采用<文件名方式传递给程序的文件，对应C程序中的文件描述符0。
+	\item stdout：标准输出文件，程序运行正常时输出信息到的文件，一般指输出到屏幕的，并可采用>文件名定向到的文件，对应C程序中的文件描述符1。
+	\item stderr：标准出错文件，程序运行出错时输出信息到的文件，一般指也输出到屏幕，并可采用2>定向到的文件（注意这里的2），对应C程序中的文件描述符2。
+	\item <ENTITY>：实体
+	\item <SPECS>：明细、规格
+\end{itemize}
+
+\subsection{三种模式区别}
+\begin{itemize}
+	\item 批处理作业（采用\LS{sbatch}命令提交）：
+
+对于批处理作业，使用\LS{sbatch}命令提交作业脚本，作业被调度运行后，在所分配的首个节点上执行作业脚本，在作业脚本中也可使用\LS{srun}命令加载作业任务。
+	\item 交互式作业提交（采用\LS{srun}命令提交）：
+
+资源分配与任务加载两步均通过\LS{srun}命令进行：当在登录shell中执行\LS{srun}命令时，\LS{srun}首先向系统提交作业请求并等待资源分配，然后在所分配的节点上加载作业任务。
+	\item 分配模式作业（采用\LS{salloc}命令提交）：
+
+分配作业模式类似于交互式作业模式和批处理作业模式的融合。用户需要指定资源分配的需求条件，向资源管理器提出作业的资源分配请求。作业排队，当用户请求资源被满足时，将在用户提交作业的节点上执行用户所指定的命令，指定的命令执行结束后，也运行结束，用户申请的资源被释放。
+
+\LS{salloc}后面如果没有跟定相应的脚本或可执行文件，则默认选择/bin/sh，用户获得了一个合适环境变量的shell环境。
+
+\LS{salloc}和\LS{sbatch}最主要的区别是\LS{salloc}命令资源请求被满足时，直接在提交作业的节点执行相应任务。而\LS{sbatch}则当资源请求被满足时，在分配的第一个节点上执行相应任务。
+
+\LS{salloc}在分配资源后，再执行相应的任务，很适合需要指定运行节点和其它资源限制，并有特定命令的作业。
+\end{itemize}
+
+\subsection{基本用户命令}
+\begin{itemize}
+%	\item \LS{sacct}：显示激活的或已完成作业或作业步的记账信息。
+	\item \LS{sacctmgr}：显示账户关联的QOS(Quality of Service)限制等。
+	\item \LS{salloc}：为需实时处理的作业分配资源，典型场景为分配资源并启动一个shell，然后用此shell执行\LS{srun}命令去执行并行任务。
+	\item \LS{sattach}：吸附到运行中的作业或作业步的标准输入、输出及出错，通过吸附，使得有能力监控运行中的作业或作业步的IO等。可以吸附或脱离多次。
+	\item \LS{sbatch}：提交作业脚本使其运行。此脚本一般会含有一个或多个\LS{srun}命令启动并行任务。
+	\item \LS{sbcast}：将本地存储中的文件传递分配给作业的节点上。% is used to transfer a file from local disk to local disk on the nodes allocated to a job. This can be used to effectively use diskless compute nodes or provide improved performance relative to a shared file system.
+	\item \LS{scancel}：取消排队或运行中的作业或作业步，还可用于发送任意信号到运行中的作业或作业步中的所有进程。
+	\item \LS{scontrol}：显示或设定Slurm作业、分区、节点等状态。
+	\item \LS{sinfo}：显示分区或节点状态，具有非常多过滤、排序和格式化等选项。
+	\item \LS{smap}：以ncurse图形方式显示作业、分区和节点信息等。
+	\item \LS{squeue}：显示队列中的作业及作业步状态，具有非常多过滤、排序和格式化等选项。
+	\item \LS{srun}：运行并行作业。具有非常多过滤、排序和格式化等选项，包含最小和最大节点数、处理器数、是否指定使用或排除的节点、节点特征（内存、磁盘空间、特定需求特征等）。一个作业可以含有多个作业步，这些作业在作业节点分配中，作业步可以是串行的、独立或共享资源并行的。
+%	\item \LS{strigger}：查看事件触发器。事件触发器包含节点宕机或作业接近其时间限制等。
+	\item \LS{sview}：以图形界面方式显示节点、分区、作业等信息。
+\end{itemize}
+
+%以下仅作简要介绍，具体请参考Slurm用户手册。
+%手册正在编写中，临时请先参考：\url{http://211.86.151.155/docs/slurm/slurm-yh.pdf}，注意一般需将命令的yh开头替换为s开头，比如\LS{yhinfo}，应该为\LS{sinfo}。
+
+%在此分别给出串行和并行作业的简单脚本，用户可以修改此脚本以适用于自己的作业，如需更加高级的功能请参考Slurm手册，有些对作业调度系统有特殊要求的程序需结合程序手册中关于作业调度系统的使用说明进行相应设置。
+
+\section{查看分区、节点信息：sinfo}
+\LS{sinfo}可以查看系统存在什么分区、节点及其状态。如\LS{sinfo}：
+\begin{OUT}
+PARTITION AVAIL  TIMELIMIT   JOB_SIZE ROOT OVERSUBS     GROUPS  NODES       STATE NODELIST
+batch*       up   infinite 1-infinite   no       NO        all      1       mixed node44
+batch*       up   infinite 1-infinite   no       NO        all     43   allocated node[1-43]
+batch*       up   infinite 1-infinite   no       NO        all     16        idle node[45-60]
+serial       up   infinite 1-infinite   no       NO        all      9        idle node[62-70]
+fat48        up   infinite 1-infinite   no       NO        all      2        idle login[2-3]
+\end{OUT}
+
+\subsection{主要输出项}
+\begin{itemize}
+	\item AVAIL：up表示可用，down表示不可用。
+    \item CPUS：各节点上的CPU数。
+    \item S:C:T：各节点上的CPU插口sockets(S)数（CPU颗数，一颗CPU含有多颗CPU核，以下类似）、CPU核cores(C)数和线程threads(T)数。
+    \item SOCKETS：各节点CPU插口数，CPU颗数。
+    \item CORES：各节点CPU核数。
+    \item THREADS：各节点线程数。
+    \item GROUPS：可使用的用户组，all表示所有组都可以用。
+	\item JOB\_SIZE：可供用户作业使用的最小和最大节点数，如果只有1个值，则表示最大和最小一样，infinite表示无限制。
+	\item TIMELIMIT：作业运行墙上时间（walltime，指的是用计时器，如手表或挂钟，度量的实际时间）限制，infinite表示没限制，如有限制的话，其格式为``days-hours:minutes:seconds''。
+    \item MEMORY：实际内存大小，单位为MB。
+    \item NODELIST：节点名列表。
+    \item NODES：节点数。
+    \item NODES(A/I)：节点数，状态格式为``available/idle''。
+    \item NODES(A/I/O/T)：节点数，状态格式为``available/idle/other/total''。
+	\item PARTITION：分区名，后面带有*的，表示此分区为默认分区。
+    \item ROOT：是否限制资源只能分配给root账户。
+    \item OVERSUBSCRIBE：是否允许作业分配的资源超过计算资源（如CPU数）：
+	\begin{itemize}
+		\item no：不允许超额。
+		\item exclusive：排他的，只能给这些作业用（等价于srun --exclusive）。
+		\item force：资源总被超额。
+		\item yes：资源可以被超额。
+	\end{itemize}
+     \item STATE：节点状态，可能的状态包括：
+\begin{itemize}
+	\item	allocated、alloc：已分配。
+	\item	completing、comp：完成中。
+	\item	down：宕机。
+	\item	drained、drain：已失去活力。
+	\item	draining、drng：失去活力中。
+	\item	fail：失效。
+	\item	failing、failg：失效中。
+	\item	future、futr：将来可用。
+	\item	idle：空闲，可以接收新作业。
+	\item	maint：保持。
+	\item	mixed：混合，节点在运行作业，但有些空闲CPU核，可接受新作业。
+	\item	perfctrs、npc：因网络性能计数器使用中导致无法使用。
+	\item	power\_down、pow\_dn：已关机。
+	\item	power\_up、pow\_up：正在开机中。
+	\item	reserved、resv：预留。
+	\item	unknown、unk：未知原因。
+\end{itemize}
+	注意，如果状态带有后缀*，表示节点没响应。
+     \item TMP\_DISK：/tmp所在磁盘分区空间大小，单位为MB。
+\end{itemize}
+
+\subsection{主要参数}
+\begin{itemize}
+	\item -a、--all：显示全部分区信息，如显示隐藏分区或本组没有使用权的分区。
+	\item -d、--dead：仅显示无响应或已宕机节点。
+	\item -e、--exact：精确而不是分组显示显示各节点。
+	\item --help：显示帮助。
+	\item -i <seconds>、--iterate=<seconds>：以<seconds>秒间隔持续自动更新显示信息。
+	\item -l、--long：显示详细信息。
+	\item -n <nodes>、--nodes=<nodes>：显示<nodes>节点信息。
+	\item -N, --Node：以每行一个节点方式显示信息，即显示各节点信息。
+	\item -p <partition>、--partition=<partition>：显示<partition>分区信息。
+	\item -r、--responding：仅显示响应的节点信息。
+	\item -R、--list-reasons：显示不响应（down、drained、fail或failing状态）节点的原因。
+	\item -s：显示摘要信息。
+	\item -S <sort\_list>、--sort=<sort\_list>：设定显示信息的排序方式。排序字段参见后面输出格式部分，多个排序字段采用,分隔，字段前面的+和-分表表示升序（默认）或降序。分区字段P前面如有\#，表示以Slurm配置文件slurm.conf中的顺序显示。例如：\LS{sinfo -S +P,-m}表示以分区名升序及内存大小降序排序。
+	\item -t <states>、--states=<states>：仅显示<states>状态的信息。<states>状态可以为（不区分大小写）：ALLOC、ALLOCATED、COMP、COMPLETING、DOWN、DRAIN、DRAINED、DRAINING、ERR、ERROR、FAIL、FUTURE、FUTR、IDLE、MAINT、MIX、MIXED、NO\_RESPOND、NPC、PERFCTRS、POWER\_DOWN、POWER\_UP、RESV、RESERVED、 UNK和UNKNOWN。
+	\item -T, --reservation：仅显示预留资源信息。
+	\item --usage：显示用法。
+	\item -v、--verbose：显示冗余信息，即详细信息。
+	\item -V：显示版本信息。
+	\item -o <output\_format>、--format=<output\_format>：按照<output\_format>格式输出信息，默认为``\%\#P \%.5a \%.10l \%.6D \%.6t \%N''：
+\begin{itemize}
+   	\item \%all：所有字段信息。
+   	\item \%a：分区的状态及是否可用。
+   	\item \%A：以``allocated/idle''格式显示状态对应的节点数。
+   	\item \%b：激活的特性，参见\%f。
+   	\item \%B：分区中每个节点可分配给作业的CPU数。
+   	\item \%c：各节点CPU数。
+   	\item \%C：以``allocated/idle/other/total''格式状态显示CPU数。
+   	\item \%d：各节点临时磁盘空间大小，单位为MB。
+   	\item \%D：节点数。
+   	\item \%e：节点空闲内存。
+   	\item \%E：节点无效的原因（down、draine或ddraining状态）。
+   	\item \%f：节点可用特性，参见\%b。
+   	\item \%F：以``allocated/idle/other/total''格式状态的节点数。
+   	\item \%g：可以使用此节点的用户组。
+   	\item \%G：与节点关联的通用资源（gres）。
+   	\item \%h：作业是否能超用计算资源（如CPUs），显示结果可以为yes、no、exclusive或force。
+   	\item \%H：节点不可用信息的时间戳。
+   	\item \%I：分区作业权重因子。
+   	\item \%l：以``days-hours:minutes:seconds''格式显示作业可最长运行时间。
+   	\item \%L：以``days-hours:minutes:seconds''格式显示作业默认时间。
+   	\item \%m：节点内存，单位MB。
+   	\item \%M：抢占模式，可以为no或yes。
+   	\item \%n：节点主机名。
+   	\item \%N：节点名。
+   	\item \%o：节点IP地址。
+   	\item \%O：节点负载。
+   	\item \%p：分区调度优先级。
+   	\item \%P：分区名，带有*为默认分区，参见\%R。
+%   	\item：%r 是否只有root用户能初始化作业"yes"或"no"。
+   	\item \%R：分区名，不在默认分区后附加*，参见\%P。
+   	\item \%s：节点最大作业大小。
+   	\item \%S：允许分配的节点数。
+   	\item \%t：以紧凑格式显示节点状态。
+   	\item \%T：以扩展格式显示节点状态。
+%   	\item：%u    Print the user name of who set the reason a node is unavailable.。
+%   	\item：%U    Print the user name and uid of who set the reason a node is unavailable.。
+   	\item \%v：slurmd守护进程版本。
+   	\item \%w：节点调度权重。
+   	\item \%X：单节点socket数。
+   	\item \%Y：单节点CPU核数。
+   	\item \%Z：单核进程数。
+   	\item \%z：扩展方式显示单节点处理器信息：sockets、cores、threads（S:C:T）数。
+%   	\item %.<*>字段右对齐
+%	\item %<Number><*> 字段数
+\end{itemize}
+	\item -O <output\_format>, --Format=<output\_format>：按照<output\_format>格式输出信息，类似-o <output\_format>、--format=<output\_format>。
+
+每个字段的格式为``type[:[.]size]''：
+\begin{itemize}
+	\item size：最小字段大小，如没指明，则最大为20个字符。
+    \item .：指明为右对齐，默认为左对齐。
+	\item 可用type：
+\begin{itemize}
+   	\item all：所有字段信息。
+   	\item allocmem：节点上分配的内存总数，单位MB。
+   	\item allocnodes：允许分配的节点。
+   	\item available：分区的State/availability状态。
+   	\item cpus：各节点CPU数。
+   	\item cpusload：节点负载。
+   	\item freemem：节点可用内存，单位MB。
+   	\item cpusstate：以``allocated/idle/other/total''格式状态的CPU数。
+   	\item cores：单CPU颗CPU核数。
+   	\item disk：各节点临时磁盘空间大小，单位为MB。
+   	\item features：节点可用特性，参见features\_act。
+   	\item features\_act：激活的特性，参见features。
+   	\item groups：可以使用此节点的用户组。
+   	\item gres：与节点关联的通用资源（gres）。
+   	\item maxcpuspernode：分区中各节点最大可用CPU数。
+   	\item memory：节点内存，单位MB。
+   	\item nodeai：以``allocated/idle''格式显示状态对应的节点数。
+   	\item nodes：节点数。
+   	\item nodeaiot：以``allocated/idle/other/total''格式状态的节点数。
+   	\item nodehost：节点主机名。
+   	\item nodelist：节点名。
+   	\item oversubscribe：作业是否能超用计算资源（如CPUs），显示结果可以为yes、no、exclusive或force。
+   	\item partition：分区名，带有*为默认分区，参见\%R。
+   	\item partitionname：分区名，默认分区不附加*，参见\%P。
+   	\item preemptmode：抢占模式，可以为no或yes。
+   	\item priorityjobfactor：分区作业权重因子。
+   	\item prioritytier或priority：分区调度优先级。
+   	\item reason：节点无效的原因（down、draine或ddraining状态）。
+   	\item size：节点最大作业数。
+   	\item statecompact：紧凑格式节点状态。
+   	\item statelong：扩展格式节点状态。
+   	\item sockets：各节点CPU颗数。
+   	\item socketcorethread：扩展方式显示单节点处理器信息：sockets、cores、threads（S:C:T）数。
+   	\item time：以``days-hours:minutes:seconds''格式显示作业可最长运行时间。
+   	\item timestamp：节点不可用信息的时间戳。
+   	\item threads：CPU核线程数。
+   	\item weight：节点调度权重。
+%   	\item：%r 是否只有root用户能初始化作业"yes"或"no"。
+%   	\im：%u    Print the user name of who set the reason a node is unavailable.。
+%   	\im：%U    Print the user name and uid of who set the reason a node is unavailable.。
+   	\item version：slurmd守护进程版本。
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\section{查看账户的资源限制等信息}
+\LS{sacctmgr}可用于显示账户的资源限制等信息，语法格式为：\LS{sacctmgr [OPTIONS...] [COMMAND...]}
+
+账户信息的参数可以为以下几种：
+\begin{itemize}
+   \item user：用户系统登录名
+   \item partition：分区名
+   \item account：作业的记账名
+\end{itemize}
+
+\LS{sacctmgr}的子命令list与show相同（以下以list为例），用于显示特定实体的信息，其语法为：\LS{slurm list <ENTITY> [<SPECS>]}。默认显示全部信息，可以利用<SPECS>显示特定信息。
+
+主要实体<ENTITY>为：
+\begin{itemize}
+	\item account：作业记账账户，该系统一般与用户组名一致，如task1
+	\item association：账户关联的分区、资源限制等信息
+	\item qos：服务质量
+	\item user：用户登录名，只支持小写
+\end{itemize}
+
+不同实体的明细[<SPECS>]不同。
+%，以下为主要对应：
+%account：如account=admin
+%user：如name=hmli
+%qos：如qos
+
+\subsection{查看用户所在的账户：sacctmgr list user}
+\LS{sacctmgr list user}显示全部用户所在的账户，\LS{sacctmgr list user user=User}或\LS{sacctmgr list user User}显示特定用户User的信息：
+\begin{OUT}
+      User   Def Acct     Admin
+---------- ---------- ---------
+      hmli      admin      None
+\end{OUT}
+
+从上面可以看出hmli用户所在的账户为admin。
+
+\subsection{查看用户所在的账户：sacctmgr list account}
+\LS{sacctmgr list account}显示全部账户：
+\begin{OUT}
+   Account                Descr                  Org 
+---------- -------------------- -------------------- 
+     admin                admin                admin 
+       com                  com                  com 
+      root default root account                 root 
+     task0                task0                task0 
+     task1                task1                task1 
+     task2                task2                task2 
+     task3                task3                task3 
+     task4                task4                task4 
+     task5                task5                task5 
+\end{OUT}
+
+从上面可以看出存在账户admin等，利用后面的\LS{sacctmgr list assoc account=Account}可查看特定账户Account关联的用户及其QOS限制等。
+
+\subsection{查看账户关联用户及QOS限制等：sacctmgr list assoc}
+\begin{itemize}
+	\item \LS{sacctmgr list assoc}显示全部账户关联的限制
+	\item \LS{sacctmgr list assoc user=User}可查看特定用户User关联的限制
+	\item \LS{sacctmgr list assoc account=Account}可查看特定账户Account关联的限制
+\end{itemize}
+
+\subsection{查看用户关联的账户及QOS限制等：sacctmgr list assoc user=用户}
+如显示用户hmli的信息：\LS{sacctmgr list assoc user=hmli}：
+\begin{OUT}
+   Cluster    Account       User  Partition     Share GrpJobs       GrpTRES GrpSubmit     GrpWall   GrpTRESMins MaxJobs       MaxTRES MaxTRESPerNode MaxSubmit     MaxWall   MaxTRESMins                  QOS   Def QOS GrpTRESRunMin
+---------- ---------- ---------- ---------- --------- ------- ------------- --------- ----------- ------------- ------- ------------- -------------- --------- ----------- ------------- -------------------- --------- -------------
+     cfetr      admin       hmli                    1                                                                                                                                                  128cpu
+
+\end{OUT}
+
+从上面可以看出：
+\begin{itemize}
+	\item 记账账户：admin，利用后面介绍的\LS{sacctmgr list assoc account=admin}可以查看进一步信息。
+	\item QOS限制：128cpu，利用后面介绍的\LS{sacctmgr list qos name=128cpu}或\LS{sacctmgr list qos 128cpu}可以查看进一步信息。
+\end{itemize}
+
+上述显示的内容很多，可以利用format选项显示特定信息，如\\\LS{sacctmgr list assoc user=hmli format=User,Account,QOS}显示：
+\begin{OUT}
+      User    Account                  QOS
+---------- ---------- --------------------
+      hmli      admin               128cpu
+\end{OUT}
+
+\subsection{查看账户关联：sacctmgr list assoc account=账户}
+如显示账户admin的信息：\LS{sacctmgr list assoc account=admin}：
+\begin{OUT}
+  Cluster    Account       User  Partition     Share GrpJobs       GrpTRES GrpSubmit     GrpWall   GrpTRESMins MaxJobs       MaxTRES MaxTRESPerNode MaxSubmit     MaxWall   MaxTRESMins                  QOS   Def QOS GrpTRESRunMin
+---------- ---------- ---------- ---------- --------- ------- ------------- --------- ----------- ------------- ------- ------------- -------------- --------- ----------- ------------- -------------------- --------- -------------
+     cfetr      admin                               1                                                                                                                                                  normal
+     cfetr      admin       hmli                    1                                                                                                                                                  128cpu
+     cfetr      admin        set                    1                                                                                                                                                  normal
+     cfetr      admin      slurm                    1                                                                                                                                                  normal
+\end{OUT}
+
+从上面看出其名下有用户hmli、set、slurm等，并且用户hmli关联的QOS为128cpu。
+
+上述显示的内容很多，可以利用format选项显示特定信息，如\\\LS{sacctmgr list assoc account=admin format=Account,QOS}显示：
+\begin{OUT}
+   Account                  QOS
+---------- --------------------
+     admin               normal
+     admin               128cpu
+     admin               normal
+     admin               normal
+\end{OUT}
+
+\subsection{查看QOS限制：sacctmgr list qos}
+\LS{sacctmgr list qos}显示全部账户的QOS限制，\LS{sacctmgr list qos name=QOSName}或\\\LS{sacctmgr list qos QOSName}可查看特定QOS关联的限制。如\LS{sacctmgr list qos name=128cpu}：
+\begin{OUT}
+      Name   Priority  GraceTime    Preempt PreemptMode                                    Flags UsageThres UsageFactor       GrpTRES   GrpTRESMins GrpTRESRunMin GrpJobs GrpSubmit     GrpWall       MaxTRES MaxTRESPerNode   MaxTRESMins     MaxWall     MaxTRESPU MaxJobsPU MaxSubmitPU     MaxTRESPA MaxJobsPA MaxSubmitPA       MinTRES
+---------- ---------- ---------- ---------- ----------- ---------------------------------------- ---------- ----------- ------------- ------------- ------------- ------- --------- ----------- ------------- -------------- ------------- ----------- ------------- --------- ----------- ------------- --------- ----------- -------------
+    128cpu          0   00:00:00                cluster                                                        1.000000                                                                                                                                      cpu=128
+\end{OUT}
+
+从上面MaxTRESPU（注意这里显示的是缩写，采用下面format时需要采用全写）对应的cpu=128可看出，该QOS限制了该用户最大能使用128颗CPU核。
+
+上述显示的内容很多，可以利用format选项显示特定信息，如\\\LS{sacctmgr list qos format=name,MaxTRESPerUser,MinTRES}显示：
+\begin{OUT}
+      Name     MaxTRESPU       MinTRES
+---------- ------------- -------------
+    normal        cpu=72         cpu=1
+    serial                       cpu=1
+      hmli       cpu=128
+      long        cpu=72        cpu=64
+    128cpu       cpu=128
+    144cpu       cpu=144
+   1032cpu      cpu=1032
+    256cpu       cpu=256
+    512cpu       cpu=512
+     96cpu        cpu=96
+\end{OUT}
+
+\section{查看分区中的作业队列信息：squeue}
+\LS{squeue}显示分区中的作业队列信息。如\LS{squeue}：
+\begin{OUT}
+JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+ 1373     batch  x.slurm     hmli PD       0:00     25 (Resources)
+ 1111    serial GATO-TOQ     zyli  R 7-10:38:22      1 node63
+ 1370     batch cfetr.pb zhuyiren  R    7:14:37      6 node[22-27]
+\end{OUT}
+
+\subsection{主要输出项}
+\begin{itemize}
+	\item JOBID：作业号。
+	\item PARTITION：分区名（分区名）。
+	\item NAME：作业名。
+	\item USER：用户名。
+	\item ST：状态。
+\begin{itemize}
+	\item PD：排队中，PENDING。
+	\item R：运行中，RUNNING。
+	\item CA：已取消，CANCELLED。
+	\item CF：配置中，CONFIGURING。
+	\item CG：完成中，COMPLETING
+	\item CD：已完成，COMPLETED。
+	\item F：已失败，FAILED。
+	\item TO：超时，TIMEOUT。
+	\item NF：节点失效，NODE FAILURE。
+	\item SE：特殊退出状态，SPECIAL EXIT STATE。
+\end{itemize}
+	\item TIME：已运行时间。
+	\item NODELIST(REASON)：分配给的节点名列表（原因）：
+\begin{itemize}
+	\item AssociationJobLimit：作业达到其最大允许的作业数限制。
+    \item AssociationResourceLimit：作业达到其最大允许的资源限制。
+    \item AssociationTimeLimit：作业达到时间限制。
+    \item BadConstraints：作业含有无法满足的约束。
+    \item BeginTime：作业最早开始时间尚未达到。
+    \item Cleaning：作业被重新排入分区，并且仍旧在执行之前运行的清理工作。
+    \item Dependency：作业等待一个依赖的作业结束。
+    \item FrontEndDown：没有前端节点可用于执行此作业。
+    \item InactiveLimit：作业达到系统非激活限制。
+    \item InvalidAccount：作业用户无效。
+    \item InvalidQOS：作业QOS无效。
+    \item JobHeldAdmin：作业被系统管理员挂起。
+    \item JobHeldUser：作业被用户自己挂起。
+    \item JobLaunchFailure：作业无法被启动，有可能因为文件系统故障、无效程序名等。
+    \item Licenses：作业等待相应的授权。
+    \item NodeDown：作业所需的节点宕机。
+    \item NonZeroExitCode：作业停止时退出代码非零。
+    \item PartitionDown：作业所需的分区出于DOWN状态。
+    \item PartitionInactive：作业所需的分区处于Inactive状态。
+    \item PartitionNodeLimit：作业所需的节点超过所用分区当前限制。
+    \item PartitionTimeLimit：作业所需的分区达到时间限制。
+    \item Priority：作业所需的分区存在高等级作业或预留。
+    \item Prolog：作业的PrologSlurmctld前处理程序仍旧在运行。
+    \item QOSJobLimit：作业的QOS达到其最大作业数限制。
+    \item QOSResourceLimit：作业的QOS达到其最大资源限制。
+    \item QOSTimeLimit：作业的QOS达到其时间限制。
+    \item ReqNodeNotAvail：作业所需的节点无效，如节点宕机。
+    \item Reservation：作业等待其预留的资源可用。
+    \item Resources：作业等待其所需的资源可用。
+    \item SystemFailure：Slurm系统失效，如文件系统、网络失效等。
+    \item TimeLimit：作业超过去时间限制。
+    \item QOSUsageThreshold：所需的QOS阈值被违反。
+    \item WaitingForScheduling：等待被调度中。
+\end{itemize}
+\end{itemize}
+
+\subsection{主要参数}
+\begin{itemize}
+	\item -A <account\_list>, --account=<account\_list>：显示用户<account\_list>的作业信息，用户以,分隔。
+	\item -a, --all：显示所有分区中的作业及作业步信息，也显示被配置为对用户组隐藏分区的信息。
+	\item -r, --array：以每行一个作业元素方式显示。
+	\item -h, --noheader：不显示头信息，即不显示第一行``PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST''。
+	\item --help：显示帮助信息
+	\item --hide：不显示隐藏分区中的作业和作业步信息。此为默认行为，不显示配置为对用户组隐藏分区的信息。
+	\item -i <seconds>, --iterate=<seconds>：以间隔<seconds>秒方式循环显示信息。
+	\item -j <job\_id\_list>, --jobs=<job\_id\_list>：显示作业号<job\_id\_list>的作业，作业号以,分隔。--jobs=<job\_id\_list>可与--steps选项结合显示特定作业的步信息。作业号格式为``job\_id[\_array\_id]''，默认为64字节，可以用环境变量SLURM\_BITSTR\_LEN设定更大的字段大小。
+	\item -l, --long：显示更多的作业信息。
+	\item -L, --licenses=<license\_list>：指定使用授权文件<license\_list>，以,分隔。
+%	\item -M, --clusters=<string>：Clusters to issue commands to.  Multiple cluster names may be comma separated.  A value of of ’all’ will query to run on all clusters.
+	\item -n, --name=<name\_list>：显示具有特定<name\_list>名字的作业，以,分隔。
+	\item --noconvert：不对原始单位做转换，如2048M不转换为2G。
+	\item -p <part\_list>, --partition=<part\_list>：显示特定分区<part\_list>信息，<part\_list>以,分隔。
+	\item -P, --priority：对于提交到多个分区的作业，按照各分区显示其信息。如果作业要按照优先级排序时，需考虑分区和作业优先级。
+	\item -q <qos\_list>, --qos=<qos\_list>：显示特定qos的作业和作业步，<qos\_list>以,分隔。
+	\item -R, --reservation=reservation\_name：显示特定预留信息作业。
+	\item -s, --steps：显示特定作业步。作业步格式为``job\_id[\_array\_id].step\_id''。
+	\item -S <sort\_list>, --sort=<sort\_list>：按照显示特定字段排序显示，<sort\_list>以,分隔。如-S P,U。
+	\item --start：显示排队中的作业的预期执行时间。
+	\item -t <state\_list>, --states=<state\_list>：显示特定状态<state\_list>的作业信息。<state\_list>以,分隔，有效的可为：PENDING(PD)、RUNNING(R)、SUSPENDED(S)、STOPPED(ST)、COMPLETING(CG)、COMPLETED(CD)、CONFIGURING(CF)、CANCELLED(CA)、FAILED(F)、TIMEOUT(TO)、PREEMPTED(PR)、BOOT\_FAIL(BF)、NODE\_FAIL(NF)和\\SPECIAL\_EXIT(SE)，注意是不区分大小写的，如``pd''和``PD''是等效的。
+	\item -u <user\_list>, --user=<user\_list>：显示特定用户<user\_list>的作业信息，<user\_list>以,分隔。
+	\item --usage：显示帮助信息。
+	\item -v, --verbose：显示squeue命令详细动作信息。
+	\item -V, --version：显示版本信息。
+	\item -w <hostlist>, --nodelist=<hostlist>：显示特定节点<hostlist>信息，<hostlist>以,分隔。
+	\item -o <output\_format>, --format=<output\_format>：以特定格式<output\_format>显示信息。参见 -O <output\_format>, --Format=<output\_format>，采用不同参数的默认格式为：
+	\begin{itemize}
+		\item default：``\%.18i \%.9P \%.8j \%.8u \%.2t \%.10M \%.6D \%R''
+		\item -l, --long： ``\%.18i \%.9P \%.8j \%.8u \%.8T \%.10M \%.9l \%.6D \%R''
+		\item -s, --steps：``\%.15i \%.8j \%.9P \%.8u \%.9M \%N''
+	\end{itemize}
+	每个字段的格式为``\%[[.]size]type''：
+\begin{itemize}
+	\item size：字段最小尺寸，如果没有指定size，则按照所需长度显示。
+    \item .：右对齐显示，默认为左对齐。
+	\item type：类型，一些类型仅对作业有效，而有些仅对作业步有效，有效的类型为：
+\begin{itemize}
+	\item \%all：显示所有字段。
+    \item \%a：显示记帐信息（仅对作业有效）。
+    \item \%A：作业步生成的任务数（仅适用于作业步）。
+    \item \%A：作业号（仅适用于作业）。
+    \item \%b：作业或作业步所需的普通资源（gres）。
+    \item \%B：执行作业的节点。
+    \item \%c：作业每个节点所需的最小CPU数（仅适用于作业）。
+    \item \%C：如果作业还在运行，显示作业所需的CPU数；如果作业正在完成，显示当前分配给此作业的CPU数（仅适用于作业）。
+    \item \%d：作业所需的最小临时磁盘空间，单位MB（仅适用于作业）。
+    \item \%D：作业所需的节点（仅适用于作业）。
+    \item \%e：作业结束或预期结束时间（基于其时间限制）（仅适用于作业）。
+    \item \%E：作业依赖剩余情况。作业只有依赖的作业完成才运行，如显示NULL，则无依赖（仅适用于作业）。
+    \item \%f：作业所需的特性（仅适用于作业）。
+    \item \%F：作业组作业号（仅适用于作业）。
+    \item \%g：作业用户组（仅适用于作业）。
+    \item \%G：作业用户组ID（仅适用于作业）。
+    \item \%h：分配给此作业的计算资源能否被其它作业预约（仅适用于作业）。可被预约的资源包含节点、CPU颗、CPU核或超线程。值可以为：
+\begin{itemize}
+	\item YES：如果作业提交时含有oversubscribe选项或分区被配置含有\\OverSubscribe=Force。
+   	\item NO：如果作业所需排他性运行。
+   	\item USER：如果分配的计算节点设定为单个用户。
+   	\item MCS：如果分配的计算节点设定为单个安全类（参看MCSPlugin和MCSParameters\\配置参数，Multi-Category Security）。
+   	\item OK：其它（典型的分配给专用的CPU）（仅适用于作业）。
+\end{itemize}
+    \item \%H：作业所需的单节点CPU数，显示srun --sockets-per-node提交选项，如--sockets-per-node未设定，则显示*（仅适用于作业）。
+    \item \%i：作业或作业步号，在作业组中，作业号格式为``<base\_job\_id>\_<index>''，默认作业组索引字段限制到64字节，可以用环境变量SLURM\_BITSTR\_LEN设定为更大的字段大小。
+    \item \%I：作业所需的每颗CPU的CPU核数，显示的是srun --cores-per-socket设定的值，如--cores-per-socket未设定，则显示*（仅适用于作业）。
+    \item \%j：作业或作业步名。
+	\item \%J：作业所需的每个CPU核的线程数，显示的是srun --threads-per-core设定的值，如--threads-per-core未被设置则显示*（仅适用于作业）。
+    \item \%k：作业说明（仅适用于作业）。
+    \item \%K：作业组索引默认作业组索引字段限制到64字节，可以用环境变量SLURM\_BITSTR\_LEN设定为更大的字段大小（仅适用于作业）。
+    \item \%l：作业或作业步时间限制，格式为``days-hours:minutes:seconds''：NOT\_SET表示没有建立；UNLIMITED表示没有限制。
+    \item \%L：作业剩余时间，格式为``days-hours:minutes:seconds''，此值由作业的时间限制减去已用时间得到：NOT\_SET表示没有建立；UNLIMITED表示没有限制（仅适用于作业）。
+    \item \%m：作业所需的最小内存，单位为MB（仅适用于作业）。
+    \item \%M：作业或作业步已经使用的时间，格式为``days-hours:minutes:seconds''。
+    \item \%n：作业所需的节点名（仅适用于作业）。
+    \item \%N：作业或作业步分配的节点名，对于正在完成的作业，仅显示尚未释放资源回归服务的节点。
+    \item \%o：执行的命令。
+    \item \%O：作业是否需连续节点（仅适用于作业）。
+    \item \%p：作业的优先级（0.0到1.0之间），参见\%Q（仅适用于作业）。
+    \item \%P：作业或作业步的分区。
+    \item \%q：作业关联服务的品质（仅适用于作业）。
+    \item \%Q：作业优先级（通常为非常大的一个无符号整数），参见\%p（仅适用于作业）。
+    \item \%r：作业在当前状态的原因，参见JOB REASON CODES（仅适用于作业）。
+    \item \%R：参见JOB REASON CODES（仅适用于作业）：
+		\begin{itemize}
+			\item 对于排队中的作业：作业没有执行的原因。
+			\item 对于出错终止的作业：作业出错的解释。
+			\item 对于其他作业状态：分配的节点。
+		\end{itemize}
+%      %s    Node selection plugin specific data for a job. Possible data includes: Geometry requirement of resource allocation  (X,Y,Z  dimensions),
+%            Connection  type  (TORUS,  MESH, or NAV == torus else mesh), Permit rotation of geometry (yes or no), Node use (VIRTUAL or COPROCESSOR),
+%            etc.  （仅适用于作业）
+    \item \%S：作业或作业步实际或预期的开始时间。
+    \item \%t：作业状态，以紧凑格式显示：PD（排队pending）、R（运行running）、CA（取消cancelled）、CF(配置中configuring）、CG（完成中completing）、CD（已完成completed）、F（失败failed）、TO（超时timeout）、NF（节点失效node failure)和SE（特殊退出状态special exit state），参见JOB STATE CODES（仅适用于作业）。
+    \item \%T：作业状态，以扩展格式显示：PENDING、RUNNING、SUSPENDED、CANCELLED、COMPLETING、COMPLETED、CONFIGURING、FAILED、TIMEOUT、PREEMPTED、NODE\_FAIL和SPECIAL\_EXIT，参见JOB STATE CODES（仅适用于作业）。
+    \item \%u：作业或作业步的用户名。
+    \item \%U：作业或作业步的用户ID。
+    \item \%v：作业的预留资源（仅适用于作业）。
+    \item \%V：作业的提交时间。
+    \item \%w：工程量特性关键Workload Characterization Key（wckey）（仅适用于作业）。
+    \item \%W：作业预留的授权（仅适用于作业）。
+    \item \%x：作业排他性节点名（仅适用于作业）。
+    \item \%X：系统使用需每个节点预留的CPU核数（仅适用于作业）。
+    \item \%y：Nice值（调整作业调动优先级）（仅适用于作业）。
+    \item \%Y：对于排队中作业，显示其开始运行时期望的节点名。
+    \item \%z：作业所需的每个节点的CPU颗数、CPU核数和线程数（S:C:T），如（S:C:T）未设置，则显示*（仅适用于作业）。
+    \item \%Z：作业的工作目录。
+\end{itemize}
+\end{itemize}
+    \item -O <output\_format>, --Format=<output\_format>：以特定格式<output\_format>显示信息，参见-o <output\_format>, --format=<output\_format>
+	每个字段的格式为``\%[[.]size]type''：
+\begin{itemize}
+	\item size：字段最小尺寸，如果没有指定size，则最长显示20个字符。
+    \item .：右对齐显示，默认为左对齐。
+	\item type：类型，一些类型仅对作业有效，而有些仅对作业步有效，有效的类型为：
+\begin{itemize}
+	\item account：作业记账信息（仅适用于作业）。
+    \item allocnodes：作业分配的节点（仅适用于作业）。
+    \item allocsid：用于提交作业的会话ID（仅适用于作业）。
+    \item arrayjobid：作业组中的作业ID。
+    \item arraytaskid：作业组中的任务ID。
+    \item associd：作业关联ID（仅适用于作业）。
+    \item batchflag：是否批处理设定了标记（仅适用于作业）。
+    \item batchhost：执行节点（仅适用于作业）：
+\begin{itemize}
+	\item 对于分配的会话：显示的是会话执行的节点（如，srun或salloc命令执行的节点）。
+	\item 对于批处理作业：显示的执行批处理的节点。
+\end{itemize}
+%   \item           boardspernode 作业分配节点的主板数（仅适用于作业）
+%   \item          burstbuffer Burst Buffer specification （仅适用于作业）
+    \item chptdir：作业checkpoint的写目录（仅适用于作业步）。
+    \item chptinter：作业checkpoint时间间隔（仅适用于作业步）。
+    \item command：作业执行的命令（仅适用于作业）。
+    \item comment：作业关联的说明（仅适用于作业）。
+    \item contiguous：作业是否要求连续节点（仅适用于作业）。
+    \item cores：作业所需的每颗CPU的CPU核数，显示的是srun --cores-per-socket设定的值，如--cores-per-socket未设定，则显示*（仅适用于作业）。
+    \item corespec：为了系统使用所预留的CPU核数（仅适用于作业）。
+    \item cpufreq：分配的CPU主频（仅适用于作业步）。
+    \item cpuspertask：作业分配的每个任务的CPU颗数（仅适用于作业）。
+    \item deadline：作业的截止时间（仅适用于作业）。
+    \item dependency：作业依赖剩余。作业只有依赖的作业完成才运行，如显示NULL，则无依赖（仅适用于作业）。
+    \item derivedec：作业的起源退出码，对任意作业步是最高退出码（仅适用于作业）。
+    \item eligibletime：预计作业开始运行时间（仅适用于作业）。
+    \item endtime：作业实际或预期的终止时间（仅适用于作业）。
+    \item exit\_code：作业退出码（仅适用于作业）。
+    \item feature：作业所需的特性（仅适用于作业）。
+    \item gres：作业或作业步需的通用资源（gres）。
+    \item groupid：作业用户组ID（仅适用于作业）。
+    \item groupname：作业用户组名（仅适用于作业）。
+    \item jobarrayid：作业组作业ID（仅适用于作业）。
+    \item jobid：作业号（仅适用于作业）。
+    \item licenses：作业预留的授权（仅适用于作业）。
+    \item maxcpus：分配给作业的最大CPU颗数（仅适用于作业）。
+    \item maxnodes：分配给作业的最大节点数（仅适用于作业）。
+    \item mcslabel：作业的MCS\_label（仅适用于作业）。
+    \item minmemory：作业所需的最小内存大小，单位MB（仅适用于作业）。
+    \item mintime：作业的最小时间限制（仅适用于作业）。
+    \item mintmpdisk：作业所需的临时磁盘空间，单位MB（仅适用于作业）。
+    \item mincpus：作业所需的各节点最小CPU颗数，显示的是srun --mincpus设定的值（仅适用于作业）。
+    \item name：作业或作业步名。
+    \item network：作业运行的网络。
+    \item nice Nice值(调整作业调度优先值)（仅适用于作业）。
+    \item nodes：作业或作业步分配的节点名，对于正在完成的作业，仅显示尚未释放资源回归服务的节点。
+    \item nodelist：作业或作业步分配的节点，对于正在完成的作业，仅显示尚未释放资源回归服务的节点。
+%   \item  ntperboard  The number of tasks per board allocated to the job.  （仅适用于：作业）。
+    \item ntpercore：作业每个CPU核分配的任务数（仅适用于作业）。
+    \item ntpernode：作业每个节点分配的任务数（仅适用于作业）。
+    \item ntpersocket：作业每颗CPU分配的任务数（仅适用于作业）。
+    \item numcpus：作业所需的或分配的CPU颗数。
+    \item numnodes：作业所需的或分配的最小节点数（仅适用于作业）。
+    \item numtask：作业或作业号需的任务数，显示的--ntasks设定的。
+    \item oversubscribe：分配给此作业的计算资源能否被其它作业预约（仅适用于作业）。可被预约的资源包含节点、CPU颗、CPU核或超线程。值可以为：
+\begin{itemize}
+	\item YES：如果作业提交时含有oversubscribe选项或分区被配置含有\\OverSubscribe=Force。
+   	\item NO：如果作业所需排他性运行。
+   	\item USER：如果分配的计算节点设定为单个用户。
+   	\item MCS：如果分配的计算节点设定为单个安全类（参看MCSPlugin和\\MCSParameters配置参数）。
+   	\item OK：其它(典型分配给指定CPU)。
+\end{itemize}
+   	\item partition：作业或作业步的分区。
+   	\item priority：作业的优先级（0.0到1.0之间），参见\%Q（仅适用于作业）。
+   	\item prioritylong：作业优先级（通常为非常大的一个无符号整数），参见\%p（仅适用于作业）。
+   	\item profile：作业特征（仅适用于作业）。
+   	\item preemptime：作业抢占时间（仅适用于作业）。
+   	\item qos：作业的服务质量（仅适用于作业）。
+   	\item reason：作业在当前的原因，参见JOB REASON CODES（仅适用于作业）。
+   	\item reasonlist：参见JOB REASON CODES（仅适用于作业）。
+   	\begin{itemize}
+   	   	\item 对于排队中的作业：作业没有执行的原因。
+   	   	\item 对于出错终止的作业：作业出错的解释。
+   	   	\item 对于其他作业状态：分配的节点。
+   	\end{itemize}
+%  	\item  reboot Indicates if the allocated nodes should be rebooted before starting the job.  (Valid on jobs only)
+   	\item reqnodes：作业所需的节点名（仅适用于作业）。
+%    reqswitch The max number of requested switches by for the job.  （仅适用于作业）
+    \item requeue：作业失败时是否需重新排队运行（仅适用于作业）。
+    \item reservation：预留资源（仅适用于作业）。
+    \item resizetime：运行作业的变化时间总和（仅适用于作业）。
+    \item restartcnt：作业的重启checkpoint数（仅适用于作业）。
+    \item resvport：作业的预留端口（仅适用于作业步）。
+    \item schednodes：排队中的作业开始运行时预期将被用的节点列表（仅适用于作业）。
+    \item sct：各节点作业所需的CPU数、CPU核数和线程数（S:C:T），如（S:C:T）未设置，则显示*（仅适用于作业）。
+    \item selectjobinfo：节点选择插件针对作业指定的数据，可能的数据包含：资源分配的几何维度（X、Y、Z维度）、连接类型（TORUS、MESH或NAV == torus else mesh），是否允许几何旋转（yes或no），节点使用（VIRTUAL或COPROCESSOR）等（仅适用于作业）。
+    \item sockets：作业每个节点需的CPU数，显示srun时的--sockets-per-node选项，如--sockets-per-node未设置，则显示*（仅适用于作业）。
+    \item sperboard：每个主板分配给作业的CPU数（仅适用于作业）。
+    \item starttime：作业或作业布实际或预期开始时间。
+    \item state：扩展格式作业状态：排队中PENDING、运行中RUNNING、已停止STOPPED、被挂起SUSPENDED、被取消CANCELLED、完成中COMPLETING、已完成COMPLETED、配置中CONFIGURING、已失败FAILED、超时TIMEOUT、预取PREEMPTED、节点失效NODE\_FAIL、特定退出SPECIAL\_EXIT，参见JOB STATE CODES部分（仅适用于作业）。
+    \item statecompact：紧凑格式作业状态：PD（排队中pending）、R（运行中running）、CA（已取消cancelled）、CF(配置中configuring）、CG（完成中completing）、CD（已完成completed）、F（已失败failed）、TO（超时timeout）、NF（节点失效node failure）和SE（特定退出状态special exit state），参见JOB STATE CODES部分（仅适用于作业）。
+    \item stderr：标准出错输出目录（仅适用于作业）。
+    \item stdin：标准输入目录（仅适用于作业）。
+    \item stdout：标准输出目录（仅适用于作业）。
+    \item stepid：作业或作业步号。在作业组中，作业号格式为``<base\_job\_id>\_<index>''（仅适用于作业步）。
+    \item stepname：作业步名（仅适用于作业步）。
+    \item stepstate：作业步状态（仅适用于作业步）。
+    \item submittime：作业提交时间（仅适用于作业）。
+    \item threads：作业所需的每颗CPU核的线程数，显示srun的--threads-per-core参数，如--threads-per-core未设置，则显示*（仅适用于作业）。
+    \item timeleft：作业剩余时间，格式为``days-hours:minutes:seconds''，此值是通过其时间限制减去已运行时间得出的：如未建立则显示``NOT\_SET''；如无限制则显示``UNLIMITED''（仅适用于作业）。
+    \item timelimit：作业或作业步的时间限制。
+    \item timeused：作业或作业步以使用时间，格式为``days-hours:minutes:seconds''，days和hours只有需要时才显示。对于作业步，显示从执行开始经过的时间，因此对于被曾挂起的作业并不准确。节点间的时间差也会导致时间不准确。如时间不对（如，负值），将显示``INVALID''。
+    \item tres：显示分配给作业的可被追踪的资源。
+    \item userid：作业或作业步的用户ID。
+    \item username：作业或作业步的用户名。
+    \item wait4switch：需满足转轨器数目的总等待时间（仅适用于作业）。
+    \item wckey：工作负荷特征关键（wckey）（仅适用于作业）。
+    \item workdir：作业工作目录（仅适用于作业）。
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\section{查看详细分区信息：scontrol show partition}
+\LS{scontrol show partition}显示全部分区信息，\LS{scontrol show partition PartitionName}显示分区名为PartitionName的分区信息，输出类似下面：
+\begin{OUT}
+PartitionName=batch
+   AllowGroups=ALL AllowAccounts=ALL AllowQos=ALL
+   AllocNodes=ALL Default=YES QoS=N/A
+   DefaultTime=NONE DisableRootJobs=NO ExclusiveUser=NO GraceTime=0 Hidden=NO
+   MaxNodes=UNLIMITED MaxTime=UNLIMITED MinNodes=1 LLN=NO MaxCPUsPerNode=UNLIMITED
+   Nodes=node[1-60]
+   PriorityJobFactor=1 PriorityTier=1 RootOnly=NO ReqResv=NO OverSubscribe=NO PreemptMode=OFF
+   State=UP TotalCPUs=1440 TotalNodes=60 SelectTypeParameters=NONE
+   DefMemPerNode=UNLIMITED MaxMemPerNode=UNLIMITED
+
+PartitionName=serial
+   AllowGroups=ALL AllowAccounts=ALL AllowQos=ALL
+   AllocNodes=ALL Default=NO QoS=N/A
+   DefaultTime=NONE DisableRootJobs=NO ExclusiveUser=NO GraceTime=0 Hidden=NO
+   MaxNodes=UNLIMITED MaxTime=UNLIMITED MinNodes=1 LLN=NO MaxCPUsPerNode=UNLIMITED
+   Nodes=node[61-70]
+   PriorityJobFactor=1 PriorityTier=1 RootOnly=NO ReqResv=NO OverSubscribe=NO PreemptMode=OFF
+   State=UP TotalCPUs=240 TotalNodes=10 SelectTypeParameters=NONE
+   DefMemPerNode=UNLIMITED MaxMemPerNode=UNLIMITED
+
+PartitionName=fat48
+   AllowGroups=ALL AllowAccounts=ALL AllowQos=ALL
+   AllocNodes=ALL Default=NO QoS=N/A
+   DefaultTime=NONE DisableRootJobs=NO ExclusiveUser=NO GraceTime=0 Hidden=NO
+   MaxNodes=UNLIMITED MaxTime=UNLIMITED MinNodes=1 LLN=NO MaxCPUsPerNode=UNLIMITED
+   Nodes=login[2-3]
+   PriorityJobFactor=1 PriorityTier=1 RootOnly=NO ReqResv=NO OverSubscribe=NO PreemptMode=OFF
+   State=UP TotalCPUs=96 TotalNodes=2 SelectTypeParameters=NONE
+   DefMemPerNode=UNLIMITED MaxMemPerNode=UNLIMITED
+\end{OUT}
+
+\subsection{主要输出项}
+\begin{itemize}
+	\item PartitionName：分区名。
+	\item AllowGroups：允许的用户组。
+	\item AllowAccounts：允许的用户。
+	\item AllowQos：允许的QoS。
+	\item AllocNodes：允许的节点。
+	\item Default：是否为默认分区。
+	\item QoS：服务质量。
+	\item DefaultTime：默认时间。
+	\item DisableRootJobs：是否禁止root用户提交作业。
+	\item ExclusiveUser：排除的用户。
+	\item GraceTime：抢占的款显时间，单位秒。
+	\item Hidden：是否为隐藏分区。
+	\item MaxNodes：最大节点数。
+	\item MaxTime：最大运行时间。
+	\item MinNodes：最小节点数。
+	\item LLN：是否按照最小负载节点调度。
+	\item MaxCPUsPerNode：每个节点的最大CPU颗数。
+	\item Nodes：节点名。
+	\item PriorityJobFactor：作业因子优先级。
+	\item PriorityTier：调度优先级。
+	\item RootOnly：是否只允许Root。
+	\item ReqResv：要求预留的资源。
+	\item OverSubscribe：是否允许超用。
+	\item PreemptMode：是否为抢占模式。
+	\item State：状态：
+\begin{itemize}
+	\item UP：可用，作业可以提交到此分区，并将运行。
+   	\item DOWN：作业可以提交到此分区，但作业也许不会获得分配开始运行。已运行的作业还将继续运行。
+   	\item DRAIN：不接受新作业，已接受的作业可以被运行。
+   	\item INACTIVE：不接受新作业，已接受的作业未开始运行的也不运行。
+\end{itemize}
+	\item TotalCPUs：总CPU核数。
+	\item TotalNodes：总节点数。
+	\item SelectTypeParameters：资源选择类型参数。
+	\item DefMemPerNode：每个节点默认分配的内存大小，单位MB。
+	\item MaxMemPerNode：每个节点最大内存大小，单位MB。
+\end{itemize}
+
+\section{查看详细节点信息：scontrol show node}
+\LS{scontrol show node}显示全部节点信息，\LS{scontrol show node NODENAME}显示节点名为NODENAME的节点信息，输入类似下面：
+\begin{OUT}
+NodeName=node1 Arch=x86_64 CoresPerSocket=12
+   CPUAlloc=24 CPUErr=0 CPUTot=24 CPULoad=24.00
+   AvailableFeatures=(null)
+   ActiveFeatures=(null)
+   Gres=(null)
+   NodeAddr=node1 NodeHostName=node1 Version=16.05
+   OS=Linux RealMemory=63593 AllocMem=0 FreeMem=58374 Sockets=2 Boards=1
+   State=ALLOCATED ThreadsPerCore=1 TmpDisk=0 Weight=1 Owner=N/A MCS_label=N/A
+   BootTime=2016-12-03T15:15:05 SlurmdStartTime=2016-12-22T10:06:36
+   CapWatts=n/a
+   CurrentWatts=0 LowestJoules=0 ConsumedJoules=0
+   ExtSensorsJoules=n/s ExtSensorsWatts=0 ExtSensorsTemp=n/s
+
+NodeName=login2 Arch=x86_64 CoresPerSocket=12
+   CPUAlloc=0 CPUErr=0 CPUTot=48 CPULoad=0.00
+   AvailableFeatures=(null)
+   ActiveFeatures=(null)
+   Gres=(null)
+   NodeAddr=login2 NodeHostName=login2 Version=16.05
+   OS=Linux RealMemory=387506 AllocMem=0 FreeMem=381675 Sockets=4 Boards=1
+   State=IDLE ThreadsPerCore=1 TmpDisk=0 Weight=1 Owner=N/A MCS_label=N/A
+   BootTime=2016-12-03T15:10:40 SlurmdStartTime=2016-12-22T10:06:39
+   CapWatts=n/a
+   CurrentWatts=0 LowestJoules=0 ConsumedJoules=0
+   ExtSensorsJoules=n/s ExtSensorsWatts=0 ExtSensorsTemp=n/s
+\end{OUT}
+
+\subsection{主要输出项}
+\begin{itemize}
+	\item NodeName：节点名。
+	\item NodArch：系统架构。
+	\item NodCoresPerSocket：12。
+	\item NodCPUAlloc：分配给的CPU核数。
+	\item NodCPUErr：出错的CPU核数。
+	\item NodCPUTot：总CPU核数。
+	\item NodCPULoad：CPU负载。
+	\item NodAvailableFeatures：可用特性。
+	\item NodActiveFeatures：激活的特性。
+	\item NodGres：通用资源。
+	\item NodNodeAddr：节点IP地址。
+	\item NodNodeHostName：节点名。
+	\item NodVersion：Slurm版本。
+	\item NodOS：操作系统 。
+	\item NodRealMemory：实际物理内存，单位GB。
+	\item NodAllocMem：已分配内存，单位GB。
+	\item NodFreeMem：可用内存，单位GB。
+	\item NodSockets：CPU颗数。
+	\item NodBoards：主板数。
+	\item NodState：状态 。
+	\item NodThreadsPerCore：每颗CPU核线程数。
+	\item NodTmpDisk：临时存盘硬盘大小。
+	\item NodWeight：权重。
+%	\item NodOwner：所有者。
+%   \item Nod MCS\_label：标签。
+	\item NodBootTime：开机时间。
+	\item NodSlurmdStartTime：Slurmd守护进程启动时间。
+%	\item NodCapWatts：n/a。
+%	\item NodCurrentWatts：0 LowestJoules：0 ConsumedJoules：0
+%	\item NodExtSensorsJoules：n/s ExtSensorsWatts：0 ExtSensorsTemp：n/s
+\end{itemize}
+本系统主要有两种节点：
+\begin{itemize}
+	\item 双路CPU节点：
+\begin{itemize}
+	\item 分区：serial和batch。
+	\item CPU：2*Intel(R) Xeon(R) CPU E5-2680 v3 @ 2.50GHz，24核/节点。
+	\item 内存：64GB。
+\end{itemize}
+	\item 四路CPU节点：
+\begin{itemize}
+	\item 分区：serial和batch。
+	\item CPU：4*Intel(R) Xeon(R) CPU E7-4850 v2 @ 2.30GHz，48核/节点。
+	\item 内存：384GB。
+\end{itemize}
+\end{itemize}
+
+\section{查看详细作业信息：scontrol show job}
+\LS{scontrol show job}显示全部作业信息，\LS{scontrol show job JOBID}显示作业号为JOBID的作业信息，输入类似下面：
+\begin{OUT}
+JobId=1362 JobName=BOUT++-nonlinear
+   UserId=hmli(1000) GroupId=task1(502) MCS_label=N/A
+   Priority=4294900535 Nice=0 Account=(null) QOS=normal
+   JobState=RUNNING Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=1-11:15:03 TimeLimit=41-16:00:00 TimeMin=N/A
+   SubmitTime=2016-12-27T23:17:48 EligibleTime=2016-12-27T23:17:48
+   StartTime=2016-12-28T11:13:07 EndTime=2017-02-08T03:13:07 Deadline=N/A
+   PreemptTime=None SuspendTime=None SecsPreSuspend=0
+   Partition=batch AllocNode:Sid=service0:22374
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=node[1-22]
+   BatchHost=node1
+   NumNodes=22 NumCPUs=512 NumTasks=512 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=512,node=22
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=1 MinMemoryNode=0 MinTmpDiskNode=0
+   Features=(null) Gres=(null) Reservation=(null)
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/admin/hmli/BOUT-2.0/examples/elmnew513-x516y64z65-nonlinear-in_-3e-3/cfetr.sbatch
+   WorkDir=/home/admin/hmli/BOUT-2.0/examples/elmnew513-x516y64z65-nonlinear-in_-3e-3/./
+   StdErr=/home/admin/hmli/BOUT-2.0/examples/elmnew513-x516y64z65-nonlinear-in_-3e-3/.//1362.out
+   StdIn=/dev/null
+   StdOut=/home/admin/hmli/BOUT-2.0/examples/elmnew513-x516y64z65-nonlinear-in_-3e-3/.//1362.out
+   Power=
+
+JobId=1373 JobName=x.slurm
+   UserId=hmli(1000) GroupId=admin(500) MCS_label=N/A
+   Priority=4294900524 Nice=0 Account=hmli QOS=hmli
+   JobState=PENDING Reason=Resources Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:00:00 TimeLimit=UNLIMITED TimeMin=N/A
+   SubmitTime=2016-12-29T21:36:21 EligibleTime=2016-12-29T21:36:21
+   StartTime=2017-02-08T03:13:07 EndTime=Unknown Deadline=N/A
+   PreemptTime=None SuspendTime=None SecsPreSuspend=0
+   Partition=batch AllocNode:Sid=service0:23832
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=(null)
+   NumNodes=25 NumCPUs=600 NumTasks=600 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=600,node=1
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=1 MinMemoryNode=0 MinTmpDiskNode=0
+   Features=(null) Gres=(null) Reservation=(null)
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/admin/hmli/slurm/x.slurm
+   WorkDir=/home/admin/hmli/slurm/./
+   StdErr=/home/admin/hmli/slurm/.//1373.err
+   StdIn=/dev/null
+   StdOut=/home/admin/hmli/slurm/.//1373.out
+   Power=
+\end{OUT}
+
+\subsection{主要输出项}
+\begin{itemize}
+	\item JobId：作业号。
+	\item JobName：作业名。
+	\item UserId：用户名（用户ID）。
+	\item GroupId：用户组（组ID）。
+	\item MCS\_label：。
+	\item Priority：优先级，越大越优先，如果为0则表示被管理员挂起，不允许运行。
+	\item Nice：Nice值，越小越优先，-20到19。
+	\item Account：记账用户名。
+	\item QOS：作业的服务质量。
+	\item JobState：作业状态。
+\begin{itemize}
+	\item PENDING：排队中。
+	\item RUNNING：运行中。
+	\item CANCELLED：已取消。
+	\item CONFIGURING：配置中。
+	\item COMPLETING：完成中。
+	\item COMPLETED：已完成。
+	\item FAILED：已失败。
+	\item TIMEOUT：超时。
+	\item NODE FAILURE：节点失效。
+	\item SPECIAL EXIT STATE：特殊退出状态。
+\end{itemize}
+	\item Reason：原因。
+	\item Dependency：依赖关系。
+	\item Requeue：节点失效时，是否重排队，0为否，1为是。
+	\item Restarts：失败时，是否重运行，0为否，1为是。
+	\item BatchFlag：是否为批处理作业，0为否，1为是。
+	\item Reboot：节点空闲时是否重启节点，0为否，1为是。
+	\item ExitCode：作业退出代码。
+	\item RunTime：已运行时间。
+	\item TimeLimit：作业允许的剩余运行时间。
+	\item TimeMin：最小时间。
+	\item SubmitTime：提交时间。
+	\item EligibleTime：获得认可时间。
+	\item StartTime：开始运行时间。
+	\item EndTime：预计结束时间。
+	\item Deadline：截止时间。
+	\item PreemptTime：先占时间。
+	\item SuspendTime：挂起时间。
+	\item SecsPreSuspend：0。
+	\item Partition：对列名。
+	\item AllocNode:Sid：分配的节点:系统ID号。
+	\item ReqNodeList：去要的节点列表。
+	\item ExcNodeList：排除的节点列表。
+	\item NodeList：实际运行节点列表。
+	\item BatchHost：批处理节点名。
+	\item NumNodes：节点数。
+	\item NumCPUs：CPU核数。
+	\item NumTasks：任务数。
+	\item CPUs/Task：CPU核数/任务数。
+	\item ReqB:S:C:T：所需的主板数:每主板CPU颗数:每颗CPU核数:每颗CPU核的线程数，\\<baseboard\_count>:<socket\_per\_baseboard\_count>:<core\_per\_socket\_count>:\\<thread\_per\_core\_count>。
+	\item TRES：显示分配给作业的可被追踪的资源。
+	\item Socks/Node：每节点CPU颗数。
+	\item NtasksPerN:B:S:C：每主板数:每主板CPU颗数:每颗CPU的核数:每颗CPU核的线程数启动的作业数，<tasks\_per\_node>:<tasks\_per\_baseboard>:<tasks\_per\_socket>:<tasks\_per\_core>。
+	\item CoreSpec：各节点系统预留的CPU核数，如未包含，则显示*。
+	\item MinCPUsNode：每节点最小CPU核数。
+	\item MinMemoryNode：每节点最小内存大小，0表示未限制。
+	\item MinTmpDiskNode：每节点最小临时存盘硬盘大小，0表示未限制。
+	\item Features：特性。
+	\item Gres：通用资源。
+	\item Reservation：预留资源。
+	\item OverSubscribe：是否允许与其它作业共享资源，OK允许，NO不允许。
+	\item Contiguous：是否要求分配连续节点，OK是，NO否。
+	\item Licenses：软件授权。
+	\item Network：网络。
+	\item Command：作业命令。
+	\item WorkDir：工作目录。
+	\item StdErr：标准出错输出文件。
+	\item StdIn：标准输入文件。
+	\item StdOut：标准输出文件。
+\end{itemize}
+
+\section{交互式提交并行作业：srun}
+\LS{srun}可以交互式提交运行并行作业，提交后，作业等待运行，等运行完毕后，才返回终端。语法为：\LS{srun [OPTIONS...] executable [args...]}
+\subsection{主要参数}
+\begin{itemize}
+\item --begin=<time>：设定作业开始时间，时间到了如果资源满足，则运行，否则继续等待。常用格式如下：
+\begin{itemize}
+	\item --begin=16:00：16:00开始。
+    \item --begin=now+1hour：1小时后开始。
+    \item --begin=now+60：60分钟后开始。
+    \item --begin=2017-02-20T12:34:00：2017-02-20T12:34:00开始。
+\end{itemize}
+\item --comment=<string>：作业说明
+\item --contiguous：需分配到连续节点，一般来说连续节点之间网络会快一点，如在同一个IB交换机内，但有可能导致开始运行时间推迟（需等待足够多的连续节点）。
+\item --cores-per-socket=<cores>：每颗CPU的核数。
+%\item -C, --constraint=<list>
+% --cpu-freq =<p1[-p2[:p3]]>
+\item -c, --cpus-per-task=<ncpus>：每个进程需ncpus颗CPU核，一般运行OpenMP等多线程程序时需，普通MPI程序不需。
+\item --deadline=<OPT>：截止时间，如果作业到了截至时间而未完成，那么也将结束。有效的时间格式为：
+\begin{itemize}
+	\item HH:MM[:SS] [AM|PM]
+    \item MMDD[YY] 或 MM/DD[/YY] 或 MM.DD[.YY]
+    \item MM/DD[/YY]-HH:MM[:SS]
+    \item YYYY-MM-DD[THH:MM[:SS]]]
+\end{itemize}
+\item -d, --dependency=<dependency\_list>：依赖于<dependency\_list>满足后才运行，如：
+\begin{itemize}
+	\item after:job\_id[:jobid...]：作业号为job\_id[:jobid...]的所有作业结束后。
+    \item afterany:job\_id[:jobid...]：作业号为job\_id[:jobid...]的任意之一作业结束。
+    \item aftercorr:job\_id[:jobid...]：作业号为job\_id[:jobid...]的所有作业成功结束（退出码为0）后。
+    \item afternotok:job\_id[:jobid...]：作业号为job\_id[:jobid...]的所有作业失败结束（如退出状态为：非零退出码、节点失效、超时等）后。
+    \item afterok:job\_id[:jobid...]：作业号为job\_id[:jobid...]的所有作业成功执行（退出码为0）后。
+    \item expand:job\_id：分配给此作业的资源将被扩展到job\_id作业。扩充到的作业不许共享相同的QOS和分区。此分区中的连接资源调度不被支持。
+    \item singleton：任意先前共享相同作业名和用户的作业结束后。
+\end{itemize}
+\item -D, --chdir=<path>：改变工作目录到<path>执行命令。
+\item -e, --error=<mode>：设定标准错误如何重定向。非交互模式下，默认srun重定向标准错误到与标准输出同样的文件（如果指定了）。此参数可以指定重定向到不同文件。如果指定的文件已经存在，那么将被覆盖。参见IO重定向。
+\item -E, --preserve-env：将环境变量SLURM\_NNODES和SLURM\_NTASKS传递给可执行文件，而无需通过计算命令行参数。
+\item --epilog=<executable>：作业结束后执行<executable>程序做相应处理。
+\item --exclusive[=user]：排他性运行，独占性运行，此节点不允许其他用户或不允许user用户共享运行作业。
+\item --export=<environment variables | NONE>：将环境变量传递给应用程序，如``--export=NONE,PATH=/bin,SHELL=/bin/bash''。
+%--export-file=<filename | fd>
+% -F, --nodefile=<node file>
+%--get-user-env[=timeout][mode]
+\item -h, --help：显示帮助信息。
+\item -i, --input=<mode>：指定标准输入如何重定向。默认，srun对所有任务重定向标准输入为从终端。参见IO重定向。
+\item -J, --job-name=<jobname>：赋予作业的作业名为<jobname>。
+\item -l, --label：在标注正常输出或标准错误输出的行前面添加作业号。
+\item --mpi=<mpi\_type>：指定使用的MPI环境，<mpi\_type>可以主要为：
+\begin{itemize}
+	\item list：列出可用的MPI以便选择。
+	\item mpich1\_shmem：单节点内采用共享内存运行MPICH时，对共享内存的MVAPICH也可用。
+	\item mvapich：针对InfiniBand的MPICH实现MVAPICH。
+	\item openmpi：针对OpenMPI。
+	\item none：默认选项，针对其它MPI实现，如Intel MPI。
+\end{itemize}
+\item --multi-prog：让不同任务运行不同的程序及参数，需指定一个配置文件，参见MULTIPLE PROGRAM CONFIGURATION。
+\item -N, --nodes=<minnodes[-maxnodes]>：采用特定节点数运行作业，如没指定maxnodes则需特定节点数，注意，这里是节点数，不是CPU核数，实际分配的是节点数×每节点CPU核数。
+\item -n, --ntasks=<number>：运行<number>个任务，默认一个节点一个作业，注意是节点，不是CPU核。仅对作业起作用，不对作业步起作用。
+\item --ntasks-per-core=<ntasks>：每颗CPU核运行<ntasks>个任务，需与-n, --ntasks=<number>配合，并自动绑定<ntasks>个任务到每个CPU核。仅对作业起作用，不对作业步起作用。
+\item --ntasks-per-node=<ntasks>：每个节点运行<ntasks>个任务，需与-n, --ntasks=<number>配合。仅对作业起作用，不对作业步起作用。
+\item --ntasks-per-socket=<ntasks>：每颗CPU运行<ntasks>个任务，需与-n, --ntasks=<number>配合，并自动绑定<ntasks>个任务到每颗CPU。仅对作业起作用，不对作业步起作用。
+\item -o, --output=<mode>：指定标准输出重定向。在非交互模式中，默认srun收集各任务的标准输出，并发送到吸附的终端上。采用--output可以将其重定向到同一个文件、每个任务一个文件或/dev/null等。参见IO重定向。
+\item --open-mode=<append|truncate>：标准输出和标准错误输出打开文件的方式：
+\begin{itemize}
+	\item append：追加。
+	\item truncate：截断覆盖。
+\end{itemize}
+\item -p, --partition=<partition\_names>：使用<partition\_names>分区
+\item --prolog=<executable>：作业开始运行前执行<executable>程序，做相应处理。
+\item -t, --time=<time>：作业最大运行总时间<time>，到时间后将被终止掉。时间<time>的格式可以为：分钟、分钟:秒、小时:分钟:秒、天-小时、天-小时:分钟、天-小时:分钟:秒
+\item --task-epilog=<executable>：任务终止后立即执行<executable>，对应于作业步分配。
+\item --task-prolog=<executable>：任务开始前立即执行<executable>，对应于作业步分配。
+\item --threads-per-core=<threads>：每颗CPU核运行<threads>个线程。
+\item --usage：显示简略帮助信息
+\item -v, --verbose：显示详细信息，多个v会显示更详细的详细。
+\item -W, --wait=<seconds>：设定在第一个任务结束后多久结束全部任务。
+\item -w, --nodelist=<host1,host2,... or filename>：在特定<host1,host2>节点或filename文件中指定的节点上运行。
+\item -x, --exclude=<host1,host2,... or filename>：在特定<host1,host2>节点或filename文件中指定的节点之外的节点上运行。
+\end{itemize}
+
+\subsection{IO重定向}
+默认标准输出文件和标准出错文件将从所有任务中被重定向到srun的标准输出文件和标准出错文件，标准输入文件从srun的标准输输入文件重定向到所有任务。如果标准输入仅仅是几个任务需要，建议采用读文件方式而不是重定向方式，以免输入错误数据。
+
+以上行为可以通过 --output、--error和--input（-o、-e、-i）等选项改变，有效的格式为：
+\begin{itemize}
+	\item all：标准输出和标准出错从所有任务定向到srun，标准输入文件从srun的标准输输入文件重定向到所有任务（默认）。
+    \item none：标准输出和标准出错不从任何任务定向到srun，标准输入文件不从srun定向到任何任务。
+    \item taskid：标准输出和/或标准出错仅从任务号为taskid的任务定向到srun，标准输入文件仅从srun定向到任务号为taskid任务。
+    \item filename: srun将所有任务的标准输出和标准出错重定向到filename文件，标准输入文件将从filename文件重定向到全部任务。
+    \item 格式化字符：srun允许生成采用格式化字符命名的上述IO文件，如可以结合作业号、作业步、节点或任务等。
+\begin{itemize}
+	\item \textbackslash\textbackslash：不处理任何代替符。
+    \item \%\%：字符``\%''。
+    \item \%A：作业组的主作业分配号。
+    \item \%a：作业组ID号。
+    \item \%J：运行作业的作业号.步号（如128.0）。
+    \item \%j：运行作业的作业号
+    \item \%s：运行作业的作业步号。
+    \item \%N：短格式节点名，每个节点将生成的不同的IO文件。
+    \item \%n：当前作业相关的节点标记（如``0''是运行作业的第一个节点），每个节点将生成的不同的IO文件。
+    \item \%t：与当前作业相关的任务标记（rank），每个rank将生成一个不同的IO文件。
+    \item \%u：用户名。
+\end{itemize}
+在\%与格式化标记符之间的数字可以用于生成前导零，如：
+\begin{itemize}
+   \item job\%J.out：job128.0.out。
+   \item job\%4j.out：job0128.out。
+   \item job\%j-\%2t.out：job128-00.out、job128-01.out、...。
+\end{itemize}
+\end{itemize}
+
+\subsection{主要输入环境变量}
+一些srun选项可通过环境变量来设置，命令行的选项优先级高于设置的环境变量，将覆盖掉环境变量的设置。环境变量与对应的参数如下：
+\begin{itemize}
+	\item SLURM\_ACCOUNT：类似 -A, --account。
+	\item SLURM\_ACCTG\_FREQ：类似 --acctg-freq。
+	\item SLURM\_BCAST：类似 --bcast。
+	\item SLURM\_CHECKPOINT：类似 --checkpoint。
+	\item SLURM\_CHECKPOINT\_DIR：类似 --checkpoint-dir。
+	\item SLURM\_CNLOAD\_IMAGE：类似 --cnload-image。
+	\item SLURM\_COMPRESS：类似 --compress。
+	\item SLURM\_CONN\_TYPE：类似 --conn-type。
+	\item SLURM\_CORE\_SPEC：类似 --core-spec。
+	\item SLURM\_CPU\_BIND：类似 --cpu\_bind。
+	\item SLURM\_CPU\_FREQ\_REQ：类似 --cpu-freq.。
+	\item SLURM\_CPUS\_PER\_TASK：类似 -c, --cpus-per-task。
+	\item SLURM\_DEBUG：类似 -v, --verbose。
+	\item SLURM\_DEPENDENCY：类似 -P, --dependency=<jobid>。
+	\item SLURM\_DISABLE\_STATUS：类似 -X, --disable-status。
+	\item SLURM\_DIST\_PLANESIZE：类似 -m plane。
+	\item SLURM\_DISTRIBUTION：类似 -m, --distribution。
+	\item SLURM\_EPILOG：类似 --epilog。
+	\item SLURM\_EXCLUSIVE：类似 --exclusive。
+	\item SLURM\_EXIT\_ERROR：Slurm出错时的退出码。
+	\item SLURM\_EXIT\_IMMEDIATE：当--immediate使用时且资源当前无效时的Slurm退出码。
+	\item SLURM\_GEOMETRY：类似 -g, --geometry。
+	\item SLURM\_GRES\_FLAGS：类似 --gres-flags。
+	\item SLURM\_HINT：类似 --hint。
+	\item SLURM\_GRES：类似 --gres，参见SLURM\_STEP\_GRES。
+	\item SLURM\_IMMEDIATE：类似 -I, --immediate。
+	\item SLURM\_IOLOAD\_IMAGE：类似 --ioload-image。
+	\item SLURM\_JOB\_ID：类似 --jobid。
+	\item SLURM\_JOB\_NAME：类似 -J, --job-name。
+	\item SLURM\_JOB\_NUM\_NODES：分配的总节点数。
+	\item SLURM\_KILL\_BAD\_EXIT：类似 -K, --kill-on-bad-exit。
+	\item SLURM\_LABELIO：类似 -l, --label。
+	\item SLURM\_LINUX\_IMAGE：类似 --linux-image。
+	\item SLURM\_MEM\_BIND：类似 --mem\_bind。
+	\item SLURM\_MEM\_PER\_CPU：类似 --mem-per-cpu。
+	\item SLURM\_MEM\_PER\_NODE：类似 --mem。
+	\item SLURM\_MLOADER\_IMAGE：类似 --mloader-image。
+	\item SLURM\_MPI\_TYPE：类似 --mpi。
+	\item SLURM\_NETWORK：类似 --network。
+	\item SLURM\_NNODES：类似 -N, --nodes。
+	\item SLURM\_NO\_ROTATE：类似 -R, --no-rotate。
+	\item SLURM\_NTASKS：类似 -n, --ntasks。
+	\item SLURM\_NTASKS\_PER\_CORE：类似 --ntasks-per-core。
+	\item SLURM\_NTASKS\_PER\_NODE：类似 --ntasks-per-node。
+	\item SLURM\_NTASKS\_PER\_SOCKET：类似 --ntasks-per-socket。
+	\item SLURM\_OPEN\_MODE：类似 --open-mode。
+	\item SLURM\_OVERCOMMIT：类似 -O, --overcommit。
+	\item SLURM\_PARTITION：类似 -p, --partition。
+	\item SLURM\_POWER：类似 --power。
+	\item SLURM\_PROFILE：类似 --profile。
+	\item SLURM\_PROLOG：类似 --prolog。
+	\item SLURM\_QOS：类似 --qos。
+	\item SLURM\_RAMDISK\_IMAGE：类似 --ramdisk-image。
+	\item SLURM\_REMOTE\_CWD：类似 -D, --chdir=。
+	\item SLURM\_RESERVATION：类似 --reservation。
+	\item SLURM\_RESTART\_DIR：类似 --restart-dir。
+	\item SLURM\_RESV\_PORTS：类似 --resv-ports。
+	\item SLURM\_SIGNAL：类似 --signal。
+	\item SLURM\_STDERRMODE：类似 -e, --error。
+	\item SLURM\_STDINMODE：类似 -i, --input。
+	\item SLURM\_SRUN\_REDUCE\_TASK\_EXIT\_MSG：如被设置，并且非0,那么具有相同退出码的连续的任务退出消息只显示一次。
+	\item SLURM\_STEP\_GRES：类似 --gres (仅对作业步有效，不影响作业分配)，参见SLURM\_GRES。
+	\item SLURM\_STEP\_KILLED\_MSG\_NODE\_ID=ID：如被设置，当作业或作业步被信号终止时只特定ID的节点下显示信息。
+	\item SLURM\_STDOUTMODE：类似 -o, --output。
+	\item SLURM\_TASK\_EPILOG：类似 --task-epilog。
+	\item SLURM\_TASK\_PROLOG：类似 --task-prolog。
+	\item SLURM\_TEST\_EXEC：如被定义，在计算节点执行之前先在本地节点上测试可执行程序。
+	\item SLURM\_THREAD\_SPEC：类似 --thread-spec。
+	\item SLURM\_THREADS：类似 -T, --threads。
+	\item SLURM\_TIMELIMIT：类似 -t, --time。
+	\item SLURM\_UNBUFFEREDIO：类似 -u, --unbuffered。
+	\item SLURM\_USE\_MIN\_NODES：类似 --use-min-nodes。
+	\item SLURM\_WAIT：类似 -W, --wait。
+%	\item SLURM\_WAIT4SWITCH：Max time waiting for requested switches. See --switches。
+	\item SLURM\_WCKEY：类似 -W, --wckey。
+	\item SLURM\_WORKING\_DIR：类似 -D, --chdir。
+\end{itemize}
+
+\subsection{主要输出环境变量}
+\LS{srun}会在执行的节点上设置如下环境变量：
+\begin{itemize}
+	\item SLURM\_CHECKPOINT\_IMAGE\_DIR：Checkpoint镜像的存储目录。
+	\item SLURM\_CLUSTER\_NAME：集群名。
+	\item SLURM\_CPU\_BIND\_VERBOSE：--cpu\_bind 详细情况（quiet、verbose）。
+	\item SLURM\_CPU\_BIND\_TYPE：--cpu\_bind 类型（none、rank、map\_cpu:、mask\_cpu:）。
+	\item SLURM\_CPU\_BIND\_LIST：--cpu\_bind 映射或掩码列表。
+	\item SLURM\_CPU\_FREQ\_REQ：需要的CPU频率资源，参见--cpu-freq和输入环境变量SLURM\_CPU\_FREQ\_REQ。
+	\item SLURM\_CPUS\_ON\_NODE：节点上的CPU颗数。
+	\item SLURM\_CPUS\_PER\_TASK：每作业的CPU颗数，参见--cpus-per-task选项指定。
+	\item SLURM\_DISTRIBUTION：分配的作业的分布类型，参见-m, --distribution。
+	\item SLURM\_GTIDS：此节点上分布的全局任务号，从0开始，以,分隔。
+	\item SLURM\_JOB\_ACCOUNT：作业的记账名。
+	\item SLURM\_JOB\_CPUS\_PER\_NODE：每个节点的CPU颗数。
+	\item SLURM\_JOB\_DEPENDENCY：依赖关系，参见--dependency选项。
+	\item SLURM\_JOB\_ID：作业号。
+	\item SLURM\_JOB\_NAME：作业名，参见--job-name选项或srun启动的命令名。
+	\item SLURM\_JOB\_PARTITION：作业使用的分区名。
+	\item SLURM\_JOB\_QOS：作业的服务质量QOS。
+	\item SLURM\_JOB\_RESERVATION：作业的高级资源预留。
+	\item SLURM\_LAUNCH\_NODE\_IPADDR：任务初始启动节点的IP地址。
+	\item SLURM\_LOCALID：节点本地任务号。
+	\item SLURM\_MEM\_BIND\_VERBOSE：内存绑定详细情况，参见--mem\_bind verbosity（quiet、verbose）。
+	\item SLURM\_MEM\_BIND\_TYPE：--mem\_bind类型（none、rank、map\_mem:、mask\_mem:）。
+	\item SLURM\_MEM\_BIND\_LIST：--mem\_bind映射或掩码列表（<list of IDs or masks for this node>）。
+	\item SLURM\_NNODES：分配的节点总数。
+	\item SLURM\_NODE\_ALIASES：分配的节点名、通信IP地址和节点名，每组内采用:分隔，组间通过,分隔，如：SLURM\_NODE\_ALIASES=ec0:1.2.3.4:foo,ec1:1.2.3.5:bar。
+	\item SLURM\_NODEID：当前节点的相对节点号。
+	\item SLURM\_NODELIST：分配的节点列表。
+	\item SLURM\_NTASKS：任务总数。
+	\item SLURM\_PRIO\_PROCESS：作业提交时的调度优先级值（nice值）。
+	\item SLURM\_PROCID：当前MPI秩号。
+	\item SLURM\_SRUN\_COMM\_HOST：节点的通信IP。
+	\item SLURM\_SRUN\_COMM\_PORT：srun的通信端口。
+	\item SLURM\_STEP\_LAUNCHER\_PORT：作业步启动端口。
+	\item SLURM\_STEP\_NODELIST：作业步节点列表。
+	\item SLURM\_STEP\_NUM\_NODES：作业步的节点总数。
+	\item SLURM\_STEP\_NUM\_TASKS：作业步的任务总数。
+	\item SLURM\_STEP\_TASKS\_PER\_NODE：作业步在每个节点上的任务总数。
+	\item SLURM\_STEP\_ID：当前作业的作业步号。
+	\item SLURM\_SUBMIT\_DIR：提交作业的目录。
+	\item SLURM\_SUBMIT\_HOST：提交作业的节点名。
+	\item SLURM\_TASK\_PID：任务启动的进程号。
+	\item SLURM\_TASKS\_PER\_NODE：每个节点上启动的任务数，以SLURM\_NODELIST中的节点顺序显示，以,分隔。如果两个或多个连续节点上的任务数相同，数后跟着(x\#)，其中\#是对应的节点数，如SLURM\_TASKS\_PER\_NODE=2(x3),1"表示，前三个节点上的作业数为3，第四个节点上的任务数为1。
+	%\item SLURM\_TOPOLOGY\_ADDR   。
+	%\item SLURM\_TOPOLOGY\_ADDR\_PATTERN。
+	\item SLURM\_UMASK：作业提交时的umask掩码。
+	\item SLURMD\_NODENAME：任务运行的节点名。
+	\item SRUN\_DEBUG：srun命令的调试详细信息级别，默认为3（info级）。
+\end{itemize}
+
+\subsection{多程序运行配置}
+Slurm支持一次申请多个节点，在不同节点上同时启动执行不同任务。为实现次功能，需要生成一个配置文件，在配置文件中做相应设置。
+
+配置文件中的注释必需第一列为\#，配置文件包含以空格分隔的以下域（字段）：
+\begin{itemize}
+	\item 任务范围（Task rank）：一个或多个任务秩，多个值的话可以用逗号,分隔。范围可以用两个用-分隔的整数表示，小数在前，大数在后。如果最后一行为*，则表示全部其余未在前面声明的秩。如没有指明可执行程序，则会显示错误信息：``No executable program specified for this task''。
+    \item 需要执行的可执行程序（Executable）：也许需要绝对路径指明。
+    \item 可执行程序的参数（Arguments）：``\%t''将被替换为任务号；``\%o''将被替换为任务号偏移（如配置的秩为``1-5''，则偏移值为``0-4''）。单引号可以防止内部的字符被解释。此域为可选项，任何在命令行中需要添加的程序参数都将加在配置文件中的此部分。
+\end{itemize}
+例如，配置文件silly.conf内容为：
+\begin{SH}
+###################################################################
+# srun multiple program configuration file
+#
+# srun -n8 -l --multi-prog silly.conf
+###################################################################
+4-6       hostname
+1,7       echo  task:%t
+0,2-3     echo  offset:%o
+\end{SH}
+
+运行：\LS{srun -n8 -l --multi-prog silly.conf}
+
+输出结果：
+\begin{OUT}
+0: offset:0
+1: task:1
+2: offset:1
+3: offset:2
+4: node1
+5: node2
+6: node4
+7: task:7
+\end{OUT}
+
+\subsection{常见例子}
+\begin{itemize}
+	\item 使用8个CPU核（-n8）运行作业，并在标准输出上显示任务号（-l）：
+
+\LS{srun -n8 -l hostname}
+
+输出结果：
+\begin{OUT}
+0: node0
+1: node0
+2: node1
+3: node1
+4: node2
+5: node2
+6: node3
+7: node3
+\end{OUT}
+
+	\item 在脚本中使用-r2参数使其在第2号（分配的节点号从0开始）开始的两个节点上运行，并采用实时分配模式而不是批处理模式运行：
+
+脚本\fl{test.sh}内容：
+\begin{SH}
+#!/bin/sh
+echo $SLURM_NODELIST
+srun -lN2 -r2 hostname
+srun -lN2 hostname
+\end{SH}
+
+运行：\LS{salloc -N4 test.sh}
+
+输出结果：
+\begin{OUT}
+dev[7-10]
+0: node9
+1: node10
+0: node7
+1: node8
+\end{OUT}
+
+\item 在分配的节点上并行运行两个作业步：
+
+脚本\fl{test.sh}内容：
+\begin{SH}
+#!/bin/bash
+srun -lN2 -n4 -r 2 sleep 60 &
+srun -lN2 -r 0 sleep 60 &
+sleep 1
+squeue
+squeue -s
+wait
+\end{SH}
+
+运行：\LS{salloc -N4 test.sh}
+
+输出结果：
+\begin{OUT}
+  JOBID PARTITION     NAME     USER  ST      TIME  NODES NODELIST
+  65641     batch  test.sh   grondo   R      0:01      4 dev[7-10]
+
+STEPID     PARTITION     USER      TIME NODELIST
+65641.0        batch   grondo      0:01 dev[7-8]
+65641.1        batch   grondo      0:01 dev[9-10]
+\end{OUT}
+
+\item 运行MPICH作业：
+
+脚本\fl{test.sh}内容：
+\begin{SH}
+#!/bin/sh
+MACHINEFILE="nodes.$SLURM_JOB_ID"
+
+# 生成MPICH所需的包含节点名的machinfile文件
+srun -l /bin/hostname | sort -n | awk ’{print $2}’ > $MACHINEFILE
+
+# 运行MPICH作业
+mpirun -np $SLURM_NTASKS -machinefile $MACHINEFILE mpi-app
+
+rm $MACHINEFILE
+\end{SH}
+
+采用2个节点（-N2）共4个CPU核（-n4）运行：\LS{salloc -N2 -n4 test.sh}
+
+\item 利用不同节点号（SLURM\_NODEID）运行不同作业，节点号从0开始：
+
+脚本\fl{test.sh}内容：
+\begin{SH}
+case $SLURM_NODEID in
+    0) echo "I am running on "
+       hostname ;;
+    1) hostname
+       echo "is where I am running" ;;
+esac
+\end{SH}
+运行：\LS{srun -N2 test.sh}
+
+输出：
+\begin{OUT}
+dev0
+is where I am running
+I am running on
+ev1
+\end{OUT}
+
+\item 利用多核选项控制任务执行：
+
+采用2个节点（-N2），每节点4颗CPU每颗CPU 2颗CPU核（-B 4-4:2-2），运行作业：
+
+\LS{srun -N2 -B 4-4:2-2 a.out}
+
+\item 排它性独占运行作业：
+
+脚本\fl{my.script}内容：
+\begin{SH}
+#!/bin/bash
+srun --exclusive -n4 prog1 &
+srun --exclusive -n3 prog2 &
+srun --exclusive -n1 prog3 &
+srun --exclusive -n1 prog4 &
+wait
+\end{SH}
+\end{itemize}
+
+\section{批处理方式提交作业：sbatch}
+Slurm支持利用\LS{sbatch}命令采用批处理方式运行作业，\LS{sbatch}命令在脚本正确传递给作业调度系统后立即退出，同时获取到一个作业号。作业等所需资源满足后开始运行。
+
+\LS{sbatch}提交一个批处理作业脚本到Slurm。批处理脚本名可以在命令行上通过传递给\LS{sbatch}，如没有指定文件名，则\LS{sbatch}从标准输入中获取脚本内容。
+
+脚本文件基本格式：
+\begin{itemize}
+	\item 第一行以\#!/bin/sh等指定该脚本的解释程序，/bin/sh可以变为/bin/bash、/bin/csh等。
+	\item 在可执行命令之前的每行``\#SBATCH''前缀后跟的参数作为作业调度系统参数。
+\end{itemize}
+
+默认，标准输出和标准出错都定向到同一个文件\fl{slurm-\%j.out}，``\%j''将被作业号代替。
+
+脚本\fl{myscript}内容：
+\begin{SH}
+#!/bin/sh
+#SBATCH --time=1
+#SBATCH -p serial
+srun hostname |sort
+\end{SH}
+
+采用4个节点（-N4）运行：\LS{sbatch -p batch -N4 myscript}
+
+在这里，虽然脚本中利用``\#SBATCH -p serial''指定了使用serial分区，但命令行中的\LS{-p batch}优先级更高，因此实际提交到batch分区。
+
+提交成功后有类似输出：
+\begin{OUT}
+salloc: Granted job allocation 65537
+\end{OUT}
+其中65537为分配的作业号。
+
+程序结束后的作业日志文件\fl{slurm-65537.out}显示：
+\begin{OUT}
+node1
+node2
+node3
+node4
+\end{OUT}
+
+从标准输入获取脚本内容，可采用以下两种方式之一：
+\begin{enumerate}
+	\item 运行\LS{sbatch -N4}，显示等待后输入：
+\begin{SH}
+#!/bin/sh
+srun hostname |sort
+\end{SH}
+输入以上内容后按CTRL+D终止输入。
+	\item 运行\LS{sbatch -N4 <<EOF}，
+	\begin{SH}
+> #!/bin/sh
+> srun hostname |sort
+> EOF
+\end{SH}
+\begin{itemize}
+	\item 第一个EOF表示输入内容的开始标识符
+	\item 最后的EOF表示输入内容的终止标识符，在两个EOF之间的内容为实际执行的内容。
+	\item >实际上是每行输入回车后自动在下一行出现的提示符。
+\end{itemize}
+\end{enumerate}
+
+以上两种方式输入结束后将显示：
+\begin{OUT}
+sbatch: Submitted batch job 65541
+\end{OUT}
+
+常见主要选项与\LS{srun}类似，下面主要介绍下特有的选项：
+\begin{itemize}
+	\item --export-file=<filename | fd>：通过文件filename设定环境变量。文件中的环境变量格式为NAME=value，变量之间通过空格分隔。
+	\item --no-requeue：任何情况下都不重新运行。
+	\item -F, --nodefile=<node file>：类似--nodelist，只不过是通过文件设定节点名，节点名可以在几行内，重复的节点名将被忽略，节点名顺序不重要，将被自动排序。
+	%\item --get-user-env[=timeout][mode]：
+	\item --ignore-pbs：忽略脚本文件中的全部``\#SBATCH''选项。
+	\item --parsable：仅输出作业号和集群名（如果有的话），采用;分隔。错误仍旧显示。
+	\item --test-only：作业不真正执行，仅仅测试脚本是否可以执行，并给出预计开始执行时间。
+%--wrap=<command string>
+\end{itemize}
+
+\subsection{主要输入环境变量}
+一些选项可通过环境变量来设置，命令行的选项优先级高于设置的环境变量，将覆盖掉环境变量的设置。环境变量与对应的参数如下：
+\begin{itemize}
+	\item SBATCH\_ACCOUNT：类似-A、--account。
+	\item SBATCH\_ACCTG\_FREQ：类似--acctg-freq。
+	\item SBATCH\_ARRAY\_INX：类似-a、--array。
+	\item SBATCH\_BLRTS\_IMAGE：类似--blrts-image。
+	\item SBATCH\_BURST\_BUFFER：类似--bb。
+	\item SBATCH\_CHECKPOINT：类似--checkpoint。
+	\item SBATCH\_CHECKPOINT\_DIR：类似--checkpoint-dir。
+	\item SBATCH\_CLUSTERS 或 SLURM\_CLUSTERS：类似--clusters。
+	\item SBATCH\_CNLOAD\_IMAGE：类似--cnload-image。
+	\item SBATCH\_CONN\_TYPE：类似--conn-type。
+	\item SBATCH\_CORE\_SPEC：类似--core-spec。
+	\item SBATCH\_DEBUG：类似-v、--verbose。
+	\item SBATCH\_DISTRIBUTION：类似-m、--distribution。
+	\item SBATCH\_EXCLUSIVE：类似--exclusive。
+	\item SBATCH\_EXPORT：类似--export。
+	\item SBATCH\_GEOMETRY：类似-g、--geometry。
+	\item SBATCH\_GET\_USER\_ENV：类似--get-user-env。
+	\item SBATCH\_GRES\_FLAGS：类似--gres-flags。
+	\item SBATCH\_HINT 或 SLURM\_HINT：类似--hint。
+	\item SBATCH\_IGNORE\_PBS：类似--ignore-pbs。
+	\item SBATCH\_IMMEDIATE：类似-I、--immediate。
+	\item SBATCH\_IOLOAD\_IMAGE：类似--ioload-image。
+	\item SBATCH\_JOBID：类似--jobid。
+	\item SBATCH\_JOB\_NAME：类似-J、--job-name。
+	\item SBATCH\_LINUX\_IMAGE：类似--linux-image。
+	\item SBATCH\_MEM\_BIND：类似--mem\_bind。
+	\item SBATCH\_MLOADER\_IMAGE：类似--mloader-image。
+	\item SBATCH\_NETWORK：类似--network。
+	\item SBATCH\_NO\_REQUEUE：类似--no-requeue。
+	\item SBATCH\_NO\_ROTATE：类似-R、--no-rotate。
+	\item SBATCH\_OPEN\_MODE：类似--open-mode。
+	\item SBATCH\_OVERCOMMIT：类似-O、--overcommit。
+	\item SBATCH\_PARTITION：类似-p、--partition。
+	\item SBATCH\_POWER：类似--power。
+	\item SBATCH\_PROFILE：类似--profile。
+	\item SBATCH\_QOS：类似--qos。
+	\item SBATCH\_RAMDISK\_IMAGE：类似--ramdisk-image。
+	\item SBATCH\_RESERVATION：类似--reservation。
+%	\item SBATCH\_REQ\_SWITCH     When a tree topology is used, this defines the maximum count of switches desired for the job allocation and optionally the max- imum time to wait for that number of switches. See--switches。
+	\item SBATCH\_REQUEUE：类似--requeue。
+	\item SBATCH\_SIGNAL：类似--signal。
+	\item SBATCH\_THREAD\_SPEC：类似--thread-spec。
+	\item SBATCH\_TIMELIMIT：类似-t、--time。
+	\item SBATCH\_USE\_MIN\_NODES：类似--use-min-nodes。
+	\item SBATCH\_WAIT：类似-W、--wait。
+	\item SBATCH\_WAIT\_ALL\_NODES：类似--wait-all-nodes。
+	\item SBATCH\_WAIT4SWITCH：需要交换的最大时间，参见See--switches。
+	\item SBATCH\_WCKEY：类似--wckey。
+	\item SLURM\_CONF：Slurm配置文件路径。
+	\item SLURM\_EXIT\_ERROR：设定Slurm出错时的退出码。
+	\item SLURM\_STEP\_KILLED\_MSG\_NODE\_ID=ID：如果设置，当作业或作业步被信号终止时，只有指定ID的节点记录。
+\end{itemize}
+
+\subsection{主要输出环境变量}
+Slurm将在作业脚本中输出以下变量，作业脚本可以使用这些变量：
+\begin{itemize}
+      \item SBATCH\_CPU\_BIND：由--cpu\_bind选项设定。
+      \item SBATCH\_CPU\_BIND\_VERBOSE：如--cpu\_bind选项包含verbose选项时，则由其设定。
+      \item SBATCH\_CPU\_BIND\_TYPE：由--cpu\_bind选项设定。
+      \item SBATCH\_CPU\_BIND\_LIST：CPU绑定时设定的bit掩码。
+      \item SBATCH\_MEM\_BIND：--mem\_bind选项设定。
+      \item SBATCH\_MEM\_BIND\_VERBOSE：如--mem\_bind选项包含verbose选项时，则由其设定。
+      \item SBATCH\_MEM\_BIND\_TYPE：由--mem\_bind选项设定。
+      \item SBATCH\_MEM\_BIND\_LIST：内存绑定时设定的bit掩码。
+      \item SLURM\_ARRAY\_TASK\_ID：作业组ID（索引）号。
+      \item SLURM\_ARRAY\_TASK\_MAX：作业组最大ID号。
+      \item SLURM\_ARRAY\_TASK\_MIN：作业组最小ID号。
+      \item SLURM\_ARRAY\_TASK\_STEP：作业组索引步进间隔。
+      \item SLURM\_ARRAY\_JOB\_ID：作业组主作业号。
+%     \item  SLURM\_CHECKPOINT\_IMAGE\_DIR Directory into which checkpoint images should  be written if specified on the execute line.。
+      \item SLURM\_CLUSTER\_NAME：集群名。
+      \item SLURM\_CPUS\_ON\_NODE：分配的节点上的CPU颗数。
+      \item SLURM\_CPUS\_PER\_TASK：每个任务的CPU颗数，只有--cpus-per-task选项设定时才有。
+      \item SLURM\_DISTRIBUTION：类似 -m, --distribution。
+      \item SLURM\_GTIDS：在此节点上运行的全局任务号。以0开始，逗号,分隔。
+%     \item  SLURM\_JOB\_ACCOUNT Account name associated of the job allocation.。
+      \item SLURM\_JOB\_ID 作业号。
+      \item SLURM\_JOB\_CPUS\_PER\_NODE 每个节点上的CPU颗数。
+      \item SLURM\_JOB\_DEPENDENCY：作业依赖信息，由--dependency选项设置。
+      \item SLURM\_JOB\_NAME：作业名。
+      \item SLURM\_JOB\_NODELIST：分配的节点名列表。
+      \item SLURM\_JOB\_NUM\_NODES：分配的节点总数。
+      \item SLURM\_JOB\_PARTITION：使用的分区名。
+%     \item  SLURM\_JOB\_QOS Quality Of Service (QOS) of the job allocation.。
+      \item SLURM\_JOB\_RESERVATION： 作业预留。
+      \item SLURM\_LOCALID： 节点本地任务号。
+      \item SLURM\_MEM\_PER\_CPU： 类似--mem-per-cpu，每颗CPU的内存。
+      \item SLURM\_MEM\_PER\_NODE：类似--mem，每个节点的内存。
+      \item SLURM\_NODE\_ALIASES：分配的节点名、通信IP地址和主机名组合，类似\\SLURM\_NODE\_ALIASES=ec0:1.2.3.4:foo,ec1:1.2.3.5:bar。
+      \item SLURM\_NODEID：分配的节点号。
+      \item SLURM\_NTASKS：类似-n, --ntasks，总任务数，CPU核数。
+      \item SLURM\_NTASKS\_PER\_CORE：每个CPU核分配的任务数。
+      \item SLURM\_NTASKS\_PER\_NODE：每个节点上的任务数 。
+      \item SLURM\_NTASKS\_PER\_SOCKET：每颗CPU上的任务数，仅--ntasks-per-socket选项设定时设定。
+      \item SLURM\_PRIO\_PROCESS：进程的调度优先级（nice值）。
+      \item SLURM\_PROCID：当前进程的MPI秩。
+      \item SLURM\_PROFILE：类似--profile。
+      \item SLURM\_RESTART\_COUNT：因为系统失效等导致的重启次数。
+      \item SLURM\_SUBMIT\_DIR：sbatch启动目录，即提交作业时目录。
+      \item SLURM\_SUBMIT\_HOST：sbatch启动的节点名，即提交作业时节点。
+      \item SLURM\_TASKS\_PER\_NODE：每节点上的任务数，以SLURM\_NODELIST中的节点顺序显示，以,分隔。如果两个或多个连续节点上的任务数相同，数后跟着(x\#)，其中\#是对应的节点数，如``SLURM\_TASKS\_PER\_NODE=2(x3),1''表示前三个节点上的作业数为3，第四个节点上的任务数为1。
+      \item SLURM\_TASK\_PID：任务的进程号PID。
+%     \item  SLURM\_TOPOLOGY\_ADDR。
+%     \item  SLURM\_TOPOLOGY\_ADDR\_PATTERN。
+      \item SLURMD\_NODENAME：执行作业脚本的节点名。
+\end{itemize}
+
+\subsection{串行作业提交}
+对于串行程序，用户可类似下面两者之一：
+\begin{enumerate}
+	\item 直接采用\LS{sbatch -n1 -o job-\%j.log -e job-\%.err yourprog}方式运行
+	\item 编写命名为\fl{serial_job.sh}（此脚本名可以按照用户喜好命名）的串行作业脚本，其内容如下：
+\begin{SH}
+#!/bin/sh
+#An example for serial job.
+#SBATCH -J job_name
+#SBATCH -o job-%j.log
+#SBATCH -e job-%j.err
+echo Running on hosts 
+echo Time is `date`
+echo Directory is $PWD
+echo This job runs on the following nodes:
+echo $SLURM_JOB_NODELIST
+module load intel/2016.3.210
+echo This job has allocated 1 cpu core.
+./yourprog
+\end{SH}
+必要时需在脚本文件中利用\LS{module}命令设置所需的环境，如上面的\LS{module load intel/2016.3.210}。
+
+作业脚本编写完成后，可以按照下面命令提交作业：
+
+\LS{hmli@service0:~/work$ sbatch -n1 -p serail serial_job.sh}
+\end{enumerate}
+
+%注意\footnote{此脚本中\lstinline{`}hostaname\lstinline{`}等中的是键盘左上角的反引号\lstinline{`}，不是右侧的'}，TORQUE建立在PBS作业管理系统之上，PBS的参数需在作业提交脚本中利用\#SBATCH设置。上述脚本利用qsub命令提交后，表示进入当前命令提交目录后（\lstinline{$PBS_O_WORKDIR}），提交到batch分区，其作业名为job\_name，标准输出和错误输出将分别存在此目录下的\fl{job.log}和\fl{job.err}文件中。上述脚本中以\#SBATCH开头的几行的-N、-o、-e、-q参数后分别设置的是这个作业的名字job\_name、标准输出定向到的文件名\fl{job.log}、标准错误输出定向到的文件名\fl{job.err}、作业使用的分区名batch。echo语句主要用于将一些信息输出，如果不需，可以删除这些语句或者用\#屏蔽。
+
+
+%其中37.admin0表示的是作业号，由两部分组成，37表示的是作业序号.admin0表示的是作业管理系统的主机名，之后可以用此作业号来（37或37.admin0）查询作业及终止此作业等。
+
+\subsection{OpenMP共享内存并行作业提交}
+对于OpenMP共享内存并行程序，用户可编写命名为\fl{omp_job.sh}的作业脚本，其内容如下：
+\begin{SH}
+#!/bin/sh
+#An example for serial job.
+#SBATCH -J job_name
+#SBATCH -o job-%j.log
+#SBATCH -e job-%j.err
+#SBATCH -N 1 -n 8
+echo Running on hosts 
+echo Time is `date`
+echo Directory is $PWD
+echo This job runs on the following nodes:
+echo $SLURM_JOB_NODELIST
+module load intel/2016.3.210
+echo This job has allocated 1 cpu core.
+export OMP_NUM_THREADS=8
+./yourprog
+\end{SH}
+
+相对于串行作业脚本，主要增加\lstinline{export OMP_NUM_THREADS=8}和\\\lstinline{#SBATCH -N 1 -n 8}，表示使用一个节点内部的八个核，从而保证是在同一个节点内部，需几个核就设置-n为几。-n后跟的不能超过单节点内CPU核数。
+
+作业脚本编写完成后，可以按照下面命令提交作业：
+
+\LS{hmli@service0:~/work$ sbatch omp\_job.sh}
+
+\subsection{MPI并行作业提交}
+
+与串行作业类似，对于MPI并行作业，则需编写类似下面脚本\fl{mpi_job.sh}：
+
+\begin{SH}
+#!/bin/sh
+#An example for MPI job.
+#SBATCH -J job_name
+#SBATCH -o job-%j.log
+#SBATCH -e job-%j.err
+#SBATCH -N 1 -n 8
+echo Time is `date`
+echo Directory is $PWD
+echo This job runs on the following nodes:
+echo $SLURM_JOB_NODELIST
+echo This job has allocated $NPROCS cpu cores.
+module load intelmpi/5.1.3.210
+#module load mpich/3.2/intel/2016.3.210
+#module load openmpi/2.0.0/intel/2016.3.210
+MPIRUN=mpirun #Intel mpi and Open MPI
+#MPIRUN=mpiexec #MPICH
+MPIOPT="-env I_MPI_FABRICS shm:ofa" #Intel MPI
+#MPIOPT="--mca btl self,openib,sm" #Open MPI
+#MPIOPT="-iface ib0" #MPICH3
+$MPIRUN $MPIOPT ./yourprog
+\end{SH}
+
+与串行程序的脚本相比，主要不同之处在于需采用mpirun或mpiexec的命令格式提交并行可执行程序。采用不同MPI提交时，需要打开上述对应的选项。
+
+与串行作业类似，可使用下面方式提交：
+
+\LS{hmli@service0:~/work$ sbatch mpi\_job.sh}
+
+\section{分配式提交作业：salloc}
+
+\LS{salloc}将获取作业的分配后执行命令，当命令结束后释放分配的资源。其基本语法为：
+
+\LS{salloc [options] [<command> [command args]]}
+
+command可以是任何是用户想要用的程序，典型的为xterm或包含srun命令的shell。如果后面没有跟命令，那么将执行Slurm系统slurm.conf配置文件中通过SallocDefaultCommand\\设定的命令。如果SallocDefaultCommand没有设定，那么将执行用户的默认shell。
+
+注意：\LS{salloc}逻辑上包括支持保存和存储终端行设置，并且设计为采用前台方式执行。如果需要后台执行\LS{salloc}，可以设定标准输入为某个文件，如：\LS{salloc -n16 a.out </dev/null &}。
+
+\subsection{主要选项}
+\begin{itemize}
+	\item -A, --account=<account>：指定此作业的责任资源为账户<account>。
+    \item --acctg-freq：指定作业记账和剖面信息采样间隔。支持的格式为--acctg-freq=<datatype>=<interval>，其中<datatype>=<interval>指定了任务抽样间隔或剖面抽样间隔。多个<datatype>=<interval>可以采用,分隔（默认为30秒）：
+\begin{itemize}
+	\item task=<interval>：以秒为单位的任务抽样（需要jobacct\_gather插件启用）和任务剖面（需要acct\_gather\_profile插件启用）间隔。
+    \item energy=<interval>：以秒为单位的能源剖面抽样间隔，需要acct\_gather\_energy插件启用。
+    \item network=<interval>：以秒为单位的InfiniBand网络剖面抽样间隔，需要acct\_gather\_infiniband\\插件启用。
+    \item filesystem=<interval>：以秒为单位的文件系统剖面抽样间隔，需要acct\_gather\_filesystem插件启用。
+\end{itemize}
+       -B --extra-node-info=<sockets[:cores[:threads]]>：选择满足<sockets[:cores[:threads]]>的节点，*可以表示对应选项不做限制。对应限制可以采用下面对应选项：
+\begin{itemize}
+	\item --sockets-per-node=<sockets>
+    \item --cores-per-socket=<cores>
+    \item --threads-per-core=<threads>
+\end{itemize}
+%       --bb=<spec> Burst buffer specification. The form of the specification is system dependent.  Note the burst buffer may not be accessible from a login node, but require that salloc spawn a shell on one of it’s allocated compute nodes. See the description of SallocDefaultCommand  in  the  slurm.conf man page for more information about how to spawn a remote shell.
+
+%       --bbf=<file_name> Path of file containing burst buffer specification.  The form of the specification is system dependent.  Also see --bb.  Note the burst buffer may not be accessible from a login node, but require that salloc spawn a shell on one of it’s allocated compute nodes. See the description  of SallocDefaultCommand in the slurm.conf man page for more information about how to spawn a remote shell.
+    \item --begin=<time>：设定开始分配资源运行的时间。时间格式可以为HH:MM:SS，或者添加AM、PM等，也可以采用MMDDYY、MM/DD/YY或YYYY-MM-DD格式指定日期，含有日期及时间的格式为：YYYY-MM-DD[THH:MM[:SS]]，也可以采用类似now+时间单位的方式，时间单位可以为seconds（默认）、minutes、hours、days和weeks、today、tomorrow等，例如：
+\begin{itemize}
+	\item --begin=16:00
+    \item --begin=now+1hour
+    \item --begin=now+60
+    \item --begin=2010-01-20T12:34:00
+\end{itemize}
+    \item --bell：分配资源是终端响铃，参见--no-bell。
+    \item --comment=<string>：添加注释。
+     %  -C, --constraint=<list>
+     %         Nodes can have features assigned to them by the Slurm administrator.  Users can specify which of these features  are  required  by  their  job
+     %         using  the  constraint  option.   Only  nodes having features matching the job constraints will be used to satisfy the request.  Multiple con-
+     %         straints may be specified with AND, OR, matching OR, resource counts, etc. (some operators are not supported on all system types).   Supported
+     %         constraint options include:
+     %         Single Name
+     %                Only nodes which have the specified feature will be used.  For example, --constraint="intel"
+     %         Node Count
+     %                A  request  can  specify  the  number of nodes needed with some feature by appending an asterisk and count after the feature name.  For
+     %                example "--nodes=16 --constraint=graphics*4 ..."  indicates that the job requires 16 nodes and that at least four of those  nodes  must
+     %                have the feature "graphics."
+     %         AND    If  only  nodes  with  all  of  specified  features  will  be  used.   The  ampersand is used for an AND operator.  For example, --con-
+     %                straint="intel&gpu"
+     %         OR     If only nodes with at least one of specified features will be used.  The vertical bar is used for an OR operator.  For example,  --con-
+     %                straint="intel|amd"
+     %         Matching OR
+     %                If  only  one  of  a  set  of possible options should be used for all allocated nodes, then use the OR operator and enclose the options
+     %                within square brackets.  For example: "--constraint=[rack1|rack2|rack3|rack4]" might be used to specify that all nodes  must  be  allo-
+     %                cated on a single rack of the cluster, but any of those four racks can be used.
+     %         Multiple Counts
+     %                Specific counts of multiple resources may be specified by using the AND operator and enclosing the options within square brackets.  For
+     %                example: "--constraint=[rack1*2&rack2*4]" might be used to specify that two nodes must be allocated from  nodes  with  the  feature  of
+     %                "rack1" and four nodes must be allocated from nodes with the feature "rack2".
+     \item --contiguous：设定分配的节点必须是连续的。
+     \item --cores-per-socket=<cores>：分配的节点需要至少每颗CPU <cores>CPU核
+      % --cpu-freq =<p1[-p2[:p3]]>
+      %        Request  that job steps initiated by srun commands inside this allocation be run at some requested frequency if possible, on the CPUs selected
+      %        for the step on the compute node(s).
+
+      %        p1 can be  [#### | low | medium | high | highm1] which will set the frequency scaling_speed to the corresponding value, and set the  frequency
+      %        scaling_governor to UserSpace. See below for definition of the values.
+
+      %        p1 can be [Conservative | OnDemand | Performance | PowerSave] which will set the scaling_governor to the corresponding value. The governor has
+      %        to be in the list set by the slurm.conf option CpuFreqGovernors.
+
+      %        When p2 is present, p1 will be the minimum scaling frequency and p2 will be the maximum scaling frequency.
+
+      %        p2 can be  [#### | medium | high | highm1] p2 must be greater than p1.
+
+      %        p3 can be [Conservative | OnDemand | Performance | PowerSave | UserSpace] which will set the governor to the corresponding value.
+
+      %        If p3 is UserSpace, the frequency scaling_speed will be set by a power or energy aware scheduling strategy to a value between p1 and  p2  that
+      %        lets  the  job run within the site’s power goal. The job may be delayed if p1 is higher than a frequency that allows the job to run within the
+      %        goal.
+
+      %        If the current frequency is < min, it will be set to min. Likewise, if the current frequency is > max, it will be set to max.
+
+      %        Acceptable values at present include:
+      %        ####          frequency in kilohertz
+
+      %        Low           the lowest available frequency
+
+      %        High          the highest available frequency
+
+      %        HighM1        (high minus one) will select the next highest available frequency
+
+      %        Medium        attempts to set a frequency in the middle of the available range
+
+      %        Conservative  attempts to use the Conservative CPU governor
+
+      %        OnDemand      attempts to use the OnDemand CPU governor (the default value)
+
+      %        Performance   attempts to use the Performance CPU governor
+
+      %        PowerSave     attempts to use the PowerSave CPU governor
+
+      %        UserSpace     attempts to use the UserSpace CPU governor
+
+      %        The following informational environment variable is set in the job
+      %        step when --cpu-freq option is requested.
+      %                SLURM_CPU_FREQ_REQ
+
+      %        This environment variable can also be used to supply the value for the CPU frequency request if it is set when the ’srun’ command  is  issued.  %        The --cpu-freq on the command line will override the environment variable value.  The form on the environment variable is the same as the com-
+      %        mand line.  See the ENVIRONMENT VARIABLES section for a description of the SLURM_CPU_FREQ_REQ variable.
+
+      %        NOTE: This parameter is treated as a request, not a requirement.  If the job step’s node does not support setting the CPU  frequency,  or  the
+      %        requested value is outside the bounds of the legal frequencies, an error is logged, but the job step is allowed to continue.
+
+      %        NOTE:  Setting  the frequency for just the CPUs of the job step implies that the tasks are confined to those CPUs.  If task confinement (i.e.,
+      %        TaskPlugin=task/affinity or TaskPlugin=task/cgroup with the "ConstrainCores" option) is not configured, this parameter is ignored.
+
+      %        NOTE: When the step completes, the frequency and governor of each selected CPU is reset to the previous values.
+
+      %        NOTE: When submitting jobs with  the --cpu-freq option with linuxproc as the ProctrackType can cause jobs to run too quickly before Accounting
+      %        is able to poll for job information. As a result not all of accounting information will be present.
+
+    \item -c, --cpus-per-task=<ncpus>：设定每个任务的CPU核数。
+    \item  --deadline=<OPT>：如果在此deadline（start > (deadline - time[-min]）之前没有结束，那么移除此作业。默认没有deadline，有效的时间格式为：
+\begin{itemize}
+	\item HH:MM[:SS] [AM|PM]
+    \item MMDD[YY]或MM/DD[/YY]或MM.DD[.YY]
+    \item MM/DD[/YY]-HH:MM[:SS]
+    \item YYYY-MM-DD[THH:MM[:SS]]]
+\end{itemize}
+    \item -d, --dependency=<dependency\_list>：满足依赖条件<dependency\_list>后开始分配。<dependency\_list>可以为<type:job\_id[:job\_id][,type:job\_id[:job\_id]]>或<type:job\_id[:job\_id][?type:job\_id[:job\_id]]>。依赖条件如果用,分隔，则各依赖条件都需要满足；如果采用?分隔，那么只要任意条件满足即可。可以为：
+\begin{itemize}
+	\item after:job\_id[:jobid...]：当指定作业号的作业结束后开始运行。
+    \item afterany:job\_id[:jobid...]：当指定作业号的任意作业结束后开始运行。
+    \item aftercorr:job\_id[:jobid...]：当相应的任务号任务结束后，此作业组中的任务运行。
+    \item afternotok:job\_id[:jobid...]：当指定作业号的作业结束时具有异常状态（非零退出码、节点失效、超时等）时。
+    \item afterok:job\_id[:jobid...]：当指定的作业正常结束（退出码为0）时开始运行。
+    \item expand:job\_id：分配给此作业的资源将扩展给指定作业。
+    \item singleton：等任意通账户的相同作业名的前置作业结束时。
+\end{itemize}
+    \item -D, --chdir=<path>：在执行前切换到<path>目录。
+    \item --exclusive[=user|mcs]：不与user用户或mcs选项的作业共享节点。
+    \item -F, --nodefile=<node file>：类似--nodelist指定需要运行的节点，但此列表包含一个含有节点名的文件。
+%    \item  --gres=<list>：设定通用消费资源，可以以,分隔。每个<list>格式为``name[[:type]:count]''。name是可消费资源；count是资源个数，默认为1；
+%              that of the consumable resource.  The count is the number of those resources with a default value of 1.  The specified resources will be allo-
+%              cated  to  the job on each node.  The available generic consumable resources is configurable by the system administrator.  A list of available
+%              generic consumable resources will be printed and the  command  will  exit  if  the  option  argument  is  "help".   Examples  of  use  include
+%              "--gres=gpu:2,mic=1", "--gres=gpu:kepler:2", and "--gres=help".
+%
+%       --gres-flags=enforce-binding
+%              If  set,  the  only CPUs available to the job will be those bound to the selected GRES (i.e. the CPUs identified in the gres.conf file will be
+%              strictly enforced rather than advisory). This option may result in delayed initiation of a job.  For example a job requiring two GPUs and  one
+%              CPU will be delayed until both GPUs on a single socket are available rather than using GPUs bound to separate sockets, however the application
+%              performance may be improved due to improved communication speed.  Requires the node to be configured with more than one  socket  and  resource
+%              filtering will be performed on a per-socket basis.
+     \item -H, --hold：设定作业将被提交为挂起状态。挂起的作业可以利用scontrol release <job\_id>使其排队运行。
+     \item -h, --help：显示帮助信息。
+     \item --hint=<type>：绑定任务到应用暗示：
+\begin{itemize}
+	\item compute\_bound：选择设定计算边界应用：采用每个socket的所有CPU核，每颗CPU核一个进程。
+    \item memory\_bound：选择设定内存边界应用：仅采用每个socket的1颗CPU核，每颗CPU核一个进程。
+    \item [no]multithread：在in-core multi-threading是否采用额外的线程，对通信密集型应用有益。仅当task/affinity插件启用时。
+    \item help：显示帮助信息
+\end{itemize}
+    \item -I, --immediate[=<seconds>]：在<seconds>秒内资源未满足的话立即退出。格式可以为``-I60''，但不能之间有空格是``-I 60''。
+    \item -J, --job-name=<jobname>：设定作业名，默认为命令名。
+    \item -K, --kill-command[=signal]：设定需要终止时的signal，默认，如没指定，则对于交互式作业为SIGHUP，对于非交互式作业为SIGTERM。格式类似可以为``-K1''，但不能包含空格为``-K 1''。
+    \item -k, --no-kill：如果分配的节点失效，那么不会自动终止。
+    \item -L, --licenses=<license>：设定使用的<license>。
+%    \item -m, --distribution=arbitrary|<block|cyclic|plane=<options>[:block|cyclic|fcyclic]>：
+%
+%              Specify alternate distribution methods for remote processes.  In salloc, this only sets environment variables that will be used by  subsequent
+%              srun  requests.   This  option  controls  the assignment of tasks to the nodes on which resources have been allocated, and the distribution of
+%              those resources to tasks for binding (task affinity). The first distribution method (before the ":") controls the  distribution  of  resources
+%              across  nodes.  The  optional  second distribution method (after the ":") controls the distribution of resources across sockets within a node.
+%              Note  that  with  select/cons_res,  the  number   of   cpus   allocated   on   each   socket   and   node   may   be   different.   Refer   to
+%              https://slurm.schedmd.com/mc_support.html  for  more information on resource allocation, assignment of tasks to nodes, and binding of tasks to
+%              CPUs.
+%
+%              First distribution method:
+%
+%              block  The block distribution method will distribute tasks to a node such that consecutive tasks share a node. For example, consider an  allo-
+%                     cation  of  three  nodes each with two cpus. A four-task block distribution request will distribute those tasks to the nodes with tasks
+%                     one and two on the first node, task three on the second node, and task four on the third  node.   Block  distribution  is  the  default
+%                     behavior if the number of tasks exceeds the number of allocated nodes.
+%
+%              cyclic The cyclic distribution method will distribute tasks to a node such that consecutive tasks are distributed over consecutive nodes (in a
+%                     round-robin fashion). For example, consider an allocation of three nodes each with two cpus. A four-task  cyclic  distribution  request
+%                     will  distribute those tasks to the nodes with tasks one and four on the first node, task two on the second node, and task three on the
+%                     third node.  Note that when SelectType is select/cons_res, the same number of CPUs may not be allocated on each node. Task distribution
+%                     will be round-robin among all the nodes with CPUs yet to be assigned to tasks.  Cyclic distribution is the default behavior if the num-
+%                     ber of tasks is no larger than the number of allocated nodes.
+%
+%              plane  The tasks are distributed in blocks of a specified size.  The options include a number representing the size of the task  block.   This
+%                     is  followed by an optional specification of the task distribution scheme within a block of tasks and between the blocks of tasks.  The
+%                     number of tasks distributed to each node is the same as for cyclic distribution, but the taskids assigned to each node  depend  on  the
+%                     plane size. For more details (including examples and diagrams), please see
+%                     https://slurm.schedmd.com/mc_support.html
+%                     and
+%                     https://slurm.schedmd.com/dist_plane.html
+%
+%              arbitrary
+%                     The  arbitrary  method  of  distribution  will  allocate  processes  in-order  as listed in file designated by the environment variable
+%                     SLURM_HOSTFILE.  If this variable is listed it will over ride any other method specified.  If not set the method will default to block.
+%                     Inside the hostfile must contain at minimum the number of hosts requested and be one per line or comma separated.  If specifying a task
+%                     count (-n, --ntasks=<number>), your tasks will be laid out on the nodes in the order of the file.
+%                     NOTE: The arbitrary distribution option on a job allocation only controls the nodes to be allocated to the job and not  the  allocation
+%                     of  CPUs  on those nodes. This option is meant primarily to control a job step’s task layout in an existing job allocation for the srun
+%                     command.
+%
+%              Second distribution method:
+%
+%              block  The block distribution method will distribute tasks to sockets such that consecutive tasks share a socket.
+%
+%              cyclic The cyclic distribution method will distribute tasks to sockets such that consecutive tasks are distributed  over  consecutive  sockets
+%                     (in a round-robin fashion).  Tasks requiring more than one CPU will have all of those CPUs allocated on a single socket if possible.
+%
+%              fcyclic
+%                     The  fcyclic  distribution method will distribute tasks to sockets such that consecutive tasks are distributed over consecutive sockets
+%                     (in a round-robin fashion).  Tasks requiring more than one CPU will have each CPUs allocated in a cyclic fashion across sockets.
+%
+%       --mail-type=<type>
+%              Notify user by email when certain event types occur.  Valid type values are NONE, BEGIN, END, FAIL, REQUEUE, ALL (equivalent  to  BEGIN,  END,
+%              FAIL,  REQUEUE,  and  STAGE_OUT),  STAGE_OUT (burst buffer stage out and teardown completed), TIME_LIMIT, TIME_LIMIT_90 (reached 90 percent of
+%              time limit), TIME_LIMIT_80 (reached 80 percent of time limit), and TIME_LIMIT_50 (reached 50 percent of time limit).  Multiple type values may
+%              be specified in a comma separated list.  The user to be notified is indicated with --mail-user.
+%
+%       --mail-user=<user>
+%              User to receive email notification of state changes as defined by --mail-type.  The default value is the submitting user.
+%
+%       --mcs-label=<mcs>
+%              Used  only  when the mcs/group plugin is enabled.  This parameter is a group among the groups of the user.  Default value is calculated by the
+%              Plugin mcs if it’s enabled.
+%
+   \item --mem=<MB>：设定每个节点的内存大小，后缀可以为[K|M|G|T]。
+   \item --mem-per-cpu=<MB>：设定分配的每颗CPU对应最小内存，后缀可以为[K|M|G|T]。
+%              Minimum  memory  required  per  allocated  CPU  in  megabytes.  Different units can be specified using the suffix [K|M|G|T].  Default value is
+%              DefMemPerCPU and the maximum value is MaxMemPerCPU (see exception below). If configured, both of parameters can be  seen  using  the  scontrol
+%              show config command.  Note that if the job’s --mem-per-cpu value exceeds the configured MaxMemPerCPU, then the user’s limit will be treated as
+%              a memory limit per task; --mem-per-cpu will be reduced to a value no larger than MaxMemPerCPU; --cpus-per-task will be set and  the  value  of
+%              --cpus-per-task  multiplied  by the new --mem-per-cpu value will equal the original --mem-per-cpu value specified by the user.  This parameter
+%              would generally be used if individual processors are allocated to jobs (SelectType=select/cons_res).  If resources are allocated by the  core,
+%              socket  or  whole  nodes;  the  number  of  CPUs allocated to a job may be higher than the task count and the value of --mem-per-cpu should be
+%              adjusted accordingly.  Also see --mem.  --mem and --mem-per-cpu are mutually exclusive.
+
+%       --mem\_bind=[{quiet,verbose},]type
+%              Bind tasks to memory. Used only when the task/affinity plugin is enabled and the NUMA memory functions are available.  Note that  the  resolu-
+%              tion  of CPU and memory binding may differ on some architectures. For example, CPU binding may be performed at the level of the cores within a
+%              processor while memory binding will be performed at the level of nodes, where the definition of "nodes" may differ from system to system.   By
+%              default  no  memory binding is performed; any task using any CPU can use any memory. This option is typically used to insure that each task is
+%              bound to the memory closest to it’s assigned CPU. The use of any type other than "none" or "local" is not recommended.  If  you  want  greater
+%              control,  try running a simple test code with the options "--cpu_bind=verbose,none --mem_bind=verbose,none" to determine the specific configu-
+%              ration.
+%
+%              NOTE: To have Slurm always report on the selected memory binding for all commands executed in a shell, you can enable verbose mode by  setting
+%              the SLURM_MEM_BIND environment variable value to "verbose".
+%
+%              The following informational environment variables are set when --mem_bind is in use:
+%
+%                   SLURM_MEM_BIND_VERBOSE
+%                   SLURM_MEM_BIND_TYPE
+%                   SLURM_MEM_BIND_LIST
+%
+%              See the ENVIRONMENT VARIABLES section for a more detailed description of the individual SLURM_MEM_BIND* variables.
+%
+%              Supported options include:
+%
+%              q[uiet]
+%                     quietly bind before task runs (default)
+%             v[erbose]
+%                     verbosely report binding before task runs
+%
+%              no[ne] don’t bind tasks to memory (default)
+%
+%              rank   bind by task rank (not recommended)
+%
+%              local  Use memory local to the processor in use
+%
+%              map_mem:<list>
+%                     Bind  by  setting memory masks on tasks (or ranks) as specified where <list> is <numa_id_for_task_0>,<numa_id_for_task_1>,...  The map-
+%                     ping is specified for a node and identical mapping is applied to the tasks on every node (i.e. the lowest  task  ID  on  each  node  is
+%                     mapped  to the first ID specified in the list, etc.).  NUMA IDs are interpreted as decimal values unless they are preceded with ’0x’ in
+%                     which case they interpreted as hexadecimal values.  If the number of tasks (or ranks) exceeds the number of elements in this list, ele-
+%                     ments  in the list will be reused as needed starting from the beginning of the list.  Not supported unless the entire node is allocated
+%                     to the job.
+%
+%              mask_mem:<list>
+%                     Bind by setting memory masks on tasks (or ranks) as specified where <list>  is  <numa_mask_for_task_0>,<numa_mask_for_task_1>,...   The
+%                     mapping  is  specified  for a node and identical mapping is applied to the tasks on every node (i.e. the lowest task ID on each node is
+%                     mapped to the first mask specified in the list, etc.).  NUMA masks are always interpreted as hexadecimal values.  Note that masks  must
+%                     be preceded with a ’0x’ if they don’t begin with [0-9] so they are seen as numerical values.  If the number of tasks (or ranks) exceeds
+%                     the number of elements in this list, elements in the list will be reused as needed starting from the beginning of the list.   Not  sup-
+%                     ported unless the entire node is allocated to the job.
+%
+%              help   show this help message
+
+	\item --mincpus=<n>：设定每个节点最小的逻辑CPU核/处理器。
+    \item -N, --nodes=<minnodes[-maxnodes]>：设定需要的最小和最大数。
+    \item -n, --ntasks=<number>：设定所需要的任务总数。
+%    \item --network=<type>：
+%              Specify  information pertaining to the switch or network.  The interpretation of type is system dependent.  This option is supported when run-
+%              ning Slurm on a Cray natively.  It is used to request using Network Performance Counters.  Only one value per request is valid.   All  options
+%              are case in-sensitive.  In this configuration supported values include:
+%
+%              system
+%                    Use  the  system-wide  network performance counters. Only nodes requested will be marked in use for the job allocation.  If the job does
+%                    not fill up the entire system the rest of the nodes are not able to be used by other jobs using NPC, if idle their state will appear  as
+%                    PerfCnts.  These nodes are still available for other jobs not using NPC.
+%
+%              blade Use the blade network performance counters. Only nodes requested will be marked in use for the job allocation.  If the job does not fill
+%                    up the entire blade(s) allocated to the job those blade(s) are not able to be used by other jobs using NPC, if  idle  their  state  will
+%                    appear as PerfCnts.  These nodes are still available for other jobs not using NPC.
+%
+%              In all cases the job allocation request must specify the
+%              --exclusive option.  Otherwise the request will be denied.
+%
+%              Also  with any of these options steps are not allowed to share blades, so resources would remain idle inside an allocation if the step running
+%              on a blade does not take up all the nodes on the blade.
+%
+%              The network option is also supported on systems with IBM’s Parallel Environment (PE).  See IBM’s LoadLeveler job command keyword documentation
+%              about the keyword "network" for more information.  Multiple values may be specified in a comma separated list.  All options are case in-sensi-
+%              tive.  Supported values include:
+%
+%              BULK_XFER[=<resources>]
+%                          Enable bulk transfer of data using Remote Direct-Memory Access (RDMA).  The optional resources specification is  a  numeric  value
+%                          which  can  have a suffix of "k", "K", "m", "M", "g" or "G" for kilobytes, megabytes or gigabytes.  NOTE: The resources specifica-
+%                          tion is not supported by the underlying IBM infrastructure as of Parallel Environment version 2.2 and no value should be specified
+%                          at this time.
+%
+%              CAU=<count> Number  of  Collectve Acceleration Units (CAU) required.  Applies only to IBM Power7-IH processors.  Default value is zero.  Inde-
+%                          pendent CAU will be allocated for each programming interface (MPI, LAPI, etc.)
+%
+%              DEVNAME=<name>
+%                          Specify the device name to use for communications (e.g. "eth0" or "mlx4_0").
+%
+%              DEVTYPE=<type>
+%                          Specify the device type to use for communications.  The supported values of type are: "IB" (InfiniBand),  "HFI"  (P7  Host  Fabric
+%                          Interface), "IPONLY" (IP-Only interfaces), "HPCE" (HPC Ethernet), and "KMUX" (Kernel Emulation of HPCE).  The devices allocated to
+%                          a job must all be of the same type.  The default value depends upon depends upon what hardware is available and in order of  pref-
+%                          erences is IPONLY (which is not considered in User Space mode), HFI, IB, HPCE, and KMUX.
+%
+%              IMMED =<count>
+%                          Number of immediate send slots per window required.  Applies only to IBM Power7-IH processors.  Default value is zero.
+%
+%              INSTANCES =<count>
+%                          Specify number of network connections for each task on each network connection.  The default instance count is 1.
+%
+%              IPV4        Use Internet Protocol (IP) version 4 communications (default).
+%
+%              IPV6        Use Internet Protocol (IP) version 6 communications.
+%
+%              LAPI        Use the LAPI programming interface.
+%
+%              MPI         Use the MPI programming interface.  MPI is the default interface.
+%
+%              PAMI        Use the PAMI programming interface.
+%
+%              SHMEM       Use the OpenSHMEM programming interface.
+%
+%              SN_ALL      Use all available switch networks (default).
+%
+%              SN_SINGLE   Use one available switch network.
+%
+%              UPC         Use the UPC programming interface.
+%
+%              US          Use User Space communications.
+%
+%              Some examples of network specifications:
+%
+%              Instances=2,US,MPI,SN_ALL
+%                          Create two user space connections for MPI communications on every switch network for each task.
+%
+%              US,MPI,Instances=3,Devtype=IB
+%                          Create three user space connections for MPI communications on every InfiniBand network for each task.
+%
+%              IPV4,LAPI,SN_Single
+%                          Create a IP version 4 connection for LAPI communications on one switch network for each task.
+%
+%              Instances=2,US,LAPI,MPI
+%                          Create  two user space connections each for LAPI and MPI communications on every switch network for each task. Note that SN_ALL is
+%                          the default option so every switch network is used. Also note that Instances=2 specifies that two connections are established  for
+%                          each  protocol  (LAPI and MPI) and each task.  If there are two networks and four tasks on the node then a total of 32 connections
+%                          are established (2 instances x 2 protocols x 2 networks x 4 tasks).
+%
+   \item --nice[=adjustment]：设定NICE调整值。负值提高优先级，正值降低优先级。调整范围为：+/- 2147483645。
+   \item --ntasks-per-core=<ntasks>：设定每颗CPU核运行的任务数。
+   \item --ntasks-per-node=<ntasks>：设定每个节点运行的任务数。
+   \item --ntasks-per-socket=<ntasks>：设定每颗CPU运行的任务数。
+   \item --no-bell：资源分配时不终端响铃。参见--bell。
+   \item --no-shell：分配资源后立即退出，而不运行命令。但Slurm作业仍旧被生成，在其激活期间，且保留这些激活的资源。用户会获得一个没有附带进程和任务的作业号，用户可以采用提交srun命令到这些资源。
+   \item -O, --overcommit：采用此选项可以使得每颗CPU运行不止一个任务。
+   \item -p, --partition=<partition\_names>：设定使用的分区。
+       %--power=<flags>
+       %       Comma separated list of power management plugin options.  Currently available flags include: level (all nodes allocated to the job should have
+       %       identical power caps, may be disabled by the Slurm configuration option PowerParameters=job_no_level).
+
+%       --priority=<value>：设定特定的作业优先级。<value>可以为数值或TOP
+%              Request a specific job priority.  May be subject to configuration specific constraints.  value should either be a numeric value or "TOP"  (for
+%              highest possible value).  Only Slurm operators and administrators can set the priority of a job.
+%
+%       --profile=<all|none|[energy[,|task[,|lustre[,|network]]]]>
+%              enables  detailed  data collection by the acct_gather_profile plugin.  Detailed data are typically time-series that are stored in an HDF5 file
+%              for the job.
+%
+%              All       All data types are collected. (Cannot be combined with other values.)
+%
+%              None      No data types are collected. This is the default.
+%                         (Cannot be combined with other values.)
+%
+%              Energy    Energy data is collected.
+%
+%              Task      Task (I/O, Memory, ...) data is collected.
+%
+%              Lustre    Lustre data is collected.
+%
+%              Network   Network (InfiniBand) data is collected.
+
+   \item -Q, --quiet：采用安静模式运行，一般信息将不显示，但错误信息仍将被显示。
+  %     --qos=<qos>
+  %            Request a quality of service for the job.  QOS values can be defined for each user/cluster/account association in the Slurm  database.   Users
+  %            will  be  limited to their association’s defined set of qos’s when the Slurm configuration parameter, AccountingStorageEnforce, includes "qos"
+  %            in it’s definition.
+
+  %     --reboot
+  %            Force the allocated nodes to reboot before starting the job.  This is only supported with some system configurations  and  will  otherwise  be
+  %            silently ignored.
+  %     --reservation=<name>
+  %            Allocate resources for the job from the named reservation.
+%
+%              --share The --share option has been replaced by the --oversubscribe option described below.
+
+%       -s, --oversubscribe
+%              The  job  allocation  can over-subscribe resources with other running jobs.  The resources to be over-subscribed can be nodes, sockets, cores,
+%              and/or hyperthreads depending upon configuration.  The default over-subscribe behavior depends on system  configuration  and  the  partition’s
+%              OverSubscribe  option  takes  precedence  over  the  job’s  option.  This option may result in the allocation being granted sooner than if the
+%              --oversubscribe option was not set and allow higher system utilization, but application performance will likely suffer due to competition  for
+%              resources.  Also see the --exclusive option.
+    \item -S, --core-spec=<num>：指定预留的不被作业使用的各节点CPU核数。
+%              Count  of  specialized  cores per node reserved by the job for system operations and not used by the application. The application will not use
+%              these cores, but will be charged for their allocation.  Default value is dependent upon the node’s configured CoreSpecCount value.  If a value
+%              of zero is designated and the Slurm configuration option AllowSpecResourcesUsage is enabled, the job will be allowed to override CoreSpecCount
+%              and use the specialized resources on nodes it is allocated.  This option can not be used with the --thread-spec option.
+    \item --signal=<sig\_num>[@<sig\_time>]：设定到其终止时间前信号时间<sig\_time>秒时的信号。由于Slurm事件处理的时间精度，信号有可能比设定时间早60秒。信号可以为10或USER1，信号时间sig\_time必须在0到65535之间，如没指定，则默认为60秒。
+    \item  --sockets-per-node=<sockets>：设定每个节点的CPU颗数。
+%       --switches=<count>[@<max-time>]
+%              When a tree topology is used, this defines the maximum count of switches desired for the job allocation and optionally  the  maximum  time  to
+%              wait  for  that  number  of  switches. If Slurm finds an allocation containing more switches than the count specified, the job remains pending
+%              until it either finds an allocation with desired switch count or the time limit expires.  It there is no switch count limit, there is no delay
+%              in  starting  the  job.  Acceptable time formats include "minutes", "minutes:seconds", "hours:minutes:seconds", "days-hours", "days-hours:min-
+%              utes" and "days-hours:minutes:seconds".  The job’s maximum time delay may be limited by the system administrator using the SchedulerParameters
+%              configuration parameter with the max_switch_wait parameter option.  The default max-time is the max_switch_wait SchedulerParameters.
+%
+    \item -t, --time=<time>：设定作业总运行时间，当设定的时间到时，作业将被杀掉。时间格式为：minutes、minutes:seconds、hours:minutes:seconds、days-hours、days-hours:minutes和days-hours:minutes:seconds。
+	\item --thread-spec=<num>：设定指定预留的不被作业使用的各节点线程数。
+	\item --threads-per-core=<threads>：设定需要的各CPU核线程数。
+	\item --time-min=<time>：设定作业分配的最小时间。时间格式为：minutes、minutes:seconds、hours:minutes:seconds、days-hours、days-hours:minutes和
+days-hours:minutes:seconds。
+	\item --tmp=<MB>：设定/tmp目录最小磁盘空间。
+	\item -u, --usage：显示简要帮助信息。
+	\item --use-min-nodes：设定如果给了一个节点数范围，选择较小的数。
+	\item -V, --version：显示版本信息。
+	\item -v, --verbose：显示冗余信息。
+	\item -w, --nodelist=<node name list>：设定运行的节点列表。
+	\item --wait-all-nodes=<value>：控制当节点准备好时何时运行命令。默认，当分配的资源准备好后\LS{salloc}命令立即返回。<value>可以为：
+\begin{itemize}
+	\item 0：当分配的资源可以分配时立即执行，比如有节点以重启好。
+    \item 1：只有当分配的所有节点都准备好时才执行
+\end{itemize}
+
+%	\item --wckey=<wckey>
+%              Specify wckey to be used with job.  If TrackWCKey=no (default) in the slurm.conf this value is ignored.
+
+    \item -x, --exclude=<node name list>：设定排除运行此作业的节点列表。
+\end{itemize}
+
+\subsection{主要输入环境变量}
+\begin{itemize}
+	\item SALLOC\_ACCOUNT：类似-A, --account
+	\item SALLOC\_ACCTG\_FREQ：类似--acctg-freq
+	\item SALLOC\_BELL：类似--bell
+	\item SALLOC\_BURST\_BUFFER：类似--bb
+	\item SALLOC\_CONN\_TYPE：类似--conn-type
+	\item SALLOC\_CORE\_SPEC：类似--core-spec
+	\item SALLOC\_DEBUG：类似-v, --verbose
+	\item SALLOC\_EXCLUSIVE：类似--exclusive
+	\item SALLOC\_GEOMETRY：类似-g, --geometry
+	\item SALLOC\_GRES\_FLAGS：类似--gres-flags
+	\item SALLOC\_HINT or SLURM\_HINT：类似--hint
+	\item SALLOC\_IMMEDIATE：类似-I, --immediate
+	\item SALLOC\_JOBID：类似--jobid
+	\item SALLOC\_KILL\_CMD：类似-K, --kill-command
+	\item SALLOC\_MEM\_BIND：类似--mem\_bind
+	\item SALLOC\_NETWORK：类似--network
+	\item SALLOC\_NO\_BELL：类似--no-bell
+	\item SALLOC\_NO\_ROTATE：类似-R, --no-rotate
+	\item SALLOC\_OVERCOMMIT：类似-O, --overcommit
+	\item SALLOC\_PARTITION：类似-p, --partition
+	\item SALLOC\_POWER：类似--power
+	\item SALLOC\_PROFILE：类似--profile
+	\item SALLOC\_QOS：类似--qos
+%	\item SALLOC\_REQ\_SWITCH：     When a tree topology is used, this defines the maximum count of switches desired for the job allocation and optionally the max- imum time to wait for that number of switches. See --switches.
+	\item SALLOC\_RESERVATION：类似--reservation
+	\item SALLOC\_SIGNAL：类似--signal
+	\item SALLOC\_THREAD\_SPEC：类似--thread-spec
+	\item SALLOC\_TIMELIMIT：类似-t, --time
+	\item SALLOC\_USE\_MIN\_NODES：类似--use-min-nodes
+	\item SALLOC\_WAIT\_ALL\_NODES：类似--wait-all-nodes
+	\item SALLOC\_WCKEY：类似--wckey
+%	\item SALLOC\_WAIT4SWITCH    Max time waiting for requested switches. See --switches
+	\item SLURM\_CONF：Slurm配置文件路径。
+	\item SLURM\_EXIT\_ERROR：错误退出代码。
+	\item SLURM\_EXIT\_IMMEDIATE：当--immediate选项时指定的立即退出代码。
+\end{itemize}
+
+\subsection{主要输出环境变量}
+\begin{itemize}
+%	\item BASIL\_RESERVATION\_ID The reservation ID on Cray systems running ALPS/BASIL only.
+	\item SLURM\_CLUSTER\_NAME：集群名。
+%	\item MPIRUN\_NOALLOCATE Do not allocate a block on Blue Gene L/P systems only.
+%	\item MPIRUN\_NOFREE Do not free a block on Blue Gene L/P systems only.
+%	\item MPIRUN\_PARTITION The block name on Blue Gene systems only.
+	\item SLURM\_CPUS\_PER\_TASK：每个任务分配的CPU数。
+	\item SLURM\_DISTRIBUTION：类似-m, --distribution。
+	\item SLURM\_JOB\_ACCOUNT：账户名。
+	\item SLURM\_JOB\_ID（SLURM\_JOBID为向后兼容）：作业号。
+	\item SLURM\_JOB\_CPUS\_PER\_NODE：分配的每个节点CPU数。
+	\item SLURM\_JOB\_NODELIST（SLURM\_NODELIST为向后兼容）：分配的节点名列表。
+	\item SLURM\_JOB\_NUM\_NODES（SLURM\_NNODES为向后兼容）：作业分配的节点数。
+	\item SLURM\_JOB\_PARTITION：作业使用的分区名。
+	\item SLURM\_JOB\_QOS：作业的QOS。
+	\item SLURM\_JOB\_RESERVATION：预留的作业资源。
+	\item SLURM\_MEM\_BIND：--mem\_bind选项指定的值。
+	\item SLURM\_MEM\_PER\_CPU：类似--mem-per-cpu。
+	\item SLURM\_MEM\_PER\_NODE：类似--mem。
+	\item SLURM\_SUBMIT\_DIR：运行salloc时的目录。
+	\item SLURM\_SUBMIT\_HOST：运行salloc时的节点名。
+	\item SLURM\_NODE\_ALIASES：分配的节点名、通信地址和主机名，格式类似\\SLURM\_NODE\_ALIASES=ec0:1.2.3.4:foo,ec1:1.2.3.5:bar。
+	\item SLURM\_NTASKS：类似-n, --ntasks。
+	\item SLURM\_NTASKS\_PER\_NODE：--ntasks-per-node选项设定的值。
+	\item SLURM\_PROFILE：类似--profile。
+	\item SLURM\_TASKS\_PER\_NODE：每个节点的任务数。值以,分隔，并与SLURM\_NODELIST顺序一致。如果连续的节点有相同的任务数，那么数后面跟有``(x\#)''，其中``\#''是重复次数。如：``SLURM\_TASKS\_PER\_NODE=2(x3),1。
+\end{itemize}
+
+\subsection{例子}
+\begin{itemize}
+	\item 获取分配，并打开xterm，以便srun可以交互式输入：
+            \LS{salloc -N16 xterm}
+将输出：
+\begin{OUT}
+salloc: Granted job allocation 65537
+(at this point the xterm appears, and salloc waits for xterm to exit)
+salloc: Relinquishing job allocation 65537
+\end{OUT}
+	\item 获取分配并并行运行应用：
+    \LS{salloc -N5 srun -n10 myprogram}
+\end{itemize}
+
+\section{将文件同步到各节点：sbcast}
+\LS{sbcast}命令可以将文件同步到各计算节点对应目录。
+
+当前，用户主目录是共享的，一般不需要此命令，如果用户需要将某些文件传递到分配给作业的各节点\fl{/tmp}等非共享目录，那么可以考虑此命令。
+
+\LS{sbcast}命令的基本语法为：\LS{sbcast [-CfFjpstvV] SOURCE DEST}。
+
+此命令仅对批处理作业或在Slurm资源分配后生成的shell中起作用。SOURCE是当前节点上文件名，DEST为分配给此作业的对应节点将要复制到文件全路径。
+
+\subsection{主要参数}
+\begin{itemize}
+	\item -C [library], --compress[=library]：设定采用压缩传递，及其使用的压缩库，[library]可以为lz4（默认）、zlib。
+    \item -f, --force：强制模式，如果目标文件存在，那么将直接覆盖。
+    \item -F number, --fanout=number：设定用于文件传递时的消息扇出，当前最大值为8。
+    \item -j jobID[.stepID], --jobid=jobID[.stepID]：指定使用的作业号。
+    \item -p, --preserve：保留源文件的修改时间、访问时间和模式等。
+    \item -s size, --size=size：设定广播时使用的块大小。size可以具有k或m后缀，默认单位为比特。默认大小为文件大小或8MB。
+    \item -t seconds, fB--timeout=seconds：设定消息的超时时间。
+    \item -v, --verbose：显示冗余信息。
+    \item -V, --version：显示版本信息。
+\end{itemize}
+
+\subsection{主要环境变量}
+\begin{itemize}
+	\item SBCAST\_COMPRESS：类似-C, --compress
+    \item SBCAST\_FANOUT：类似-F number, fB--fanout=number
+    \item SBCAST\_FORCE：类似-f, --force
+    \item SBCAST\_PRESERVE：类似-p, --preserve
+    \item SBCAST\_SIZE：类似-s size, --size=size
+    \item SBCAST\_TIMEOUT：类似-t seconds, fB--timeout=seconds
+    \item SLURM\_CONF：Slurm配置文件。
+\end{itemize}
+
+\subsection{例子}
+
+将\fl{my.prog}传到\fl{/tmp/my.proc}，且执行：
+
+\begin{itemize}
+	\item 生成脚本\fl{my.job}：
+\begin{SH}
+#!/bin/bash
+sbcast my.prog /tmp/my.prog
+srun /tmp/my.prog
+\end{SH}
+	\item 提交：
+
+\LS{sbatch --nodes=8 my.job}
+\end{itemize}
+
+\section{吸附到作业步：sattach}
+
+\LS{sattach}可以吸附到一个运行中的Slurm作业步，通过吸附，可以获取所有任务的IO流等，有时也可以用于并行调试器。
+
+基本语法：\LS{sattach [options] <jobid.stepid>}
+
+\subsection{主要参数}
+\begin{itemize}
+      \item -h, --help：显示帮助信息。
+      \item --input-filter[=]<task number>、 --output-filter[=]<task number>、 --error-filter[=]<task number>：仅传递标准输入到一个单独任务或打印一个单个任务中的标准输出或标准错误输出。
+      \item -l, --label：在每行前显示其对应的任务号。
+      \item --layout：联系slurmctld获得任务层信息，打印层信息后退出吸附作业步。
+      \item --pty：在伪终端上执行0号任务。与--input-filter、--output-filter或--error-filter不兼容。
+      \item -Q, --quiet：安静模式。不显示一般的sattach信息，但错误信息仍旧显示。
+      \item -u, --usage：显示简要帮助信息。
+      \item -V, --version：显示版本信息。
+      \item -v, --verbose：显示冗余信息。
+\end{itemize}
+
+\subsection{主要输入环境变量}
+\begin{itemize}
+	\item SLURM\_CONF：Slurm配置文件。
+    \item SLURM\_EXIT\_ERROR：Slurm退出错误代码。
+\end{itemize}
+
+\subsection{例子}
+\begin{itemize}
+	\item \LS{sattach 15.0}
+    \item \LS{sattach --output-filter 5 65386.15}
+\end{itemize}
+
+\section{其他常用作业管理命令}
+\subsection{终止作业：scancel job\_id}
+如果想终止一个作业，可利用\LS{scancel job\_id}来取消，job\_list可以为以,分隔的作业ID，如：
+
+\LS{hmli@service0:~$ scancel 7}
+
+\subsection{挂起排队中尚未运行的作业：scontrol hold job\_list}
+\LS{scontrol hold job\_list}（job\_list可以为以,分隔的作业ID或jobname=作业名）命令可使得排队中尚未运行的作业（设置优先级为0）暂停被分配运行，被挂起的作业将不被执行，这样可以让其余作业优先得到资源运行。被挂起的作业在用\LS{squeue}命令查询显示的时NODELIST(REASON)状态标志为JobHeldUser（被用户自己挂起）或JobHeldAdmin（被系统管理员挂起），利用\LS{scontrol release job\_list}可取消挂起。下面命令将挂起作业号为7的作业：
+
+\LS{hmli@service0:~/work$ scontrol hold 7}
+
+\subsection{继续排队被挂起的尚未运行作业：scontrol release job\_list}
+被挂起的作业可以利用\LS{scontrol release job\_list}来取消挂起，重新进入等待运行状态，job\_list可以为以,分隔的作业ID或jobname=作业名。
+
+\LS{hmli@service0:~/work$ scontrol release 7}
+
+%\subsection{挂起已在运行的作业：scontrol suspend job\_list}
+%\LS{scontrol suspend job\_list}命令可使得已运行的作业暂停运行，这样可以让其余作业优先得到资源运行，被挂起的作业在用qstat命令查询时显示的状态标志为H，下面命令将挂起作业号为7.admin0的作业：
+%
+%\LS{hmli@service0:~/work$ scontrol suspend 7}
+%
+%\subsection{继续运行被暂停运行的作业：scontrol resume job\_list}
+%被暂停运行的作业可以利用\LS{scontrol resume job\_list}继续运行：
+%
+%\LS{hmli@service0:~/work$ scontrol release job\_list 7}
+
+\subsection{重新运行作业：scontrol requeue job\_list}
+利用\LS{scontrol requeue job\_list}重新使得运行中的、挂起的或停止的作业重新进入排队等待运行，job\_list可以为以,分隔的作业ID。
+\LS{hmli@service0:~/work$ scontrol requeue 7}
+
+\subsection{重新挂起作业：scontrol requeuehold job\_list}
+利用\LS{scontrol requeuehold job\_list}重新使得运行中的、挂起的或停止的作业重新进入排队，并被挂起等待运行，job\_list可以为以,分隔的作业ID。之后可利用\LS{scontrol release job\_list}使其运行。
+
+\LS{hmli@service0:~/work$ scontrol requeuehold 7}
+
+\subsection{最优先等待运行作业：scontrol top job\_id}
+利用\LS{scontrol top job\_list}可以使得尚未开始运行的job\_list作业排到用户自己排队作业的最前面，最优先运行，job\_list可以为以,分隔的作业ID。
+
+\LS{hmli@service0:~/work$ scontrol top 7}
+
+\subsection{等待某个作业运行完：scontrol wait\_job job\_id}
+利用\LS{scontrol wait_job job_id}可以等待某个job\_id结束后开始运行，一般用于脚本中。
+
+\LS{hmli@service0:~/work$ scontrol wait_job 7}
+
+\subsection{更新作业信息：scontrol update SPECIFICATION}
+利用\LS{scontrol update SPECIFICATION}可以更新作业、作业步等信息，SPECIFICATION格式为\LS{scontaol show job}显示出的，如下面命令将更新作业号为7的作业名为NewJobName：
+
+\LS{scontrol update JobId=7 JobName=NewJobName}
+

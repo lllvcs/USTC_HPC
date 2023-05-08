@@ -1,0 +1,1710 @@
+
+<!DOCTYPE html>
+
+<html lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>前言 &#8212; Ubuntu 22.04下的PXE自动安装配置服务设置 2022-09 文档</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/material.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="联系方式" href="contact.html" />
+    <link rel="prev" title="Ubuntu 22.04下的PXE安装服务配置" href="index.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=#4000FF data-md-color-accent=light-blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#ubuntu-pxe" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="index.html" title="Ubuntu 22.04下的PXE自动安装配置服务设置 2022-09 文档"
+           class="md-header-nav__button md-logo">
+          
+              <img src="_static/logo.png" height="26"
+                   alt="Ubuntu 22.04下的PXE自动安装配置服务设置 2022-09 文档 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Ubuntu的PXE自动安装配置</span>
+          <span class="md-header-nav__topic"> 前言 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://git.ustc.edu.cn/hmli/ubuntu-pxe" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Ubuntu 22.04下的PXE自动安装配置服务设置git
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = ""versions.json"",
+        target_loc = "../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">Ubuntu 22.04下的PXE自动安装配置服务设置 2022-09 文档</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="index.html" title="Ubuntu 22.04下的PXE自动安装配置服务设置 2022-09 文档" class="md-nav__button md-logo">
+      
+        <img src="_static/logo.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="index.html"
+       title="Ubuntu 22.04下的PXE自动安装配置服务设置 2022-09 文档">Ubuntu的PXE自动安装配置</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://git.ustc.edu.cn/hmli/ubuntu-pxe" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Ubuntu 22.04下的PXE自动安装配置服务设置git
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <span class="md-nav__link caption"><span class="caption-text">目录:</span></span>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> 前言 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">前言</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#ubuntu-pxe--page-root" class="md-nav__link">前言</a>
+        </li>
+        <li class="md-nav__item"><a href="#amd64-x86-64" class="md-nav__link">AMD64(x86_64)架构网络安装</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#dhpc-bootptftp" class="md-nav__link">设置DHPC/bootp和tftp服务</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">提供引导加载程序和配置</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#web" class="md-nav__link">安装WEB服务</a>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">模式独立设置</a>
+        </li>
+        <li class="md-nav__item"><a href="#uefi" class="md-nav__link">为 <strong>UEFI</strong> 引导设置文件</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">自动化服务器安装</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">介绍</a>
+        </li>
+        <li class="md-nav__item"><a href="#debian-installer" class="md-nav__link">与 <strong>debian-installer</strong> 预置安装的区别</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">提供自动安装配置</a>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">运行真正的自动安装</a>
+        </li>
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">快速开始</a>
+        </li>
+        <li class="md-nav__item"><a href="#id9" class="md-nav__link">创建自动安装配置</a>
+        </li>
+        <li class="md-nav__item"><a href="#preseed" class="md-nav__link">转换现有 <strong>preseed</strong> 文件</a>
+        </li>
+        <li class="md-nav__item"><a href="#id11" class="md-nav__link">自动安装配置文件的结构</a>
+        </li>
+        <li class="md-nav__item"><a href="#id12" class="md-nav__link">错误处理</a>
+        </li>
+        <li class="md-nav__item"><a href="#id13" class="md-nav__link">未来可能的方向</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id14" class="md-nav__link">自动安装快速入门</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#reference" class="md-nav__link">自动服务器安装配置文件参考</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#overall-format" class="md-nav__link">整体格式(Overall format)</a>
+        </li>
+        <li class="md-nav__item"><a href="#schema" class="md-nav__link">概要(Schema)</a>
+        </li>
+        <li class="md-nav__item"><a href="#command-lists" class="md-nav__link">命令列表(Command lists)</a>
+        </li>
+        <li class="md-nav__item"><a href="#top-level-keys" class="md-nav__link">顶级关键字(Top-level keys)</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id16" class="md-nav__link">参考</a>
+        </li>
+  </ul>
+</nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#amd64-x86-64" class="md-nav__link">AMD64(x86_64)架构网络安装</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#dhpc-bootptftp" class="md-nav__link">设置DHPC/bootp和tftp服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id2" class="md-nav__link">提供引导加载程序和配置</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#web" class="md-nav__link">安装WEB服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id3" class="md-nav__link">模式独立设置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#uefi" class="md-nav__link">为 <strong>UEFI</strong> 引导设置文件</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id4" class="md-nav__link">自动化服务器安装</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#id5" class="md-nav__link">介绍</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#debian-installer" class="md-nav__link">与 <strong>debian-installer</strong> 预置安装的区别</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id6" class="md-nav__link">提供自动安装配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id7" class="md-nav__link">运行真正的自动安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id8" class="md-nav__link">快速开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id9" class="md-nav__link">创建自动安装配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#preseed" class="md-nav__link">转换现有 <strong>preseed</strong> 文件</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id11" class="md-nav__link">自动安装配置文件的结构</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id12" class="md-nav__link">错误处理</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id13" class="md-nav__link">未来可能的方向</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id14" class="md-nav__link">自动安装快速入门</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#reference" class="md-nav__link">自动服务器安装配置文件参考</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#overall-format" class="md-nav__link">整体格式(Overall format)</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#schema" class="md-nav__link">概要(Schema)</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#command-lists" class="md-nav__link">命令列表(Command lists)</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#top-level-keys" class="md-nav__link">顶级关键字(Top-level keys)</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id16" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="contact.html" class="md-nav__link">联系方式</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#ubuntu-pxe--page-root" class="md-nav__link">前言</a>
+        </li>
+        <li class="md-nav__item"><a href="#amd64-x86-64" class="md-nav__link">AMD64(x86_64)架构网络安装</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#dhpc-bootptftp" class="md-nav__link">设置DHPC/bootp和tftp服务</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">提供引导加载程序和配置</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#web" class="md-nav__link">安装WEB服务</a>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">模式独立设置</a>
+        </li>
+        <li class="md-nav__item"><a href="#uefi" class="md-nav__link">为 <strong>UEFI</strong> 引导设置文件</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">自动化服务器安装</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">介绍</a>
+        </li>
+        <li class="md-nav__item"><a href="#debian-installer" class="md-nav__link">与 <strong>debian-installer</strong> 预置安装的区别</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">提供自动安装配置</a>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">运行真正的自动安装</a>
+        </li>
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">快速开始</a>
+        </li>
+        <li class="md-nav__item"><a href="#id9" class="md-nav__link">创建自动安装配置</a>
+        </li>
+        <li class="md-nav__item"><a href="#preseed" class="md-nav__link">转换现有 <strong>preseed</strong> 文件</a>
+        </li>
+        <li class="md-nav__item"><a href="#id11" class="md-nav__link">自动安装配置文件的结构</a>
+        </li>
+        <li class="md-nav__item"><a href="#id12" class="md-nav__link">错误处理</a>
+        </li>
+        <li class="md-nav__item"><a href="#id13" class="md-nav__link">未来可能的方向</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id14" class="md-nav__link">自动安装快速入门</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#reference" class="md-nav__link">自动服务器安装配置文件参考</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#overall-format" class="md-nav__link">整体格式(Overall format)</a>
+        </li>
+        <li class="md-nav__item"><a href="#schema" class="md-nav__link">概要(Schema)</a>
+        </li>
+        <li class="md-nav__item"><a href="#command-lists" class="md-nav__link">命令列表(Command lists)</a>
+        </li>
+        <li class="md-nav__item"><a href="#top-level-keys" class="md-nav__link">顶级关键字(Top-level keys)</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id16" class="md-nav__link">参考</a>
+        </li>
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="id1">
+<h1 id="ubuntu-pxe--page-root">前言<a class="headerlink" href="#ubuntu-pxe--page-root" title="永久链接至标题">¶</a></h1>
+<p>Ubuntu 22.04下的PXE自动无人值守安装配置服务设置，原文内容比较简单，基本为翻译的 <a class="reference external" href="https://ubuntu.com/server/docs">Ubuntu 22.04官方手册</a> 。</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>服务端提供PXE自动安装服务的信息：</dt><dd><ul>
+<li><p>提供DHCPD服务的网卡：enp2s0</p></li>
+<li><p>IP：192.168.22.254</p></li>
+<li><p>掩码：255.255.255.0</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>客户端（目标对象）网络启动引导的信息：</dt><dd><ul>
+<li><p>安装系统名：Cleint1</p></li>
+<li><p>采用DHCP协议引导的网卡：enp1s0</p></li>
+<li><p>MAC地址：08:00:20:0A:0C:01</p></li>
+<li><p>自身IP：192.168.22.1</p></li>
+<li><p>网关IP：192.168.22.254</p></li>
+<li><p>掩码：255.255.255.0</p></li>
+<li><p>DNS：202.38.64.7</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>下述带有 <strong>1.、2.</strong> 编号的才是实际执行的步骤，其他都是介绍。</p>
+</section>
+<section id="amd64-x86-64">
+<h1 id="amd64-x86-64">AMD64(x86_64)架构网络安装<a class="headerlink" href="#amd64-x86-64" title="永久链接至标题">¶</a></h1>
+<p>AMD64（也称为x86_64）架构的系统启动既可以采用 <strong>UEFI</strong> 也可以采用传统 <strong>legacy</strong> (“BIOS”) 模式（很多系统可以被配置为采用其中任一模式启动）。确切的细节取决于系统固件，但两种模式都支持 <strong>PXE(“Preboot eXecution Environment”)</strong> 规范，使得可以通过网络来提供启动器引导加载程序启动主机。</p>
+<p>两种模式的网络启动实时服务器安装程序的过程相似，如下所示：</p>
+<ul class="simple">
+<li><p>待安装机器启动，并定向到网络启动。</p></li>
+<li><p><strong>DHCP/bootp</strong> 服务器告诉机器它的网络配置以及从哪里获取引导加载程序。</p></li>
+<li><p>机器的固件通过 <strong>tftp</strong> 协议下载引导加载程序并执行它。</p></li>
+<li><p>引导加载程序通过 <strong>tftp</strong> 协议下载配置，告诉它在哪里下载内核(<strong>kernel</strong>)、 <strong>ramdisk</strong> 和内核命令行以使用。</p></li>
+<li><p><strong>ramdisk</strong> 查看内核命令行以了解如何配置网络以及从何处下载服务器 <strong>ISO</strong> 操作系统安装镜像文件。</p></li>
+<li><p><strong>ramdisk</strong> 下载操作系统 <strong>ISO</strong> 并将其安装为循环设备。</p></li>
+<li><p>从此时起，安装遵循与操作系统 <strong>ISO</strong> 在本地块设备上相同的路径。</p></li>
+</ul>
+<p><strong>UEFI</strong> 和传统模式之间的区别在于：在 <strong>UEFI</strong> 模式下，引导加载程序是 <strong>EFI</strong> 可执行文件，经过签名以便安全引导 <strong>SecureBoot</strong> 接受，而在传统模式下，它是 <strong>PXELINUX</strong> 。大多数 <strong>DHCP/bootp</strong> 服务器可以配置为为特定机器提供正确的引导加载程序。</p>
+<section id="dhpc-bootptftp">
+<h2 id="dhpc-bootptftp">设置DHPC/bootp和tftp服务<a class="headerlink" href="#dhpc-bootptftp" title="永久链接至标题">¶</a></h2>
+<p>有几种可用的 <strong>DHCP/bootp</strong> 和 <strong>tftp</strong> 协议实现。本文档将简要介绍如何配置 <strong>dnsmasq</strong> 服务（相比配置 <strong>isc-dhcp-server</strong> 与 <strong>tftpd</strong> 简单的多）以执行这两个角色。</p>
+<ol class="arabic">
+<li><dl>
+<dt>创建存放为客户端提供 <strong>tftp</strong> 服务所需要的文件的目录 <em>/srv/tftp</em> ：</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">tftp</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>安装 <strong>dnsmasq</strong> 包，执行命令：</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apt</span> <span class="n">install</span> <span class="n">dnsmasq</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>设置文件 <em>/etc/dnsmasq.conf.d/pxe.conf</em> ，其内容：</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#设置本服务器提供DHCP服务的网卡</span>
+<span class="n">interface</span><span class="o">=</span><span class="n">enp2s0</span><span class="p">,</span><span class="n">lo</span>
+<span class="n">bind</span><span class="o">-</span><span class="n">interfaces</span>
+<span class="c1">#提供DHCP服务的网卡,开始IP,结束IP</span>
+<span class="n">dhcp</span><span class="o">-</span><span class="nb">range</span><span class="o">=</span><span class="n">enp2s0</span><span class="p">,</span><span class="mf">192.168.22.1</span><span class="p">,</span><span class="mf">192.168.22.254</span>
+<span class="n">dhcp</span><span class="o">-</span><span class="n">boot</span><span class="o">=</span><span class="n">pxelinux</span><span class="mf">.0</span>
+<span class="c1">#设置采用UEFI模式</span>
+<span class="n">dhcp</span><span class="o">-</span><span class="n">match</span><span class="o">=</span><span class="nb">set</span><span class="p">:</span><span class="n">efi</span><span class="o">-</span><span class="n">x86_64</span><span class="p">,</span><span class="n">option</span><span class="p">:</span><span class="n">client</span><span class="o">-</span><span class="n">arch</span><span class="p">,</span><span class="mi">7</span>
+<span class="n">dhcp</span><span class="o">-</span><span class="n">boot</span><span class="o">=</span><span class="n">tag</span><span class="p">:</span><span class="n">efi</span><span class="o">-</span><span class="n">x86_64</span><span class="p">,</span><span class="n">bootx64</span><span class="o">.</span><span class="n">efi</span>
+<span class="c1">#启用tftp服务</span>
+<span class="n">enable</span><span class="o">-</span><span class="n">tftp</span>
+<span class="c1">#设置tftp服务目录</span>
+<span class="n">tftp</span><span class="o">-</span><span class="n">root</span><span class="o">=/</span><span class="n">srv</span><span class="o">/</span><span class="n">tftp</span>
+<span class="c1">#设定将要网络安装的MAC地址为08:00:20:0A:0C:01的主机名为Client1，IP为192.168.22.1</span>
+<span class="n">dhcp</span><span class="o">-</span><span class="n">host</span><span class="o">=</span><span class="mi">08</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">0</span><span class="n">A</span><span class="p">:</span><span class="mi">0</span><span class="n">C</span><span class="p">:</span><span class="mi">01</span><span class="p">,</span><span class="n">Client1</span><span class="p">,</span><span class="mf">192.168.22.1</span>
+<span class="c1">#设定将要网络安装的MAC地址为08:00:20:0A:0C:02的主机名为Client2，IP为192.168.22.2</span>
+<span class="n">dhcp</span><span class="o">-</span><span class="n">host</span><span class="o">=</span><span class="mi">08</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">0</span><span class="n">A</span><span class="p">:</span><span class="mi">0</span><span class="n">C</span><span class="p">:</span><span class="mi">02</span><span class="p">,</span><span class="n">Client2</span><span class="p">,</span><span class="mf">192.168.22.2</span>
+</pre></div>
+</div>
+<p>上面 <strong>enp2s0</strong> 为对客户端安装服务时使用的网卡名（与客户端启动网络安装服务的网卡在同一网络）。</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>重启 <strong>dnsmasq</strong> 服务，执行命令：</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">systemctl</span> <span class="n">restart</span> <span class="n">dnsmasq</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+<section id="id2">
+<h2 id="id2">提供引导加载程序和配置<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<ol class="arabic">
+<li><dl>
+<dt>安装对应包</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apt</span> <span class="n">install</span> <span class="n">cd</span><span class="o">-</span><span class="n">boot</span><span class="o">-</span><span class="n">images</span><span class="o">-</span><span class="n">amd64</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p>生成软链接 <em>/srv/tftp/boot-amd64</em> 指向 <em>/usr/share/cd-boot-images-amd64</em> ：</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">cd</span><span class="o">-</span><span class="n">boot</span><span class="o">-</span><span class="n">images</span><span class="o">-</span><span class="n">amd64</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">tftp</span><span class="o">/</span><span class="n">boot</span><span class="o">-</span><span class="n">amd64</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+<section id="web">
+<h3 id="web">安装WEB服务<a class="headerlink" href="#web" title="永久链接至标题">¶</a></h3>
+<p>安装时，需要通过 <strong>HTTP</strong> 协议下载所需文件，为此需要配置 <strong>WEB</strong> 服务。</p>
+<dl>
+<dt>安装所需要包，并重新启动服务：</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apt</span> <span class="n">install</span> <span class="n">apache2</span>
+<span class="n">systemctl</span> <span class="n">restart</span> <span class="n">apache2</span>
+</pre></div>
+</div>
+</dd>
+<dt>或者不用上述 <strong>apache</strong> 服务，如python3支持http模块，则可直接执行下述命令启动简易 <strong>WEB</strong> 服务：</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">http</span><span class="o">.</span><span class="n">server</span> <span class="mi">80</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</section>
+<section id="id3">
+<h3 id="id3">模式独立设置<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<ol class="arabic">
+<li><dl>
+<dt>针对该次使用 <strong>Ubuntu 22.04 server</strong> 版（代号： <strong>jammy</strong> ），建议有些配置文件放置在目录 <em>/var/www/html/jammy</em> 下，为此先生成该目录：</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">html</span><span class="o">/</span><span class="n">jammy</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p>下载所需要的操作系统 <strong>Live ISO</strong> 镜像到目录 <em>/var/www/html</em> ：</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">html</span><span class="o">/</span><span class="n">jammy</span>
+<span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">mirrors</span><span class="o">.</span><span class="n">ustc</span><span class="o">.</span><span class="n">edu</span><span class="o">.</span><span class="n">cn</span><span class="o">/</span><span class="n">ubuntu</span><span class="o">-</span><span class="n">releases</span><span class="o">/</span><span class="n">jammy</span><span class="o">/</span><span class="n">ubuntu</span><span class="o">-</span><span class="mf">22.04.1</span><span class="o">-</span><span class="n">live</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">amd64</span><span class="o">.</span><span class="n">iso</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><dl>
+<dt>挂载该ISO文件：</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mount</span> <span class="o">-</span><span class="n">o</span> <span class="n">loop</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">html</span><span class="o">/</span><span class="n">jammy</span><span class="o">/</span><span class="n">ubuntu</span><span class="o">-</span><span class="mf">22.04.1</span><span class="o">-</span><span class="n">live</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">amd64</span><span class="o">.</span><span class="n">iso</span> <span class="o">/</span><span class="n">mnt</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>将内核和 <strong>initrd</strong> 从其中复制到 <strong>dnsmasq</strong> 中设置的 <strong>tftp</strong> 的位置：</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">casper</span><span class="o">/</span><span class="p">{</span><span class="n">vmlinuz</span><span class="p">,</span><span class="n">initrd</span><span class="p">}</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">tftp</span><span class="o">/</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+<section id="uefi">
+<h3 id="uefi">为 <strong>UEFI</strong> 引导设置文件<a class="headerlink" href="#uefi" title="永久链接至标题">¶</a></h3>
+<ol class="arabic">
+<li><dl>
+<dt>将签名的 shim 二进制文件复制到位：</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apt</span> <span class="n">download</span> <span class="n">shim</span><span class="o">-</span><span class="n">signed</span>
+<span class="n">dpkg</span><span class="o">-</span><span class="n">deb</span> <span class="o">--</span><span class="n">fsys</span><span class="o">-</span><span class="n">tarfile</span> <span class="n">shim</span><span class="o">-</span><span class="n">signed</span><span class="o">*</span><span class="n">deb</span> <span class="o">|</span> <span class="n">tar</span> <span class="n">x</span> <span class="o">./</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">shim</span><span class="o">/</span><span class="n">shimx64</span><span class="o">.</span><span class="n">efi</span><span class="o">.</span><span class="n">signed</span> <span class="o">-</span><span class="n">O</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">tftp</span><span class="o">/</span><span class="n">bootx64</span><span class="o">.</span><span class="n">efi</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>将签名的 grub 二进制文件复制到位：</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apt</span> <span class="n">download</span> <span class="n">grub</span><span class="o">-</span><span class="n">efi</span><span class="o">-</span><span class="n">amd64</span><span class="o">-</span><span class="n">signed</span>
+<span class="n">dpkg</span><span class="o">-</span><span class="n">deb</span> <span class="o">--</span><span class="n">fsys</span><span class="o">-</span><span class="n">tarfile</span> <span class="n">grub</span><span class="o">-</span><span class="n">efi</span><span class="o">-</span><span class="n">amd64</span><span class="o">-</span><span class="n">signed</span><span class="o">*</span><span class="n">deb</span> <span class="o">|</span> <span class="n">tar</span> <span class="n">x</span> <span class="o">./</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">grub</span><span class="o">/</span><span class="n">x86_64</span><span class="o">-</span><span class="n">efi</span><span class="o">-</span><span class="n">signed</span><span class="o">/</span><span class="n">grubnetx64</span><span class="o">.</span><span class="n">efi</span><span class="o">.</span><span class="n">signed</span> <span class="o">-</span><span class="n">O</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">tftp</span><span class="o">/</span><span class="n">grubx64</span><span class="o">.</span><span class="n">efi</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>Grub 还需要在 tftp 上可用的字体：</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apt</span> <span class="n">download</span> <span class="n">grub</span><span class="o">-</span><span class="n">common</span>
+<span class="n">dpkg</span><span class="o">-</span><span class="n">deb</span> <span class="o">--</span><span class="n">fsys</span><span class="o">-</span><span class="n">tarfile</span> <span class="n">grub</span><span class="o">-</span><span class="n">common</span><span class="o">*</span><span class="n">deb</span> <span class="o">|</span> <span class="n">tar</span> <span class="n">x</span> <span class="o">./</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">grub</span><span class="o">/</span><span class="n">unicode</span><span class="o">.</span><span class="n">pf2</span> <span class="o">-</span><span class="n">O</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">tftp</span><span class="o">/</span><span class="n">unicode</span><span class="o">.</span><span class="n">pf2</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>生成文件 <em>/srv/tftp/grub/grub.cfg</em> ，内容为：</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>set default="0"
+set timeout=0
+
+if loadfont unicode ; then
+  set gfxmode=auto
+  set locale_dir=$prefix/locale
+  set lang=en_US
+fi
+terminal_output gfxterm
+
+set menu_color_normal=white/black
+set menu_color_highlight=black/light-gray
+if background_color 44,0,30; then
+  clear
+fi
+
+function gfxmode {
+        set gfxpayload="${1}"
+        if [ "${1}" = "keep" ]; then
+                set vt_handoff=vt.handoff=7
+        else
+                set vt_handoff=
+        fi
+}
+
+set linux_gfx_mode=keep
+
+export linux_gfx_mode
+
+menuentry 'Ubuntu 22.04.1' {
+        gfxmode $linux_gfx_mode
+        linux /vmlinuz $vt_handoff ip=dhcp url=http://192.168.22.254/jammy/ubuntu-22.04.1-live-server-amd64.iso autoinstall ds=nocloud-net\;s=http://192.168.22.254/jammy/ ---
+        #注意上面最后面有三个-
+        initrd /initrd
+}
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<ul class="simple">
+<li><p>linux /vmlinuz 行的 <em>ds=nocloud-net;s=http</em> 部分的“;”前面有个转义符“”，最后有三个“-”</p></li>
+<li><p>上述配置非常简单。PXELINUX有很多选项，可以在 <a class="reference external" href="https://wiki.syslinux.org/wiki/index.php?title=PXELINUX">https://wiki.syslinux.org/wiki/index.php?title=PXELINUX</a> 查阅其文档以获取更多信息。</p></li>
+</ul>
+</div>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+</section>
+</section>
+<section id="id4">
+<h1 id="id4">自动化服务器安装<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h1>
+<section id="id5">
+<h2 id="id5">介绍<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<p>从 <strong>20.04</strong>  版起，服务器安装程序支持一种新的操作模式：自动安装（简称 <strong>autoinstall</strong> ），此功能也被称为无人值守、甩手或预置安装。</p>
+<p>自动安装使得用户可以通过提前配置自动安装配置文件回答所有这些安装配置问题，并让安装过程无需任何交互即可自行运行，适合批量安装多台主机。</p>
+</section>
+<section id="debian-installer">
+<h2 id="debian-installer">与 <strong>debian-installer</strong> 预置安装的区别<a class="headerlink" href="#debian-installer" title="永久链接至标题">¶</a></h2>
+<p><strong>preseeds</strong> 是基于 <strong>debian-installer</strong> （又名 <strong>d-i</strong> ）自动化安装程序的方法。</p>
+<p>Ubuntu新 <strong>autoinstall</strong> 方式的自动安装主要在以下方面不同于 <strong>preseeds</strong> ：</p>
+<ul class="simple">
+<li><p>格式完全不同（ <strong>cloud-init config</strong> 格式，通常是 <strong>yaml</strong> 格式，vs <strong>debconf-set-selections</strong> 格式）</p></li>
+<li><dl class="simple">
+<dt>当一个问题的答案不存在于 <strong>preseeds</strong> 中时， <strong>d-i</strong>  停止执行并要求用户输入。 <strong>autoinstalls</strong> 自动安装不是这样的：默认情况下，如果有任何自动安装配置，安装程序会为任何未回答的问题采用默认设置（如没有默认设置则失败）。</dt><dd><ul>
+<li><p>用户可以将配置中的特定部分指定为“交互式”，这意味着安装程序仍会停止并询问这些部分。</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="id6">
+<h2 id="id6">提供自动安装配置<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<p>自动安装配置是通过 <strong>cloud-init</strong> 配置提供的，几乎无限灵活。在大多数情况下，最简单的方法是通过 <strong>nocloud</strong> 数据源提供用户数据。</p>
+<p>自动安装配置应在配置中的关键字 <strong>autoinstall</strong> 下提供，如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#cloud-config</span>
+<span class="n">autoinstall</span><span class="p">:</span>
+  <span class="n">version</span><span class="p">:</span> <span class="mi">1</span>
+  <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+<section id="id7">
+<h2 id="id7">运行真正的自动安装<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
+<p>即使找到完全非交互式的自动安装配置，服务器安装程序也会在写入磁盘之前要求确认，除非内核命令行上存在自动安装关键字 <strong>autoinstall</strong> 。这是为了避免意外创建一个U盘，结果该U盘会在主机启动时重新格式化它插入的机器。许多自动安装将通过 <strong>netboot</strong> 完成，其中内核命令行由 <strong>netboot</strong> 配置控制 —— 只需记住将自动安装放在那里！</p>
+</section>
+<section id="id8">
+<h2 id="id8">快速开始<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h2>
+<p>如只是想试试看，可以参看页面 <a class="reference external" href="https://ubuntu.com/server/docs/install/autoinstall-quickstart">https://ubuntu.com/server/docs/install/autoinstall-quickstart</a> 。</p>
+</section>
+<section id="id9">
+<h2 id="id9">创建自动安装配置<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h2>
+<p>当服务器安装好Ubuntu操作系统时，会在安装好后的服务器上创建一个可用于重复安装的自动安装文件 <em>/var/log/installer/autoinstall-user-data</em> ，这可用于做后续需要的文件 <em>user-data</em> 的模板。</p>
+</section>
+<section id="preseed">
+<h2 id="preseed">转换现有 <strong>preseed</strong> 文件<a class="headerlink" href="#preseed" title="永久链接至标题">¶</a></h2>
+<p>如已经有了Debian系统的 <strong>preseed</strong> 文件，可利用自动安装生成器 <a class="reference external" href="https://snapcraft.io/autoinstall-generator?_ga=2.223897308.698614161.1664162991-1711338095.1646124381">autoinstall-generator</a> <strong>snap</strong> 包（snap 是一种包管理器，可用于安装远程snap快照等包）可以帮助将该预置数据转换为自动安装文件。</p>
+<p>安装 <strong>autoinstall-generator</strong> 包，执行：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">snap</span> <span class="n">install</span> <span class="n">autoinstall</span><span class="o">-</span><span class="n">generator</span>
+</pre></div>
+</div>
+<p>将 <strong>preseed</strong> 文件转换为自动安装格式的基本用法为：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">autoinstall</span><span class="o">-</span><span class="n">generator</span> <span class="n">my</span><span class="o">-</span><span class="n">preseed</span><span class="o">.</span><span class="n">txt</span> <span class="n">my</span><span class="o">-</span><span class="n">cloud</span><span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">yaml</span> <span class="o">--</span><span class="n">cloud</span>
+</pre></div>
+</div>
+<p>有关详细信息，请 <a class="reference external" href="https://discourse.ubuntu.com/t/autoinstall-generator-tool-to-help-with-creation-of-autoinstall-files-based-on-preseed/21334?_ga=2.35077545.964202620.1664022245-197937644.1660466546">参阅</a> 。</p>
+</section>
+<section id="id11">
+<h2 id="id11">自动安装配置文件的结构<a class="headerlink" href="#id11" title="永久链接至标题">¶</a></h2>
+<p>自动安装配置的完整说明参见：<a class="reference external" href="https://ubuntu.com/server/docs/install/autoinstall-reference">https://ubuntu.com/server/docs/install/autoinstall-reference</a> 。</p>
+<p>从技术上讲，虽然配置未定义为文本格式，但 <strong>cloud-init</strong> 配置通常以 <strong>YAML</strong> 形式提供，这是本文档使用的语法。</p>
+<p>一个最小的配置是：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>version: 1
+identity:
+    hostname: hostname
+    username: username
+    password: $crypted_pass
+</pre></div>
+</div>
+<p>含有更多特性的配置为：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>version: 1
+reporting:
+    hook:
+        type: webhook
+        endpoint: http://example.com/endpoint/path
+early-commands:
+    - ping -c1 198.162.1.1
+locale: en_US
+keyboard:
+    layout: gb
+    variant: dvorak
+network:
+    network:
+        version: 2
+        ethernets:
+            enp0s25:
+               dhcp4: yes
+            enp3s0: {}
+            enp4s0: {}
+        bonds:
+            bond0:
+                dhcp4: yes
+                interfaces:
+                    - enp3s0
+                    - enp4s0
+                parameters:
+                    mode: active-backup
+                    primary: enp3s0
+proxy: http://squid.internal:3128/
+apt:
+    primary:
+        - arches: [default]
+          uri: http://repo.internal/
+    sources:
+        my-ppa.list:
+            source: "deb http://ppa.launchpad.net/curtin-dev/test-archive/ubuntu $RELEASE main"
+            keyid: B59D 5F15 97A5 04B7 E230  6DCA 0620 BBCF 0368 3F77
+storage:
+    layout:
+        name: lvm
+identity:
+    hostname: hostname
+    username: username
+    password: $crypted_pass
+ssh:
+    install-server: yes
+    authorized-keys:
+      - $key
+    allow-pw: no
+snaps:
+    - name: go
+      channel: 1.14/stable
+      classic: true
+debconf-selections: |
+    bind9      bind9/run-resolvconf    boolean false
+packages:
+    - libreoffice
+    - dns-server^
+user-data:
+    disable_root: false
+late-commands:
+    - sed -ie 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=30/' /target/etc/default/grub
+error-commands:
+    - tar c /var/log/installer | nc 192.168.0.1 1000
+</pre></div>
+</div>
+<p>许多关键字和值一般直接对应于安装程序提出的问题（例如键盘选择），请参阅相关资料。</p>
+</section>
+<section id="id12">
+<h2 id="id12">错误处理<a class="headerlink" href="#id12" title="永久链接至标题">¶</a></h2>
+<p>安装过程中的进度及出错信息，可以通过报告 <a class="reference external" href="https://ubuntu.com/server/docs/install/autoinstall-reference#reporting">reporting</a> 关键字设定的系统获取。此外，当发生致命错误时，将执行错误命令 <a class="reference external" href="https://ubuntu.com/server/docs/install/autoinstall-reference#error-commands">error-commands</a> 并将回溯打印到控制台，然后服务器等待人为交互式干预。</p>
+</section>
+<section id="id13">
+<h2 id="id13">未来可能的方向<a class="headerlink" href="#id13" title="永久链接至标题">¶</a></h2>
+<p>可能希望扩展磁盘的 <strong>match specs</strong> （匹配规范）以涵盖选择磁盘的其他方式。</p>
+</section>
+</section>
+<section id="id14">
+<h1 id="id14">自动安装快速入门<a class="headerlink" href="#id14" title="永久链接至标题">¶</a></h1>
+<p><strong>cloud-init</strong> 使用以下三种数据并对其进行操作。</p>
+<ul class="simple">
+<li><p>用户数据 <strong>user-data</strong> ：包含执行无人值守自动安装所需的指令，如要安装的软件包、分区布局、网络配置等。</p></li>
+<li><p>元数据 <strong>meta-data</strong> ：包括与特定数据源关联的数据，如可以包括服务器名称和实例ID等。</p></li>
+<li><p>供应商数据 <strong>vendor-data</strong> ：由组织（如，云提供商）提供的，包括可以自定义镜像以更好地适应镜像运行环境的信息，该种数据为可选。</p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>设置用户数据文件 <em>/var/www/html/jammy/user-data</em> （可以采用文件 <em>/var/log/installer/autoinstall-user-data</em> 为模板修改），其内容为：</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#cloud-config
+autoinstall:
+  version: 1
+  late-commands:
+    - mkdir /target/root/.ssh &amp;&amp; echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDZUS2FXGm2yK09Tv0biWIwLszp0TPGzB2u1PD/QXCGPimLOmEP2xAFJbgwzeXlgfnj01LP7BD65lidSPd68WwaUsNHdlikfwf9iRdlSXxNg+PVueY2KPHRzgQ5omtAzJFUUnHKIOSH/Ozo9tmwrs4tZc4CNpx44InvgQY3yeKfhqvVn2O+WazirNlGsFRcpMcjLJjZ+U2OfMGM4l0soSDJKJTKoaHmV0XpIOA2iqfQmOgFDZExqmjc8Vj/1hTBvTzyhgMPlzkDz28UsuBT3U+RZiZJokPtXks5mnVkVYzQvOkln3r0+bmOX0Q4qDg2HhinSpGXAZGln1PKH3AFU7StMIg6e1Lb8AMNHNxWBR61uXIwJJw3dcP6Sy3N4Gq3WW+hkVsHJgZRD+dPQNRwMHIY1CIfBtB9TySKpwNwSAeXiBPFoYgAi0RlbrdHLpjDl9LxK/vyZ1gvGSumtU9IM01EZWfXfCKoMX68ljIaVsHHhHbqIXSS7AjaEsJO+ss8nQU= root@ubuntu22-server.hanhai22.ustc.edu.cn" &gt;/target/root/.ssh/authorized_keys
+  apt:
+    disable_components: []
+    geoip: true
+    preserve_sources_list: false
+    primary:
+    - arches:
+      - amd64
+      - i386
+      uri: http://mirrors.ustc.edu.cn/ubuntu
+    - arches:
+      - default
+      uri: http://ports.ubuntu.com/ubuntu-ports
+  drivers:
+    install: false
+  identity:
+    hostname: Client1.hanhai.scc.ustc.edu.cn
+    password: $6$dIUrqz$MJN/0cc47EFl8OJBsbxm/o37ScqlZtXb8r63rGa0JLnbwpYQSLrCq7qgEcOAJc6RlkNbIicK6VlPPK402FD7wMQv.sHqNIl1
+    realname: hmli
+    username: hmli
+  kernel:
+    package: linux-generic
+  keyboard:
+    layout: us
+    toggle: null
+    variant: ''
+  locale: en_US.UTF-8
+  network:
+    ethernets:
+      enp1s0:
+        addresses:
+        - 192.168.22.1/24
+        gateway4: 192.168.22.254
+        nameservers:
+          addresses:
+          - 202.38.64.7
+          search:
+          - ustc.edu.cn
+    version: 2
+  ssh:
+    allow-pw: true
+    authorized-keys: []
+    install-server: true
+  storage:
+    config:
+    - ptable: gpt
+#      serial: c9d3b07e01624ab69df6
+      path: /dev/vda
+      wipe: superblock
+      preserve: false
+      name: ''
+      grub_device: false
+      type: disk
+      id: disk-vda
+    - device: disk-vda
+      size: 999292928
+      wipe: superblock
+      flag: boot
+      number: 1
+      preserve: false
+      grub_device: true
+      type: partition
+      id: partition-0
+    - fstype: fat32
+      volume: partition-0
+      preserve: false
+      type: format
+      id: format-0
+    - device: disk-vda
+      size: 1902116864
+      wipe: superblock
+      flag: ''
+      number: 2
+      preserve: false
+      grub_device: false
+      type: partition
+      id: partition-1
+    - fstype: ext4
+      volume: partition-1
+      preserve: false
+      type: format
+      id: format-1
+    - device: disk-vda
+      size: 18571329536
+      wipe: superblock
+      flag: ''
+      number: 3
+      preserve: false
+      grub_device: false
+      type: partition
+      id: partition-2
+    - name: ubuntu-vg
+      devices:
+      - partition-2
+      preserve: false
+      type: lvm_volgroup
+      id: lvm_volgroup-0
+    - name: ubuntu-lv
+      volgroup: lvm_volgroup-0
+      size: 10737418240B
+      wipe: superblock
+      preserve: false
+      type: lvm_partition
+      id: lvm_partition-0
+    - fstype: ext4
+      volume: lvm_partition-0
+      preserve: false
+      type: format
+      id: format-2
+    - path: /
+      device: format-2
+      type: mount
+      id: mount-2
+    - path: /boot
+      device: format-1
+      type: mount
+      id: mount-1
+    - path: /boot/efi
+      device: format-0
+      type: mount
+      id: mount-0
+  updates: security
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>late-commands 等中的字符串在传递给执行安装的主机时，有些特殊字符串需要特殊处理。</p>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>生成所需要的文件 <em>meta-data</em> （空文件即可），执行命令：</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">touch</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">html</span><span class="o">/</span><span class="n">jammy</span><span class="o">/</span><span class="n">meta</span><span class="o">-</span><span class="n">data</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>供应商数据文件 <em>vendor-data</em> 非必需，可不管。</p></li>
+<li><p>确保目录 <em>/var/www/html/jammy/</em> 下的文件对所有人可读：</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chmod</span> <span class="o">-</span><span class="n">R</span> <span class="n">a</span><span class="o">+</span><span class="n">r</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">html</span><span class="o">/</span><span class="n">jammy</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>上述各项含义参见： <a class="reference internal" href="#reference"><span class="std std-ref">自动服务器安装配置文件参考</span></a> 。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>做好上述工作后，同一子网内的客户机启动采用PXE引导时，即可自动安装配置所需要的系统。</p>
+</div>
+<section id="reference">
+<span id="id15"></span><h2 id="reference">自动服务器安装配置文件参考<a class="headerlink" href="#reference" title="永久链接至标题">¶</a></h2>
+<section id="overall-format">
+<h3 id="overall-format">整体格式(Overall format)<a class="headerlink" href="#overall-format" title="永久链接至标题">¶</a></h3>
+<p>自动安装 <strong>autoinstall</strong> 文件是 <strong>YAML</strong> 格式的。在顶层，它必须是包含本文档中描述的关键字 <strong>key</strong> 的映射。无法识别的关键字将被忽略。</p>
+</section>
+<section id="schema">
+<h3 id="schema">概要(Schema)<a class="headerlink" href="#schema" title="永久链接至标题">¶</a></h3>
+<p>自动安装配置在使用前会根据 <strong>JSON</strong> 模式进行转换并进行验证。</p>
+</section>
+<section id="command-lists">
+<h3 id="command-lists">命令列表(Command lists)<a class="headerlink" href="#command-lists" title="永久链接至标题">¶</a></h3>
+<p>几个配置关键字是要执行的命令列表。每个命令可以是字符串（在这种情况下通过 <code class="docutils literal notranslate"><span class="pre">sh</span> <span class="pre">-c</span></code> 执行）或列表，在这种情况下直接执行。任何以非零返回码退出的命令都被视为错误并中止安装（错误命令除外，它被忽略）。</p>
+</section>
+<section id="top-level-keys">
+<h3 id="top-level-keys">顶级关键字(Top-level keys)<a class="headerlink" href="#top-level-keys" title="永久链接至标题">¶</a></h3>
+<ul>
+<li><dl>
+<dt>version</dt><dd><ul class="simple">
+<li><p>名称：版本</p></li>
+<li><p>类型：整型</p></li>
+<li><p>默认值：无</p></li>
+</ul>
+<p>为将来不同版本准备的版本信息，目前只能为 <strong>1</strong> 。</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>interactive-sections</dt><dd><ul class="simple">
+<li><p>名称：交互式部分</p></li>
+<li><p>类型：字符串列表</p></li>
+<li><p>默认值：[]</p></li>
+</ul>
+<dl>
+<dt>仍然显示在用户界面 <strong>UI</strong> 中的配置键列表，如：</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>version: 1
+interactive-sections:
+ - network
+identity:
+ username: ubuntu
+ password: $crypted_pass
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>交互式操作，将在网络屏幕上停止并允许用户更改默认值。如果为交互式部分提供了值，则将其用作默认值。</p>
+<p>可以使用特殊的块名称 <strong>“*”</strong> 来指示安装程序应该询问所有常见问题——在这种情况下，文件 <em>autoinstall.yaml</em> 根本不是真正的“自动安装”文件，而只是一种用于更改用户界面中的默认值的文件。</p>
+<p>并非所有配置关键字都对应于用户界面中的屏幕。该文档指示给定块是否可以交互。</p>
+<p>如果有任何交互块，则忽略报告关键字 <strong>reporting</strong> 。</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>early-commands</dt><dd><ul class="simple">
+<li><p>名称：早期命令</p></li>
+<li><p>默认值：无</p></li>
+<li><p>是否可交互：不可</p></li>
+</ul>
+<p>安装程序启动后立即调用的shell命令列表，特别是在执行探测块和网络设备操作之前执行。自动安装配置在 <em>/autoinstall.yaml</em> 中可用（不管它是如何被提供），并且在早期命令 <strong>early-commands</strong> 运行后将重新读取该文件，以允许它们在必要时更改配置。</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>locale</dt><dd><ul class="simple">
+<li><p>名称：语言环境</p></li>
+<li><p>类型：字符串</p></li>
+<li><p>默认值：en_US.UTF-8</p></li>
+<li><p>是否可交互：可，对于任何块中是的话，总是可以交互</p></li>
+</ul>
+<p>为已安装系统配置的语言环境。</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>refresh-installer</dt><dd><ul class="simple">
+<li><p>名称：更新安装</p></li>
+<li><p>类型：映射</p></li>
+<li><p>默认值：参见下面</p></li>
+<li><p>是否可交互：可</p></li>
+</ul>
+<p>控制安装程序在继续之前是否更新到给定频道 <strong>channel</strong> 中可用的新版本。</p>
+<p>映射包含关键字：</p>
+<ul>
+<li><dl>
+<dt>update</dt><dd><ul class="simple">
+<li><p>名称：更新</p></li>
+<li><p>类型：布尔型</p></li>
+<li><p>默认值：无</p></li>
+</ul>
+<p>控制是否执行系统更新。</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>channel</dt><dd><ul class="simple">
+<li><p>名称：频道、通道</p></li>
+<li><p>类型：字符串</p></li>
+<li><p>默认值：stable/ubuntu-$REL</p></li>
+</ul>
+<p>用于检查系统更新的频道。</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>keyboard</dt><dd><ul class="simple">
+<li><p>名称：键盘</p></li>
+<li><p>类型：映射，参见下面</p></li>
+<li><p>默认值：US English keyboard</p></li>
+<li><p>是否可交互：可</p></li>
+</ul>
+<p>任何附属键盘的布局。通常自动安装的系统根本没有键盘，在这种情况下，此处使用的值无关紧要。</p>
+<p>映射的关键字对应于 <em>/etc/default/keyboard</em> 配置文件中的设置。有关更多详细信息，请参阅其手册页。</p>
+<p>映射包含关键字：</p>
+<ul>
+<li><dl>
+<dt>layout</dt><dd><ul class="simple">
+<li><p>名称：布局</p></li>
+<li><p>类型：字符串</p></li>
+<li><p>默认值：us</p></li>
+</ul>
+<p>对应于键盘 <strong>XKBLAYOUT</strong> 设置。</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>variant</dt><dd><ul class="simple">
+<li><p>名称：变种</p></li>
+<li><p>类型：字符串</p></li>
+<li><p>默认值：””</p></li>
+</ul>
+<p>对应于键盘 <strong>XKBVARIANT</strong> 设置。</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>toggle</dt><dd><ul class="simple">
+<li><p>名称：切换</p></li>
+<li><p>类型：字符串或null</p></li>
+<li><p>默认值：null</p></li>
+</ul>
+<p>对应于 <strong>grp</strong> 值: 来自键盘 <strong>XKBOPTIONS</strong> 设置的选项的值。可接受的值是（但请注意，安装程序不会验证这些）：caps_toggle、toggle、rctrl_toggle、rshift_toggle、rwin_toggle、menu_toggle、alt_shift_toggle、ctrl_shift_toggle、ctrl_alt_toggle、alt_caps_toggle、lctrl_lshift_toggle、lalt_toggle、lctrl_toggle、lwinshift_toggle</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>与20.04 GA一起发布的 <strong>subiquity</strong> 版本由于一个bug不接受该字段为null。</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>network</dt><dd><ul class="simple">
+<li><p>名称：网络</p></li>
+<li><p>类型：netplan-format映射，参看下面</p></li>
+<li><p>默认值：用于DHCP协议的名字为eth*en*的网卡</p></li>
+<li><p>是否可交互：可</p></li>
+</ul>
+<p><a class="reference external" href="https://netplan.io/reference?_ga=2.114730432.698614161.1664162991-1711338095.1646124381">netplan</a> 格式的网络配置。将在安装期间以及已安装的系统中应用。默认是解释安装媒介的配置，它在名称匹配 <strong>“eth*”</strong> 或 <strong>“en*”</strong> 的任何网卡上运行 <strong>DHCPv4</strong> 请求，并随后禁用任何未获取到IP地址的网卡。</p>
+<p>例如，要在特定网卡 <strong>enp0s31f6</strong> 上运行 <strong>dhcp6</strong> 请求：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">network</span><span class="p">:</span>
+  <span class="n">version</span><span class="p">:</span> <span class="mi">2</span>
+  <span class="n">ethernets</span><span class="p">:</span>
+    <span class="n">enp0s31f6</span><span class="p">:</span>
+      <span class="n">dhcp6</span><span class="p">:</span> <span class="n">yes</span>
+</pre></div>
+</div>
+<p>请注意，由于一个错误，随 <strong>20.04 GA</strong> 发布的 <strong>subiquity</strong> 版本强制您使用额外的 <strong>“network:”</strong> 关键字编写此代码，如下所示：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">network</span><span class="p">:</span>
+<span class="c1">#多了上一层network:</span>
+  <span class="n">network</span><span class="p">:</span>
+    <span class="n">version</span><span class="p">:</span> <span class="mi">2</span>
+    <span class="n">ethernets</span><span class="p">:</span>
+      <span class="n">enp0s31f6</span><span class="p">:</span>
+        <span class="n">dhcp6</span><span class="p">:</span> <span class="n">yes</span>
+</pre></div>
+</div>
+<p>更高版本也支持此语法（以实现兼容性），但如果可以确定采用修复后的新版本，则应使用前者（无需使用额外的 <strong>“network:”</strong> 关键字）。</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>proxy</dt><dd><ul class="simple">
+<li><p>名称：代理</p></li>
+<li><p>类型：URL或null</p></li>
+<li><p>默认值：null</p></li>
+<li><p>是否可交互：可</p></li>
+</ul>
+<p>在安装期间以及在目标系统中为 <strong>apt</strong> 和 <strong>snapd</strong> 配置的代理，以便访问网络。</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>apt</dt><dd><ul class="simple">
+<li><p>名称：APT高级包管理工具</p></li>
+<li><p>类型：映射</p></li>
+<li><p>默认值：参看下面</p></li>
+<li><p>是否可交互：可</p></li>
+</ul>
+<p>APT配置，在安装期间和引导到目标系统后都使用。</p>
+<p>这使用与 <a class="reference external" href="https://curtin.readthedocs.io/en/latest/topics/apt_source.html">https://curtin.readthedocs.io/en/latest/topics/apt_source.html</a> 中描述的 <strong>curtin</strong> 格式相同的格式，但有一个扩展：关键字 <strong>geoip</strong> 控制是否完成地理IP(geoip)查找。</p>
+<p>默认值为：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="p">:</span>
+    <span class="n">preserve_sources_list</span><span class="p">:</span> <span class="n">false</span>
+    <span class="n">primary</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">arches</span><span class="p">:</span> <span class="p">[</span><span class="n">i386</span><span class="p">,</span> <span class="n">amd64</span><span class="p">]</span>
+          <span class="n">uri</span><span class="p">:</span> <span class="s2">"http://archive.ubuntu.com/ubuntu"</span>
+        <span class="o">-</span> <span class="n">arches</span><span class="p">:</span> <span class="p">[</span><span class="n">default</span><span class="p">]</span>
+          <span class="n">uri</span><span class="p">:</span> <span class="s2">"http://ports.ubuntu.com/ubuntu-ports"</span>
+    <span class="n">geoip</span><span class="p">:</span> <span class="n">true</span>
+</pre></div>
+</div>
+<p>如关键字 <strong>geoip</strong> 为 <strong>true</strong> 并且要使用的镜像源是默认值（ <strong>http://archive.ubuntu.com/ubuntu</strong> 或 <strong>http://ports.ubuntu.com/ubuntu-ports</strong> 等），则向 <strong>https://geoip.ubuntu.com/lookup</strong> 发出请求，并且将使用的镜像URI更改为 <strong>http://CC.archive.ubuntu.com/ubuntu</strong>  , 其中 <strong>CC</strong> 是查找返回的国家代码（或类似的端口，对于中国为 <strong>CN</strong> ），这将使用所在国家区域的源，提升网络更新速度。如果此部分不是交互式的，则请求会在10秒后超时。</p>
+<p>任何提供的配置都会与默认配置合并，而不是替换它。</p>
+<p>如果您只想设置镜像源，请使用如下配置：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="p">:</span>
+    <span class="n">primary</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">arches</span><span class="p">:</span> <span class="p">[</span><span class="n">default</span><span class="p">]</span>
+          <span class="n">uri</span><span class="p">:</span> <span class="n">YOUR_MIRROR_GOES_HERE</span>
+</pre></div>
+</div>
+<p>增加一个 <strong>PPA</strong>  源：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="p">:</span>
+    <span class="n">sources</span><span class="p">:</span>
+        <span class="n">curtin</span><span class="o">-</span><span class="n">ppa</span><span class="p">:</span>
+            <span class="n">source</span><span class="p">:</span> <span class="n">ppa</span><span class="p">:</span><span class="n">curtin</span><span class="o">-</span><span class="n">dev</span><span class="o">/</span><span class="n">test</span><span class="o">-</span><span class="n">archive</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>storage</dt><dd><ul class="simple">
+<li><p>名称：存储</p></li>
+<li><p>类型：映射，参看下面</p></li>
+<li><p>默认值：对于单块硬盘为 <strong>lvm</strong> ，对于多块硬盘则无默认值</p></li>
+<li><p>是否可交互：可</p></li>
+</ul>
+<p>存储配置是一个复杂的话题，自动安装文件中所需配置的描述也可能很复杂。安装程序支持“布局layouts”，即表达常见配置的简单方法。</p>
+<ul>
+<li><p>支持的布局</p>
+<blockquote>
+<div><p>目前支持的布局就两种，分别是逻辑卷模式 <strong>lvm</strong> 和直通模式 <strong>direct</strong> 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">storage</span><span class="p">:</span>
+  <span class="n">layout</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">lvm</span>
+<span class="n">storage</span><span class="p">:</span>
+  <span class="n">layout</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">direct</span>
+</pre></div>
+</div>
+<p>默认情况下，这些将安装到系统中容量最大的磁盘，但您可以提供匹配规范（“match: {}”，见下文）来指示要使用的磁盘：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">storage</span><span class="p">:</span>
+  <span class="n">layout</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">lvm</span>
+    <span class="n">match</span><span class="p">:</span>
+      <span class="n">serial</span><span class="p">:</span> <span class="n">CT</span><span class="o">*</span>
+<span class="n">storage</span><span class="p">:</span>
+  <span class="n">layout</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">disk</span>
+    <span class="n">match</span><span class="p">:</span>
+      <span class="n">ssd</span><span class="p">:</span> <span class="n">yes</span>
+</pre></div>
+</div>
+<p>（可以用“match: {}”来匹配任意磁盘）</p>
+<p>默认采用 <strong>lvm</strong> 。</p>
+</div></blockquote>
+</li>
+<li><p>基于动作的配置</p>
+<blockquote>
+<div><p>为了获得完全的灵活性，安装程序允许使用一种语法完成存储配置，该语法是 <strong>curtin</strong> 支持的语法的超集，在 <a class="reference external" href="https://curtin.readthedocs.io/en/latest/topics/storage.html">https://curtin.readthedocs.io/en/latest/topics/storage.html</a> 中进行了描述。</p>
+<p>如果使用 <strong>layout</strong> 功能配置磁盘，则不会使用 <strong>config</strong> 部分。</p>
+<p>除了将操作列表放在关键字 <strong>config</strong> 下之外， <a class="reference external" href="https://curtin.readthedocs.io/en/latest/topics/config.html#grub">grub</a> 和 <a class="reference external" href="https://curtin.readthedocs.io/en/latest/topics/config.html#swap">swap</a> curtin配置项也可以放在此处。因此存储部分可能如下所示：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">storage</span><span class="p">:</span>
+    <span class="n">swap</span><span class="p">:</span>
+        <span class="n">size</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="n">config</span><span class="p">:</span>
+        <span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">disk</span>
+          <span class="nb">id</span><span class="p">:</span> <span class="n">disk0</span>
+          <span class="n">serial</span><span class="p">:</span> <span class="n">ADATA_SX8200PNP_XXXXXXXXXXX</span>
+        <span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">partition</span>
+          <span class="o">...</span>
+</pre></div>
+</div>
+<p>Curtin语法的扩展围绕磁盘选择和分区/逻辑卷大小调整。</p>
+</div></blockquote>
+</li>
+<li><p>磁盘选择扩展</p>
+<blockquote>
+<div><p>Curtin支持通过串行（如 <em>Crucial_CT512MX100SSD1_14250C57FECE</em> ）或路径（如 <em>/dev/sdc</em> ）识别磁盘，服务器安装程序也支持这一点。安装程序还支持磁盘操作上的 <strong>match spec</strong> ，支持更灵活的匹配。</p>
+<p>存储配置中的操作按照它们在自动安装文件中的顺序进行处理。任何磁盘操作都会被分配一个匹配的磁盘——如果有多个磁盘，则从一组未分配的磁盘中任意选择，如果没有未分配的匹配磁盘，则会导致安装失败。</p>
+<p>匹配规范支持以下关键字：
+- <strong>model: foo</strong> ：匹配 <strong>udev</strong> 中 <strong>ID_VENDOR=foo</strong> 的磁盘，支持通配符
+- <strong>path: foo</strong> ：匹配 <strong>udev</strong> 中 <strong>DEVPATH=foo</strong> 的磁盘，支持通配符（通配符支持将此与直接在磁盘操作中指定 <strong>path: foo</strong> 区分开来）
+- <strong>serial: foo</strong> ：匹配 <strong>udev</strong> 中 <strong>ID_SERIAL=foo</strong> 的磁盘，支持通配符（通配符支持将此与直接在磁盘操作中指定 <strong>serial: foo</strong> 区分开来）
+- <strong>ssd: yes|no</strong> ：匹配是或不是 <strong>SSD</strong> 的磁盘（相对于机械硬盘）
+- <strong>size: largest|smallest</strong> ：如果有多个匹配项，则取最大或最小的磁盘而不是任意一个（在 20.06.1 版本中添加了对最小 <strong>smallest</strong> 的支持）</p>
+<p>因此，例如，要匹配任意磁盘，只需：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">disk</span>
+  <span class="nb">id</span><span class="p">:</span> <span class="n">disk0</span>
+</pre></div>
+</div>
+<p>匹配容量最大的SSD硬盘：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">disk</span>
+  <span class="nb">id</span><span class="p">:</span> <span class="n">big</span><span class="o">-</span><span class="n">fast</span><span class="o">-</span><span class="n">disk</span>
+  <span class="n">match</span><span class="p">:</span>
+    <span class="n">ssd</span><span class="p">:</span> <span class="n">yes</span>
+    <span class="n">size</span><span class="p">:</span> <span class="n">largest</span>
+</pre></div>
+</div>
+<p>匹配希捷Seagate硬盘：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">disk</span>
+  <span class="nb">id</span><span class="p">:</span> <span class="n">data</span><span class="o">-</span><span class="n">disk</span>
+  <span class="n">match</span><span class="p">:</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">Seagate</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>分区/逻辑卷扩展</p>
+<blockquote>
+<div><dl class="simple">
+<dt>curtin 中的分区或逻辑卷的大小指定为字节数。自动安装配置更加灵活：</dt><dd><ul class="simple">
+<li><p>您可以使用安装程序用户界面中支持的“1G”、“512M”语法指定大小</p></li>
+<li><p>您可以将大小指定为包含磁盘（或RAID）的百分比，例如“50%”</p></li>
+<li><p>对于为特定设备指定的最后一个分区，您可以将大小指定为“-1”以指示该分区应填充剩余空间。</p></li>
+</ul>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">partition</span>
+  <span class="nb">id</span><span class="p">:</span> <span class="n">boot</span><span class="o">-</span><span class="n">partition</span>
+  <span class="n">device</span><span class="p">:</span> <span class="n">root</span><span class="o">-</span><span class="n">disk</span>
+  <span class="n">size</span><span class="p">:</span> <span class="mi">10</span><span class="o">%</span>
+<span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">partition</span>
+  <span class="nb">id</span><span class="p">:</span> <span class="n">root</span><span class="o">-</span><span class="n">partition</span>
+  <span class="n">size</span><span class="p">:</span> <span class="mi">20</span><span class="n">G</span>
+<span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">partition</span>
+  <span class="nb">id</span><span class="p">:</span> <span class="n">data</span><span class="o">-</span><span class="n">partition</span>
+  <span class="n">device</span><span class="p">:</span> <span class="n">root</span><span class="o">-</span><span class="n">disk</span>
+  <span class="n">size</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>identity</dt><dd><ul class="simple">
+<li><p>名称：身份</p></li>
+<li><p>类型：映射，参看下面</p></li>
+<li><p>默认值：无</p></li>
+<li><p>是否可交互：可</p></li>
+</ul>
+<p>配置系统的初始用户。这是唯一必须存在的配置关键字（除非存在用户数据部分，在这种情况下它是可选的）。</p>
+<dl class="simple">
+<dt>可以包含关键字的映射，所有关键字都采用字符串值：</dt><dd><ul class="simple">
+<li><p>realname：实际名</p></li>
+<li><p>username：用户名</p></li>
+<li><p>hostname： 主机名</p></li>
+<li><p>password：密码，加密的。这是与 sudo 一起使用时所必需的，即使配置了 SSH 访问。</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>ssh</dt><dd><ul class="simple">
+<li><p>名称： <strong>SSH</strong> 服务</p></li>
+<li><p>类型：映射，参看下面</p></li>
+<li><p>默认值：参看下面</p></li>
+<li><p>是否可交互：可</p></li>
+</ul>
+<p>为已安装的系统配置 <strong>SSH</strong> 服务。可以包含关键字的映射：</p>
+<ul>
+<li><dl>
+<dt>install-server</dt><dd><ul class="simple">
+<li><p>名称：安装 <strong>SSH</strong> 服务</p></li>
+<li><p>类型：布尔型</p></li>
+<li><p>默认值：false，不安装</p></li>
+</ul>
+<p>是否安装 <strong>OpenSSH</strong> 服务。</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>authorized-keys</dt><dd><ul class="simple">
+<li><p>名称： <strong>SSH</strong> 认证公钥</p></li>
+<li><p>类型：字符串列表</p></li>
+<li><p>默认值：[]</p></li>
+</ul>
+<p>要安装在初始用户帐户中的 SSH 公钥列表，方便其他主机采用密钥通过 <strong>SSH</strong> 访问该主机。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>allow-pw</dt><dd><ul class="simple">
+<li><p>名称：是否允许密码</p></li>
+<li><p>类型：布尔型</p></li>
+<li><p>默认值：当 <strong>authorized_keys</strong> 为空时为真 <strong>true</strong> ，否则为否 <strong>false</strong></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>snaps</dt><dd><ul class="simple">
+<li><p>名称：snap包</p></li>
+<li><p>类型：列表</p></li>
+<li><p>默认值：不安装其他snap</p></li>
+<li><p>是否可交互：可</p></li>
+</ul>
+<p>要安装的snap快照包列表。每个snap都表示为具有必需的关键字 <strong>name</strong> 和可选的关键字 <strong>chanel</strong> （默认为 <strong>stable</strong> ）和 <strong>classic</strong> （经典默认为 <strong>false</strong> ）的映射。如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">snaps</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">etcd</span>
+      <span class="n">channel</span><span class="p">:</span> <span class="n">edge</span>
+      <span class="n">classic</span><span class="p">:</span> <span class="n">false</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>debconf-selections</dt><dd><ul class="simple">
+<li><p>名称：采用 <strong>debconf</strong> 设置包选择</p></li>
+<li><p>类型：字符串</p></li>
+<li><p>默认值：无</p></li>
+<li><p>是否可交互：否</p></li>
+</ul>
+<p>安装程序将使用 <strong>debconf</strong> 设置选择值更新目标。用户需要熟悉软件包 <strong>debconf</strong> 选项。</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>packages</dt><dd><ul class="simple">
+<li><p>名称：软件包</p></li>
+<li><p>类型：列表</p></li>
+<li><p>默认值：无软件包</p></li>
+<li><p>是否可交互：否</p></li>
+</ul>
+<p>要安装到目标系统中的软件包列表。更准确地说，是传递给命令 <code class="docutils literal notranslate"><span class="pre">apt-get</span> <span class="pre">install</span></code> 的字符串列表，因此这包括任务选择（ <strong>dns-server^</strong> ）和安装特定版本的包（ <strong>my-package=1-1</strong> ）。</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>late-commands</dt><dd><ul class="simple">
+<li><p>名称：后期命令</p></li>
+<li><p>类型：命令列表</p></li>
+<li><p>默认值：无命令</p></li>
+<li><p>是否可交互：否</p></li>
+</ul>
+<p>在安装成功完成并安装任何更新和软件包之后运行的 Shell 命令，就在系统重新启动之前。它们在安装程序环境中运行，已安装的系统安装在目录 <em>/target</em> 。您可以运行 <code class="docutils literal notranslate"><span class="pre">curtin</span> <span class="pre">in-target</span> <span class="pre">--</span> <span class="pre">$shell_command</span></code> （使用 20.04 GA 发布的 subiquity 版本，您需要将其指定为 <code class="docutils literal notranslate"><span class="pre">curtin</span> <span class="pre">in-target</span> <span class="pre">--target=/target</span> <span class="pre">--</span> <span class="pre">$shell_command</span></code> ）以在目标系统中运行（类似了解如何在 <strong>d-i preseed/late_command</strong> 中使用简单的目标内）。</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>error-commands</dt><dd><ul class="simple">
+<li><p>名称：出错处理命令</p></li>
+<li><p>类型：命令列表</p></li>
+<li><p>默认值：无命令</p></li>
+<li><p>是否可交互：否</p></li>
+</ul>
+<p>安装失败后运行的 Shell 命令。它们在安装程序环境中运行，并且目标系统（或安装程序设法配置的尽可能多的系统）将安装在目录 <em>/target</em> 。日志将在实时会话中的目录  <em>/var/log/installer</em> 中可用。</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>reporting</dt><dd><ul class="simple">
+<li><p>名称：报告</p></li>
+<li><p>类型：映射</p></li>
+<li><p>默认值： <strong>type: print</strong> ，导致 tty1 和任何已配置的串行控制台上的输出</p></li>
+<li><p>是否可交互：否</p></li>
+</ul>
+<p>安装程序支持向各种目的地报告进度。请注意，如果有任何交互部分，则忽略此部分；它仅适用于全自动安装。</p>
+<p>配置，实际上实现，与<a class="reference external" href="https://curtin.readthedocs.io/en/latest/topics/reporting.html">curtin使用</a>的90%相同。</p>
+<p>配置中报告映射中的每个键都定义了一个目标，其中子关键字 <strong>type</strong> 是以下之一：</p>
+<p>（原文在该处有 <strong>The rsyslog reporter does not yet exist</strong> ，没理解为什么在这个位置说这个，也不清楚什么含义）</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>print</strong> ：在 tty1 和任何配置的串行控制台上打印进度信息。没有其他配置。</p></li>
+<li><p><strong>rsyslog</strong> ：通过 rsyslog 报告进度。目标键指定将输出发送到何处。</p></li>
+<li><p><strong>webhook</strong> ：通过将 JSON 报告发布到 URL 来报告进度。接受与 curtin 相同的配置。</p></li>
+<li><p><strong>none</strong> ：不报告进度。仅对禁止默认输出有用。</p></li>
+</ul>
+</div></blockquote>
+<p>例子：</p>
+<p>默认配置：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">reporting</span><span class="p">:</span>
+ <span class="n">builtin</span><span class="p">:</span>
+  <span class="nb">type</span><span class="p">:</span> <span class="nb">print</span>
+</pre></div>
+</div>
+<p>输出到 <strong>rsyslog</strong> ：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">reporting</span><span class="p">:</span>
+ <span class="n">central</span><span class="p">:</span>
+  <span class="nb">type</span><span class="p">:</span> <span class="n">rsyslog</span>
+  <span class="n">destination</span><span class="p">:</span> <span class="o">@</span><span class="mf">192.168.0.1</span>
+</pre></div>
+</div>
+<p>抑制默认输出：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">reporting</span><span class="p">:</span>
+ <span class="n">builtin</span><span class="p">:</span>
+  <span class="nb">type</span><span class="p">:</span> <span class="n">none</span>
+</pre></div>
+</div>
+<p>输出到 <strong>curtin</strong> 样式的 <strong>webhook</strong> ：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">reporting</span><span class="p">:</span>
+ <span class="n">hook</span><span class="p">:</span>
+  <span class="nb">type</span><span class="p">:</span> <span class="n">webhook</span>
+  <span class="n">endpoint</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">endpoint</span><span class="o">/</span><span class="n">path</span>
+  <span class="n">consumer_key</span><span class="p">:</span> <span class="s2">"ck_foo"</span>
+  <span class="n">consumer_secret</span><span class="p">:</span> <span class="s2">"cs_foo"</span>
+  <span class="n">token_key</span><span class="p">:</span> <span class="s2">"tk_foo"</span>
+  <span class="n">token_secret</span><span class="p">:</span> <span class="s2">"tk_secret"</span>
+  <span class="n">level</span><span class="p">:</span> <span class="n">INFO</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>user-data</dt><dd><ul class="simple">
+<li><p>名称：用户数据</p></li>
+<li><p>类型：映射</p></li>
+<li><p>默认值：{}</p></li>
+<li><p>是否可交互：否</p></li>
+</ul>
+<p>提供 <strong>cloud-init</strong> 用户数据，它将与安装程序生成的用户数据 <strong>user-data</strong> 合并。如果您提供此信息，则无需提供身份 ** identity** 部分（但您有责任确保您可以登录到已安装的系统！）。</p>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="id16">
+<h1 id="id16">参考<a class="headerlink" href="#id16" title="永久链接至标题">¶</a></h1>
+<ul class="simple">
+<li><p>网络启动： <a class="reference external" href="https://ubuntu.com/server/docs/install/netboot-amd64">https://ubuntu.com/server/docs/install/netboot-amd64</a></p></li>
+<li><p>自动安装： <a class="reference external" href="https://ubuntu.com/server/docs/install/autoinstall">https://ubuntu.com/server/docs/install/autoinstall</a></p></li>
+</ul>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="index.html" title="Ubuntu 22.04下的PXE安装服务配置"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> Ubuntu 22.04下的PXE安装服务配置 </span>
+              </div>
+            </a>
+          
+          
+            <a href="contact.html" title="联系方式"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> 联系方式 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2022, 李会民，中国科学技术大学超级计算中心(http://scc.ustc.edu.cn).
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

@@ -1,0 +1,134 @@
+\documentclass[12pt,a4paper]{article}
+%\usepackage{amsmath}
+%\usepackage{amsthm}
+%\usepackage{fontspec,xltxtra,xunicode}
+\usepackage{fontspec}
+\usepackage[BoldFont,SlantFont,CJKchecksingle]{xeCJK}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{textcomp}
+\usepackage{color}
+\usepackage{longtable}
+%\usepackage{ccmap}
+\usepackage{setspace}
+\usepackage{framed}
+\setlength{\parindent}{5.0ex}
+\let\asas=\cite
+\lstset{upquote=true,frameround=fttt,flexiblecolumns=true,columns=fullflexible,showtabs=true,lineskip=0.5ex,literate=*{-}{-}1}
+%http://tex.stackexchange.com/questions/51604/problems-with-copy-and-paste-from-pdf-using-lstlisting
+\renewcommand\cite[1]{\textsuperscript{\asas{#1}}}
+\renewcommand\arraystretch{1.5}
+\newcommand{\alert}[1]{{\color{red}{#1}}}
+\newcommand{\com}[2]{{#1}{\color{red}\it #2}}
+\newcommand{\LS}[1]{\lstinline[escapechar=`,tabsize=4,basicstyle={\itshape\color{red}}]^#1^}
+\newcommand{\fl}[1]{\lstinline[escapechar=`,tabsize=4,basicstyle={\itshape\color{blue}}]^#1^}
+%\newcommand{\fl}[1]{{\it\color{blue}{#1}}}
+\newcommand{\env}[1]{\lstinline[escapechar=`,tabsize=4,basicstyle={\itshape}]^#1^}
+%\newcommand{\env}[1]{\lstinline[escapechar=`,tabsize=4,basicstyle={\color{magenta}\itshape}]^#1^}
+%\newcommand{\B}[1]{{\bf #1}}
+\newcommand{\wuhao}{\fontsize{8pt}{9.3pt}\selectfont}
+%\newcommand{\out}[1]{{#1}\\}
+\addtolength{\textheight}{80pt}
+\addtolength{\textwidth}{60pt}
+\addtolength{\headheight}{10pt}
+\addtolength{\hoffset}{-30pt}
+\addtolength{\voffset}{-50pt}
+\renewcommand{\baselinestretch}{1.2}
+%\definecolor{bkcolor}{gray}{.825}
+%\lstset{backgroundcolor=\color{bkcolor}}
+\setlength{\parskip}{1.0ex}
+\setlength{\parindent}{5.0ex}
+\setlength{\arraycolsep}{2pt}
+%\lstset{upquote=true,showspaces=true,frameround=fttt,flexiblecolumns=true,columns=fullflexible,showtabs=true,lineskip=0.5ex}
+%\AtBeginDvi{\special{pdf:tounicode GBK-EUC-UCS2}}
+%\lstnewenvironment{C}[1][]{\lstset{language=c,frame=trBL,frameround=fttt,#1,flexiblecolumns=true,basicstyle=\tiny}}{}
+\lstnewenvironment{CT}[1][]{\lstset{language=c,frame=trl,basicstyle=\ttfamily,#1}}{}
+\lstnewenvironment{CB}[1][]{\lstset{language=c,frame=rbl,basicstyle=\ttfamily,#1}}{}
+\lstnewenvironment{CC}[1][]{\lstset{language=c,frame=single,basicstyle=\ttfamily,#1}}{}
+\lstnewenvironment{F}[1][]{\lstset{language=[77]Fortran,frame=single,basicstyle=\ttfamily,#1}}{}
+\lstnewenvironment{F90}[1][]{\lstset{language=[90]Fortran,frame=single,basicstyle=\ttfamily,#1}}{}
+\lstnewenvironment{FT}[1][]{\lstset{language=[77]Fortran,frame=trl,basicstyle=\ttfamily,#1}}{}
+\lstnewenvironment{FB}[1][]{\lstset{language=[77]Fortran,frame=brl,basicstyle=\ttfamily,#1}}{}
+\lstnewenvironment{SHT}[1][]{\lstset{language=sh,frame=trL,#1}}{}
+\lstnewenvironment{SHB}[1][]{\lstset{language=sh,frame=rBL,#1}}{}
+\lstnewenvironment{SH}[1][]{\lstset{language=sh,frame=trBL,flexiblecolumns=true,columns=fullflexible,basicstyle=\ttfamily,fontadjust,#1}}{}
+%\lstnewenvironment{SH}[1][]{\lstset{language=sh,frame=tb,frameround=fttt,#1,flexiblecolumns=true}}{}
+\lstnewenvironment{OUT}[1][]{\lstset{frame=tb,basicstyle=\ttfamily,columns=flexible,showspaces=false,#1}}{}
+\lstnewenvironment{OUTT}[1][]{\lstset{frame=t,basicstyle=\ttfamily,columns=flexible,showspaces=false,#1}}{}
+\lstnewenvironment{OUTB}[1][]{\lstset{frame=b,basicstyle=\ttfamily,columns=flexible,showspaces=false,#1}}{}
+\definecolor{shadecolor}{gray}{1.0}
+
+\newsavebox{\logo}
+\sbox{\logo}{ \includegraphics[height=0.81\headheight,keepaspectratio]{ustc_logo} }
+\setlength{\unitlength}{1pt}
+
+\fancypagestyle{plain}{%
+    \fancyhf{}%
+    \renewcommand{\headrulewidth}{0pt}%
+    \renewcommand{\footrulewidth}{0pt}%
+    }
+\pagestyle{fancy} 
+\fancyhf{ }
+\fancyhead[RE,LO]{\small\usebox{\logo}}
+\fancyhead[CE,CO]{\small\leftmark}
+\fancyhead[LE,RO]{\small \thepage}
+
+\newcommand{\mytitle}{Slurm作业调度系统使用指南}
+\hypersetup{
+    pdftitle={\mytitle},
+    pdfauthor={李会民},
+    pdfsubject={\mytitle},
+    pdfkeywords={中国科大、高性能计算、超级计算、用户手册、编译器、MPI、OpenMP、Slurm},
+    colorlinks={true},
+    linkcolor={blue},
+    unicode=false,
+    bookmarks=true,
+    bookmarksnumbered=false,
+    bookmarksopen=false,
+    breaklinks=false,
+    pdfborder={0 0 1},
+	backref=false
+}
+\setmainfont{Times New Roman}
+\setromanfont{Times New Roman}
+%\setCJKmainfont{SimSun}
+%\setCJKfamilyfont{song}{SimSun}
+\setCJKmainfont{AR PL SungtiL GB}
+\setCJKfamilyfont{song}{AR PL SungtiL GB}
+%{AR PL SungtiL GB}
+\CJKsetecglue{}
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip=0pt plus 1pt minus 0.1pt
+
+\renewcommand\figurename{图}
+\renewcommand\contentsname{目录}
+\renewcommand{\tablename}{表}
+%\renewcommand{\partname}{部分}
+
+\begin{document}
+\title{\bf\huge{Slurm作业调度系统使用指南}}
+\author{\href{http://hmli.ustc.edu.cn}{李会民}\\ \href{http://scc.ustc.edu.cn}{中国科大超级计算中心}}
+%\institute[中国科大超算中心]{\href{http://www.ustc.edu.cn}{中国科学技术大学}{\href{http://scc.ustc.edu.cn}{火灾科学国家重点实验室}}}
+%\institute[中国科学院近地空间科学重点实验室]{\href{http://space.ustc.edu.cn}{中国科学院近地空间科学重点实验室}}
+%\ject{中国科学院近地空间科学重点实验室浪潮天梭10000超算系统使用指南}
+%\title{-2008年4月至2011年6月}
+%\keywords{超算平台}
+%\author[李会民]{\href{http://hmli.ustc.edu.cn}{李会民}\\ \texttt{\href{mailto:hmli@ustc.edu.cn}{hmli@ustc.edu.cn}}}
+%\institute[hmli@ustc.edu.cn]{中国科学技术大学网络信息中心}
+\renewcommand{\today}{\number\year 年\number\month 月\number\day 日}
+\date{\today}
+
+\maketitle
+\tableofcontents
+\include{preface}
+%\newpage
+%\include{introduction}
+\newpage
+\include{slurm}
+\newpage
+\include{contact}
+
+\end{document}

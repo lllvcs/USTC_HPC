@@ -1,0 +1,1388 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Intel C/C++ Fortran编译器 &#8212; 中国科大超级计算中心用户使用文档 2021-03 文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="PGI C/C++ Fortran编译器" href="pgi.html" />
+    <link rel="prev" title="Intel、PGI及GNU C/C++ Fortran编译器介绍" href="index.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=#4000FF data-md-color-accent=light-blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#compiler/intel" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="中国科大超级计算中心用户使用文档 2021-03 文档"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../_static/logo.png" height="26"
+                   alt="中国科大超级计算中心用户使用文档 2021-03 文档 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">中国科大超算中心用户使用手册</span>
+          <span class="md-header-nav__topic"> Intel C/C++ Fortran编译器 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://git.ustc.edu.cn/scc/user-doc" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    手册源码git
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../"versions.json"",
+        target_loc = "../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">中国科大超级计算中心用户使用文档 2021-03 文档</a></li>
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">Intel、PGI及GNU C/C++ Fortran编译器介绍</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="中国科大超级计算中心用户使用文档 2021-03 文档" class="md-nav__button md-logo">
+      
+        <img src="../_static/logo.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="中国科大超级计算中心用户使用文档 2021-03 文档">中国科大超算中心用户使用手册</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://git.ustc.edu.cn/scc/user-doc" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    手册源码git
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../preface.html" class="md-nav__link">前言</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../introduction/index.html" class="md-nav__link">现有超级计算系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../login-ftp/login-ftp.html" class="md-nav__link">用户登录与文件传输</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../module-environment/module-environment.html" class="md-nav__link">设置编译及运行环境</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../serial-compiling/serial-compiling.html" class="md-nav__link">串行及OpenMP程序编译及运行</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="index.html" class="md-nav__link">Intel、PGI及GNU C/C++ Fortran编译器介绍</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Intel C/C++ Fortran编译器 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Intel C/C++ Fortran编译器</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#compiler-intel--page-root" class="md-nav__link">Intel C/C++ Fortran编译器</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">Intel C/C++ Fortran编译器简介</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">编译错误</a>
+        </li>
+        <li class="md-nav__item"><a href="#fortran" class="md-nav__link">Fortran程序运行错误</a>
+        </li>
+        <li class="md-nav__item"><a href="#intel-parallel-studio-xe" class="md-nav__link">Intel Parallel Studio XE版重要编译选项</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">优化选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">代码生成选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#ipo" class="md-nav__link">过程间优化(IPO)选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">高级优化选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#pgo" class="md-nav__link">概要导向优化(PGO)选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">优化报告选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#openmp" class="md-nav__link">OpenMP和并行处理选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">浮点选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">内联选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#pch" class="md-nav__link">输出、调试及预编译头文件(PCH)选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id9" class="md-nav__link">预处理选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#c-c" class="md-nav__link">C/C++语言选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id10" class="md-nav__link">Fortran语言选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id11" class="md-nav__link">数据选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id12" class="md-nav__link">编译器诊断选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id13" class="md-nav__link">兼容性选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id14" class="md-nav__link">链接和链接器选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id15" class="md-nav__link">其它选项</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+  </ul>
+</nav>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#id1" class="md-nav__link">Intel C/C++ Fortran编译器简介</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id2" class="md-nav__link">编译错误</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#fortran" class="md-nav__link">Fortran程序运行错误</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#intel-parallel-studio-xe" class="md-nav__link">Intel Parallel Studio XE版重要编译选项</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="pgi.html" class="md-nav__link">PGI C/C++ Fortran编译器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="gnu.html" class="md-nav__link">GNU C/C++ Fortran编译器</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../gpu-computing/gpu-computing.html" class="md-nav__link">GPU异构计算和CUDA程序简介</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../mpi-application/mpi-application.html" class="md-nav__link">MPI并行程序编译及运行</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../debug/debug.html" class="md-nav__link">程序调试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../intel-mkl/intel-mkl.html" class="md-nav__link">Intel MKL数值函数库</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../compile-install/compile-install.html" class="md-nav__link">应用程序的编译与安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../slurm/index.html" class="md-nav__link">Slurm作业调度系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../lsf/lsf.html" class="md-nav__link">LSF作业调度系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../latex.html" class="md-nav__link">LaTeX pdf版</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../contact.html" class="md-nav__link">联系方式</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#compiler-intel--page-root" class="md-nav__link">Intel C/C++ Fortran编译器</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">Intel C/C++ Fortran编译器简介</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">编译错误</a>
+        </li>
+        <li class="md-nav__item"><a href="#fortran" class="md-nav__link">Fortran程序运行错误</a>
+        </li>
+        <li class="md-nav__item"><a href="#intel-parallel-studio-xe" class="md-nav__link">Intel Parallel Studio XE版重要编译选项</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">优化选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">代码生成选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#ipo" class="md-nav__link">过程间优化(IPO)选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">高级优化选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#pgo" class="md-nav__link">概要导向优化(PGO)选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">优化报告选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#openmp" class="md-nav__link">OpenMP和并行处理选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">浮点选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">内联选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#pch" class="md-nav__link">输出、调试及预编译头文件(PCH)选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id9" class="md-nav__link">预处理选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#c-c" class="md-nav__link">C/C++语言选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id10" class="md-nav__link">Fortran语言选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id11" class="md-nav__link">数据选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id12" class="md-nav__link">编译器诊断选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id13" class="md-nav__link">兼容性选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id14" class="md-nav__link">链接和链接器选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id15" class="md-nav__link">其它选项</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="intel-c-c-fortran">
+<h1 id="compiler-intel--page-root">Intel C/C++ Fortran编译器<a class="headerlink" href="#compiler-intel--page-root" title="此标题的永久链接">¶</a></h1>
+<section id="id1">
+<h2 id="id1">Intel C/C++ Fortran编译器简介<a class="headerlink" href="#id1" title="此标题的永久链接">¶</a></h2>
+<p><a class="reference external" href="https://software.intel.com/en-us/parallel-studio-xe">Intel Parallel Studio XE Cluster</a>版C/C++ Fortran编译器，是一种主要针对Inetl平台的高性能编译器，可用于开发复杂且要进行大量计算的C/C++、Fortran程序。</p>
+<p>系统当前安装目录为，其下有多种年份版本。官方手册目录为 <code class="docutils literal notranslate"><span class="pre">/opt/intel</span></code> 。用户可以采用molule命令来设置所需的环境，请参看 <a class="reference external" href="../module-environment/module-environment.html#module">[设置编译及运行环境]</a>。</p>
+<p>Intel编译器编译C和C++源程序的编译命令分别为<code class="docutils literal notranslate"><span class="pre">icc</span></code>和<code class="docutils literal notranslate"><span class="pre">icpc</span></code>；编译Fortran源程序的命令为<code class="docutils literal notranslate"><span class="pre">ifort</span></code>。<code class="docutils literal notranslate"><span class="pre">icpc</span></code>命令使用与<code class="docutils literal notranslate"><span class="pre">icc</span></code>命令相同的编译器选项，利用<code class="docutils literal notranslate"><span class="pre">icpc</span></code>编译时将后缀为.c和.i的文件看作为C++文件；而利用<code class="docutils literal notranslate"><span class="pre">icc</span></code>编译时将后缀为.c和.i的文件则看作为C文件。用<code class="docutils literal notranslate"><span class="pre">icpc</span></code>编译时，总会链接C++库；而用<code class="docutils literal notranslate"><span class="pre">icc</span></code>编译时，只有在编译命令行中包含C++源文件时才链接C++库。</p>
+<p>编译命令格式为：<code class="docutils literal notranslate"><span class="pre">command</span> <span class="pre">[options]</span> <span class="pre">[@response_file]</span> <span class="pre">file1</span> <span class="pre">[file2...]</span></code>，其中<code class="docutils literal notranslate"><span class="pre">response_file</span></code>为文件名，此文件包含一些编译选项，请注意调用时前面有个@。</p>
+<p>在Intel数学库(Intelmath)中的许多函数针对Intel微处理器相比针对非Intel微处理器做了非常大的优化处理。</p>
+<p>为了使用Intel数学库中的函数，需要在程序源文件中包含头文件，例如使用实函数：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="c1">// real_math.c</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mathimf.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">fp32bits</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">fp64bits</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">fp80bits</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">pi_by_four</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.141592653589793238</span><span class="o">/</span><span class="mf">4.0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// pi/4 radians is about 45 degrees</span>
+<span class="w">    </span><span class="n">fp32bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="w"> </span><span class="n">pi_by_four</span><span class="p">;</span><span class="w"> </span><span class="c1">// float approximation to pi/4</span>
+<span class="w">    </span><span class="n">fp64bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="w"> </span><span class="n">pi_by_four</span><span class="p">;</span><span class="w"> </span><span class="c1">// double approximation to pi/4</span>
+<span class="w">    </span><span class="n">fp80bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pi_by_four</span><span class="p">;</span><span class="w"> </span><span class="c1">// long double (extended) approximation to pi/4</span>
+
+<span class="w">    </span><span class="c1">// The sin(pi/4) is known to be 1/sqrt(2) or approximately .7071067</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">"When x = %8.8f, sinf(x) = %8.8f </span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">fp32bits</span><span class="p">,</span><span class="w"> </span><span class="n">sinf</span><span class="p">(</span><span class="n">fp32bits</span><span class="p">));</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">"When x = %16.16f, sin(x) = %16.16f </span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">fp64bits</span><span class="p">,</span><span class="w"> </span><span class="n">sin</span><span class="p">(</span><span class="n">fp64bits</span><span class="p">));</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">"When x = %20.20Lf, sinl(x) = %20.20f </span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">fp80bits</span><span class="p">,</span><span class="w"> </span><span class="n">sinl</span><span class="p">(</span><span class="n">fp80bits</span><span class="p">));</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>编译：<code class="docutils literal notranslate"><span class="pre">icc</span> <span class="pre">real_math.c</span></code></p>
+</section>
+<section id="id2">
+<h2 id="id2">编译错误<a class="headerlink" href="#id2" title="此标题的永久链接">¶</a></h2>
+<p>C/C++程序编译时的出错信息类似以下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">netlog</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="mi">140</span><span class="p">):</span> <span class="n">error</span><span class="p">:</span> <span class="n">identifier</span> <span class="s2">"hhh"</span> <span class="ow">is</span> <span class="n">undefined</span>
+                    <span class="k">for</span><span class="p">(</span><span class="nb">int</span> <span class="n">hhh</span><span class="o">=</span><span class="n">domain_cnt</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="n">hhh</span><span class="o">&gt;</span><span class="n">TMP</span><span class="p">;</span><span class="n">hhh</span><span class="o">--</span><span class="p">){</span>
+                                             <span class="o">^</span>
+<span class="n">netlog</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="mi">156</span><span class="p">):</span> <span class="n">error</span><span class="p">:</span> <span class="n">expected</span> <span class="n">an</span> <span class="n">expression</span>
+<span class="k">for</span><span class="p">(</span><span class="nb">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">32</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="k">for</span><span class="p">(</span><span class="nb">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="mi">256</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="k">if</span><span class="p">(</span><span class="n">ip1</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">)</span><span class="n">fprintf</span><span class="p">(</span><span class="n">fin</span><span class="p">);</span>
+    <span class="o">^</span>
+</pre></div>
+</div>
+<p>Fortran程序编译时的出错信息类似以下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NOlihm</span><span class="o">.</span><span class="n">f90</span><span class="p">(</span><span class="mi">146</span><span class="p">):</span> <span class="n">error</span> <span class="c1">#6404: This name does not have a type, and must</span>
+<span class="n">have</span> <span class="n">an</span> <span class="n">explicit</span> <span class="nb">type</span><span class="o">.</span>   <span class="p">[</span><span class="n">NPR</span><span class="p">]</span>
+  <span class="n">n2nd</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  <span class="n">npr</span><span class="o">=</span><span class="mi">0</span>
+<span class="o">-----------^</span>
+<span class="n">NOlihm</span><span class="o">.</span><span class="n">f90</span><span class="p">(</span><span class="mi">542</span><span class="p">):</span> <span class="n">remark</span> <span class="c1">#8290: Recommended relationship between field width</span>
+<span class="s1">'W'</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">fractional</span> <span class="n">digits</span> <span class="s1">'D'</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">edit</span> <span class="n">descriptor</span> <span class="ow">is</span> <span class="s1">'W&gt;=D+3'</span><span class="o">.</span>
+<span class="mi">6060</span> <span class="nb">format</span><span class="p">(</span><span class="o">/</span><span class="n">i2</span><span class="p">,</span><span class="s1">'-th layer'</span><span class="p">,</span><span class="n">i2</span><span class="p">,</span><span class="s1">'-th element: z='</span><span class="p">,</span><span class="n">i3</span><span class="p">,</span><span class="s1">' a='</span><span class="p">,</span><span class="n">f9</span><span class="mf">.5</span><span class="o">/</span><span class="s1">' Ef='</span><span class="p">,</span><span class="n">f7</span><span class="mf">.5</span><span class="p">)</span>
+<span class="o">-----------------------------------------------------------------------^</span>
+</pre></div>
+</div>
+<p>编译错误的格式为：</p>
+<ul class="simple">
+<li><p>源文件名(行数): 错误类型:具体说明</p></li>
+<li><p>源代码，^指示出错位置</p></li>
+</ul>
+<p>错误类型可以为：</p>
+<ul class="simple">
+<li><p>Warning：警告，报告对编译有效但也许存在问题的语法，请根据信息及程序本身判断，不一定需要处理。</p></li>
+<li><p>Error：存在语法或语义问题，必须要处理。</p></li>
+<li><p>Fatal Error：报告环境错误，如磁盘空间没有了。</p></li>
+</ul>
+</section>
+<section id="fortran">
+<h2 id="fortran">Fortran程序运行错误<a class="headerlink" href="#fortran" title="此标题的永久链接">¶</a></h2>
+<p>根据运行时错误代码可以在<a class="reference external" href="https://software.intel.com/en-us/fortran-compiler-developer-guide-and-reference-list-of-run-time-error-messages">官方手册</a>中查找对应错误解释。</p>
+</section>
+<section id="intel-parallel-studio-xe">
+<h2 id="intel-parallel-studio-xe">Intel Parallel Studio XE版重要编译选项<a class="headerlink" href="#intel-parallel-studio-xe" title="此标题的永久链接">¶</a></h2>
+<p>Intel编译器选项分为几类，可以用<code class="docutils literal notranslate"><span class="pre">icc</span> <span class="pre">-help</span> <span class="pre">类别</span></code>查看对应的选项，类别与选项对应关系如下：</p>
+<dl class="simple">
+<dt>advanced</dt><dd><ul class="simple">
+<li><p>Advanced Optimizations，高级优化</p></li>
+</ul>
+</dd>
+<dt>codegen</dt><dd><ul class="simple">
+<li><p>Code Generation，代码生成</p></li>
+</ul>
+</dd>
+<dt>compatibility</dt><dd><ul class="simple">
+<li><p>Compatibility，兼容性</p></li>
+</ul>
+</dd>
+<dt>component</dt><dd><ul class="simple">
+<li><p>Component Control，组件控制</p></li>
+</ul>
+</dd>
+<dt>data</dt><dd><ul class="simple">
+<li><p>Data，数据</p></li>
+</ul>
+</dd>
+<dt>deprecated</dt><dd><ul class="simple">
+<li><p>Deprecated Options，过时选项</p></li>
+</ul>
+</dd>
+<dt>diagnostics</dt><dd><ul class="simple">
+<li><p>Compiler Diagnostics，编译器诊断</p></li>
+</ul>
+</dd>
+<dt>float</dt><dd><ul class="simple">
+<li><p>Floating Point，浮点</p></li>
+</ul>
+</dd>
+<dt>help</dt><dd><ul class="simple">
+<li><p>Help，帮助</p></li>
+</ul>
+</dd>
+<dt>inline</dt><dd><ul class="simple">
+<li><p>Inlining，内联</p></li>
+</ul>
+</dd>
+<dt>ipo</dt><dd><ul class="simple">
+<li><p>Interprocedural Optimization (IPO)，过程间优化</p></li>
+</ul>
+</dd>
+<dt>language</dt><dd><ul class="simple">
+<li><p>Language，语言</p></li>
+</ul>
+</dd>
+<dt>link</dt><dd><ul class="simple">
+<li><p>Linking/Linker，链接/链接器</p></li>
+</ul>
+</dd>
+<dt>misc</dt><dd><ul class="simple">
+<li><p>Miscellaneous，杂项</p></li>
+</ul>
+</dd>
+<dt>opt</dt><dd><ul class="simple">
+<li><p>Optimization，优化</p></li>
+</ul>
+</dd>
+<dt>output</dt><dd><ul class="simple">
+<li><p>Output，输出</p></li>
+</ul>
+</dd>
+<dt>pgo</dt><dd><ul class="simple">
+<li><p>Profile Guided Optimization (PGO)，概要导向优化</p></li>
+</ul>
+</dd>
+<dt>preproc</dt><dd><ul class="simple">
+<li><p>Preprocessor，预处理</p></li>
+</ul>
+</dd>
+<dt>reports</dt><dd><ul class="simple">
+<li><p>Optimization Reports，优化报告</p></li>
+</ul>
+</dd>
+<dt>openmp</dt><dd><ul class="simple">
+<li><p>OpenMP and Parallel Processing，OpenMP和并行处理</p></li>
+</ul>
+</dd>
+</dl>
+<p>可以运行<code class="docutils literal notranslate"><span class="pre">icc</span> <span class="pre">-help</span> <span class="pre">help</span></code>查看选项分类情况。</p>
+<section id="id3">
+<h3 id="id3">优化选项<a class="headerlink" href="#id3" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-fast：最大化整个程序的速度，相当于设置-ipo、-O3、-no-prec-div、-static、-fp-model fast=2和-xHost。这里是所谓的最大化，还是需要结合程序本身使用合适的选项，默认不使用此选项。</p></li>
+<li><p>-nolib-inline：取消标准库和内在函数的内联展开。</p></li>
+<li><p>-O<em>n</em>：设定优化级别，默认为O2。O与O2相同，推荐使用；O3为在O2基础之上增加更激进的优化，比如包含循环和内存读取转换和预取等，但在有些情况下速度反而慢，建议在具有大量浮点计算和大数据处理的循环时的程序使用。</p></li>
+<li><p>-Ofast：设定一定的优化选项提高程序性能，设定-O3, -no-prec-div和-fp-model fast=2。在Linux系统上提供与gcc的兼容。</p></li>
+<li><p>-Os：启用优化，但不增加代码大小，并且产生比-O2优化小的代码。它取消了一些优化不明显却增大了代码的优化选项。</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3 id="id4">代码生成选项<a class="headerlink" href="#id4" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-ax<em>code</em>：在有性能提高时，生成针对Intel处理器的多特征面向的自动调度代码路径。<em>code</em>可为：</p>
+<ul>
+<li><p>COMMON-AVX512：生成Intel(R) Advanced Vector Extensions 512 (Intel(R) AVX-512)基础指令。</p></li>
+<li><p>CORE-AVX2：生成IntelAdvanced Vector Extensions 2 (IntelAVX2)、IntelAVX、SSE4.2、SSE4.1、SSE3、SSE2、SSE和SSSE3指令。</p></li>
+<li><p>CORE-AVX-I：生成Float-16转换指令和RDRND（随机数）指令、IntelAdvanced Vector Extensions (IntelAVX)、IntelSSE4.2、SSE4.1、SSE3、SSE2、SSE和SSSE3指令。</p></li>
+<li><p>AVX：生成IntelAdvanced Vector Extensions (IntelAVX)、IntelSSE4.2、SSE4.1、SSE3、SSE2、SSE和SSSE3指令。</p></li>
+<li><p>SSE4.2：生成IntelSSE4.2、SSE4.1、SSE3、SSE2、SSE和SSSE3指令。</p></li>
+<li><p>SSE4.1：生成IntelSSE4.1、SSE3、SSE2、SSE和SSSE3指令</p></li>
+<li><p>SSSE3：生成SSSE3指令和IntelSSE3、SSE2和SSE指令。</p></li>
+<li><p>SSE3：生成IntelSSE3、SSE2和SSE指令。</p></li>
+<li><p>SSE2：生成IntelSSE2和SSE指令。</p></li>
+</ul>
+</li>
+<li><p>-fexceptions、-fno-exceptions：是否生成异常处理表。</p></li>
+<li><p>-x<em>code</em>：设置启用编译目标的特征，包含采取何种指令集和优化。</p>
+<ul>
+<li><p>COMMON-AVX512</p></li>
+<li><p>CORE-AVX2</p></li>
+<li><p>CORE-AVX-I</p></li>
+<li><p>AVX</p></li>
+<li><p>SSE4.2</p></li>
+<li><p>SSE4.1</p></li>
+<li><p>SSSE3</p></li>
+<li><p>SSE3</p></li>
+<li><p>SSE2</p></li>
+</ul>
+</li>
+<li><p>-m<em>code</em>：需要生成目标特征的指令集。<em>code</em>可为：</p>
+<ul>
+<li><p>avx：生成IntelAdvanced Vector Extensions (IntelAVX)、IntelSSE4.2、SSE4.1、SSE3、SSE2、SSE和SSSE3指令。</p></li>
+<li><p>sse4.2：生成IntelSSE4.2、SSE4.1、SSE3、SSE2、SSE和SSSE3指令。</p></li>
+<li><p>sse4.1：生成IntelSSE4.1、SSE3、SSE2、SSE和SSSE3指令。</p></li>
+<li><p>ssse3：生成SSSE3指令和IntelSSE3、SSE2和SSE指令。</p></li>
+<li><p>sse3：生成IntelSSE3、SSE2和SSE指令。</p></li>
+<li><p>sse2：生成IntelSSE2和SSE指令。</p></li>
+<li><p>sse：已过时，现在与ia32一样。</p></li>
+<li><p>ia32：生成与IA-32架构兼容的x86/x87通用代码。取消任何默认扩展指令集，任何之前的扩展指令集。并且取消所有面向特征的优化及指令。此值仅在Linux系统上使用IA-32架构时有效。</p></li>
+</ul>
+</li>
+<li><p>-m32和-m64：生成IA-32或Intel64位代码，默认由主机系统设定。</p></li>
+<li><p>-march=<em>processor</em>：生成支持某种处理器特定特征的代码。<em>processor</em>可为：</p>
+<ul>
+<li><p>generic</p></li>
+<li><p>core-avx2</p></li>
+<li><p>core-avx-i</p></li>
+</ul>
+</li>
+<li><p>-mtune=<em>processor</em>：针对特定处理器优化。<em>processor</em>可为：</p>
+<ul>
+<li><p>generic（默认）</p></li>
+<li><p>core-avx2</p></li>
+<li><p>core-avx-i</p></li>
+</ul>
+</li>
+<li><p>-xHost：生成编译主机处理器能支持的最高指令集。</p></li>
+</ul>
+</section>
+<section id="ipo">
+<h3 id="ipo">过程间优化(IPO)选项<a class="headerlink" href="#ipo" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-ip：在单个文件中进行过程间优化(Interprocedural Optimizations-IPO)。</p></li>
+<li><p>-ip-no-inlining：禁止过程间优化时启用的全部和部分内联。</p></li>
+<li><p>-ip-no-pinlining：禁止过程间优化时启用的部分内联。</p></li>
+<li><p>-ipo<em>[n]</em>、-no-ipo：是否在多文件中进行过程间优化，非负整数<em>n</em>为可生成的对象文件数。</p></li>
+<li><p>-ipo-c：在多文件中进行过程间优化，并生成一个对象文件。</p></li>
+<li><p>-ipo-jobs<em>n</em>：指定在过程间优化的链接阶段时的命令（作业）数。</p></li>
+<li><p>-ipo-S：在多文件中进行过程间优化，并生成一个汇编文件。</p></li>
+<li><p>-ipo-separate：在多文件中进行过程间优化，并为每个文件分别生成一个对象文件。</p></li>
+</ul>
+</section>
+<section id="id5">
+<h3 id="id5">高级优化选项<a class="headerlink" href="#id5" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-funroll-all-loops：即使在循环次数不确定的情况下也展开所有循环。默认为否。</p></li>
+<li><p>-guide<em>[=n]</em>：设置自动向量化、自动并行及数据变换的指导级别。<em>n</em>为1到4，1为标准指导，4为最高指导，如果<em>n</em>忽略，则默认为4。默认为不启用。</p></li>
+<li><p>-guide-data-trans<em>[=n]</em>：设置数据变换时的指导级别。<em>n</em>为1到4，1为标准指导，4为最高指导，如果<em>n</em>忽略，则默认为4。默认为不启用。</p></li>
+<li><p>-guide-file<em>[=filename]</em>：将自动并行的结果输出到文件<em>filename</em>中。</p></li>
+<li><p>-guide-file-append<em>[=filename]</em>：将自动并行的结果追加到文件<em>filename</em>中。</p></li>
+<li><p>-guide-par<em>[=n]</em>：设置自动并行的指导级别。<em>n</em>为1到4，1为标准指导，4为最高指导，如果<em>n</em>忽略，则默认为4。默认为不启用。</p></li>
+<li><p>-guide-vec<em>[=n]</em>：设置自动向量化的指导级别。<em>n</em>为1到4，1为标准指导，4为最高指导，如果<em>n</em>忽略，则默认为4。默认为不启用。</p></li>
+<li><p>-mkl<em>[=lib]</em>：链接时自动链接Intel MKL库，默认为不启用。<em>lib</em>可以为：</p>
+<ul>
+<li><p>parallel：采用线程化部分的MKL库链接，此为<em>lib</em>如果没指明时的默认选项。</p></li>
+<li><p>sequential：采用未线程化的串行MKL库链接。</p></li>
+<li><p>cluster：采用集群部分和串行部分MKL链接。</p></li>
+</ul>
+</li>
+<li><p>-simd、-no-simd：是否启用SIMD编译指示的编译器解释。</p></li>
+<li><p>-unroll<em>[=n]</em>：设置循环展开的最大层级。</p></li>
+<li><p>-unroll-aggressive、-no-unroll-aggressive：设置对某些循环执行激进展开。默认不启用。</p></li>
+<li><p>-vec、-no-vec：是否启用向量化。默认启用。</p></li>
+</ul>
+</section>
+<section id="pgo">
+<h3 id="pgo">概要导向优化(PGO)选项<a class="headerlink" href="#pgo" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-p：使用gprof编译和链接函数。</p></li>
+<li><p>-prof-dir <em>dir</em>：设定存储概要导向优化信息的文件目录。</p></li>
+<li><p>-prof-file <em>filename</em>：设定概要摘要文件名。</p></li>
+</ul>
+</section>
+<section id="id6">
+<h3 id="id6">优化报告选项<a class="headerlink" href="#id6" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-qopt-report<em>[=n]</em>：设定显示优化报告信息的级别，为每个对象文件生成一个对应的文件。<em>n</em>为0（不显示）到5（最详细）。</p></li>
+<li><p>-qopqopt-report-file<em>=keyword</em>：设定报告文件名。<em>keyword</em>可以为：</p>
+<ul>
+<li><p>filename：保存输出的文件名。</p></li>
+<li><p>stderr：输出到标准错误输出。</p></li>
+<li><p>stdout：输出到标准输出。</p></li>
+</ul>
+</li>
+<li><p>-qopt-report-filter<em>=string</em>：设置报告的过滤器。<em>string</em>可以为filename、routine、range等。</p></li>
+<li><p>-qopt-report-format<em>=keyword</em>：设置报告的格式。<em>keyword</em>可以为text和vs，分别对应纯文本和Visual Studio格式。</p></li>
+<li><p>-qopt-report-help：显示使用-qopt-report-phase选项时可用于报告生成的各优化阶段，并显示各级别报告的简短描述。</p></li>
+<li><p>-qopt-report-per-object：为各对象文件生成独立的报告文件。</p></li>
+<li><p>-qopt-report-phase：对生成的优化报告指明一个或多个优化阶段。<em>phase</em>可以为：cg、ipo、loop、openmp、par、pgo、tcollect、vec和all等。</p></li>
+<li><p>-qopt-report-routine<em>=substring</em>：让编译器对含有<em>substring</em>的子程序生成优化报告。</p></li>
+<li><p>-qopt-report-names<em>=keyword</em>：是否在优化报告中显示重整的或未重整的名字。<em>keyword</em>可以为：mangled和unmangled。</p></li>
+<li><p>-tcheck：对线程应用启用分析。</p></li>
+<li><p>-tcollect<em>[lib]</em>：插入测试探测调用Intel Trace Collector API。<em>lib</em>为一种Intel Trace Collector库，例如：VT、VTcs、VTmc或VTfs。</p></li>
+<li><p>-tcollect-filter<em>filename</em>：对特定的函数启用或禁止测试。</p></li>
+<li><p>-vec-report<em>[=n]</em>：设置向量化诊断信息详细程度。<em>n</em>为0（不显示）到7（最详细）。</p></li>
+</ul>
+</section>
+<section id="openmp">
+<h3 id="openmp">OpenMP和并行处理选项<a class="headerlink" href="#openmp" title="此标题的永久链接">¶</a></h3>
+<ul>
+<li><p>-fmpc-privatize、-fno-mpc-privatize：是否启用针对多处理器计算环境(MPC)所有静态数据私有。</p></li>
+<li><p>-par-affinity=<em>[modifier,…]type[,permute][,offset]</em>：设定线程亲和性。</p>
+<ul class="simple">
+<li><p>modifier：可以为以下值之一：granularity=fine|thread|core、[no]respect、[no]verbose、[no]warnings、proclist=proc_list。默认为granularity=core, respect, noverbose。</p></li>
+<li><p>type：指示线程亲和性。此选项是必需的，并且需为以下之一：compact、disabled、explicit、none、scatter、logical、physical。默认为none。logical和physical已经过时。分别使用compact和scatter，并且没有permute值。</p></li>
+<li><p>permute：非负整数。当type设置为explicit、none或disabled时，不能使用此选项。默认为0。</p></li>
+<li><p>offset：非负整数。当type设置为explicit、none或disabled时，不能使用此选项。默认为0。</p></li>
+</ul>
+</li>
+<li><p>-par-num-threads=<em>n</em>：设定并行区域内的线程数。</p></li>
+<li><p>-par-report<em>n</em>：设定自动并行时诊断信息的显示级别。<em>n</em>可以为0到5。</p></li>
+<li><p>-par-runtime-control<em>n</em>、-no-par-runtime-control：设定是否对符号循环边界的循环执行运行时检查代码。</p></li>
+<li><p>-par-schedule<em>-keyword[=n]</em>：设定循环迭代的调度算法。<em>keyword</em>可以为：</p>
+<ul class="simple">
+<li><p>auto：由编译器或者运行时系统设定调度算法。</p></li>
+<li><p>static：将迭代分割成连续块。</p></li>
+<li><p>static-balanced：将迭代分割成偶数大小的块。</p></li>
+<li><p>static-steal：将迭代分割成偶数大小的块，但允许线程从临近线程窃取部分块。</p></li>
+<li><p>dynamic：动态获取迭代集。</p></li>
+<li><p>guided：设定迭代的最小值。</p></li>
+<li><p>guided-analytical：使用指数分布或动态分布分割迭代。</p></li>
+<li><p>runtime：直到运行时才设定调度分割。</p></li>
+</ul>
+<p><em>n</em>为每个迭代数或块大小。此设置，只能配合static、dynamic和guided使用。</p>
+</li>
+<li><p>-par-threshold<em>n</em>：设定针对循环自动并行的阈值。<em>n</em>为一个在0到100间的整数，限定针对循环自动并行的阈值：</p>
+<ul class="simple">
+<li><p>如<em>n</em>为0，则循环总会被并行。</p></li>
+<li><p>如<em>n</em>为100，则循环只有在基于编译器分析应用的数据能达到预期收益时才并行。</p></li>
+<li><p>1到99为预期可能的循环加速百分比。</p></li>
+</ul>
+</li>
+<li><p>-parallel：让自动并行器针对可以安全并行执行的循环生成多线程代码。</p></li>
+<li><p>-parallel-source-info<em>=n</em>、-no-parallel-source-info：设定当生成OpenMP或自动并行代码是否显示源位置。<em>n</em>为显示级别：</p>
+<ul class="simple">
+<li><p>0：禁止显示源位置信息。</p></li>
+<li><p>1：显示子程序名和行信息。</p></li>
+<li><p>2：显示路径、文件名、子程序名和行信息。</p></li>
+</ul>
+</li>
+<li><p>-qopenmp：编译OpenMP程序。注意：在一般只能在同一个节点内的CPU上运行OpenMP程序。</p></li>
+<li><p>-qopenmp-lib<em>=type</em>：设定链接时使用的OpenMP运行时库。当前<em>type</em>只能设定为compat。</p></li>
+<li><p>-qopenmp-link<em>=library</em>：设定采用动态还是静态链接OpenMP运行时库。<em>library</em>可以为static和dynamic，分别表示静态和动态链接OpenMP运行时库。</p></li>
+<li><p>-qopenmp-report<em>n</em>：设定OpenMP并行器的诊断信息的显示级别。<em>n</em>可以为0、1和2。</p></li>
+<li><p>-qopenmp-simd、-no-qopenmp-simd：设定是否启用OpenMP SIMD编译。</p></li>
+<li><p>-qopenmp-stubs：使用串行模式编译OpenMP程序。</p></li>
+<li><p>-qopenmp-task<em>=model</em>：设定OpenMP的任务模型。<em>model</em>可以为：</p>
+<ul class="simple">
+<li><p>intel：让编译接受Intel任务序列指导指令（#pragma intel_omp_taskq和#pragma intel_omp_task）。OpenMP API 3.0将被忽略。</p></li>
+<li><p>omp：让编译接受OpenMP API 3.0任务序列指导指令（#pragma omp_task）。Intel任务序列指导指令将被忽略。</p></li>
+</ul>
+</li>
+<li><p>-qopenmp-threadprivate<em>=type</em>：设定OpenMP线程私有的实现。<em>type</em>可以为：</p>
+<ul class="simple">
+<li><p>legacy：让编译器继承使用以前Intel编译器使用的OpenMP线程私有实现。</p></li>
+<li><p>compat：让编译器使用基于对每个私有线程变量应用__declspec(thread)属性的兼容OpenMP线程私有实现。</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id7">
+<h3 id="id7">浮点选项<a class="headerlink" href="#id7" title="此标题的永久链接">¶</a></h3>
+<ul>
+<li><p>-fast-transcendentals：让编译器使用超越函数代替，超越函数是较快但精度较低的实现。</p></li>
+<li><p>-fimf-absolute-error<em>=value[:funclist]</em>：定义对于数学函数返回值允许的最大绝对误差的值。<em>value</em>为正浮点数，<em>funclist</em>为函数名列表。如：-fimf-absolute-error=0.00001:sin,sinf。</p></li>
+<li><p>-fimf-accuracy-bits=<em>bits[:funclist]</em>：定义数学函数返回值的相对误差，包含除法及开方。<em>bits</em>为正浮点数，指明编译器应该使用的正确位数，<em>funclist</em>为函数名列表。如：-fimf-accuracy-bits=23:sin,sinf。bits与ulps之间的变换关系为：<span class="math notranslate nohighlight">\(ulps=2^{p-1-bits}\)</span>，其中<span class="math notranslate nohighlight">\(p\)</span>为目标格式尾数<span class="math notranslate nohighlight">\(bits\)</span>的位数（对应单精度、双精度和长双精度分别为23、53和64）。</p></li>
+<li><p>-fimf-max-error<em>=ulps[:funclist]</em>：定义对于数学函数返回值的最大允许相对误差，包含除法及开方。<em>value</em>为正浮点数，指定编译器可以使用的最大相对误差，<em>funclist</em>为函数名列表，如：-fimf-max-error=4.0:sin,sinf。</p></li>
+<li><p>-fimf-precision<em>[=value[:funclist]]</em>：当设定使用何种数学库函数时，定义编译器应该使用的精度。<em>value</em>可以为：</p>
+<ul class="simple">
+<li><p>high：等价于max-error = 0.6</p></li>
+<li><p>medium：等价于max-error = 4</p></li>
+<li><p>low：等价于accuracy-bits = 11（对单精度）和accuracy-bits = 26（对双精度）</p></li>
+</ul>
+<p><em>funclist</em>为函数名列表，如： -fimf-precision=high:sin,sinf。</p>
+</li>
+<li><p>-fma、-no-fma：是否对存在融合乘加(fused multiply-add-FMA)的目标处理器启用融合乘加。此选项只有在-x或-march参数设定CORE-AVX2或更高时才有效。</p></li>
+<li><p>-fp-model <em>keyword</em>：控制浮点计算的语义，<em>keyword</em>可以为：</p>
+<ul class="simple">
+<li><p>precise：取消浮点数据的非值安全优化。</p></li>
+<li><p>fast[=1|2]：对浮点数据启用更加激进的优化。</p></li>
+<li><p>strict：启用精度和异常，禁止收缩，启用编译指示stdc和fenv_access。</p></li>
+<li><p>source：四舍五入中间结果到源定义精度。</p></li>
+<li><p>double：四舍五入中间结果到53-bit（双）精度。</p></li>
+<li><p>extended：四舍五入中间结果到64-bit（扩展）精度。</p></li>
+<li><p>[no-]except：定义严格浮点异常编译指令是否启用。</p></li>
+</ul>
+<p><em>keyword</em>可以分成以下三组使用：</p>
+<ul class="simple">
+<li><p>precise, fast, strict</p></li>
+<li><p>source, double, extended</p></li>
+<li><p>except</p></li>
+</ul>
+</li>
+<li><p>-fp-port、-no-fp-port：是否对浮点操作启用四舍五入。</p></li>
+<li><p>-fp-speculation<em>=mode</em>：设定推测浮点操作时使用的模式。<em>mode</em>可以为：</p>
+<ul class="simple">
+<li><p>fast：让编译器推测浮点操作。</p></li>
+<li><p>safe：让编译器在推测浮点操作有可能存在浮点异常时停止推测。</p></li>
+<li><p>strict：让编译器禁止浮点操作时推测。</p></li>
+<li><p>off：与strict相同。</p></li>
+</ul>
+</li>
+<li><p>-fp-trap<em>=mode[,mode,…]</em>：设置主函数的浮点异常捕获模式。<em>mode</em>可以为：</p>
+<ul class="simple">
+<li><p>[no]divzero：是否启用被0除时的IEEE捕获。</p></li>
+<li><p>[no]inexact：是否启用不精确结果时的IEEE捕获。</p></li>
+<li><p>[no]invalid：是否启用无效操作时的IEEE捕获。</p></li>
+<li><p>[no]overflow：是否启用上溢时的IEEE捕获。</p></li>
+<li><p>[no]underflow：是否启用下溢时的IEEE捕获。</p></li>
+<li><p>[no]denormal：是否启用非正规时的IEEE捕获。</p></li>
+<li><p>all：启用上述所有的IEEE捕获。</p></li>
+<li><p>none：禁止启用上述所有的IEEE捕获。</p></li>
+<li><p>common：启用最常见的IEEE捕获：被0除、无效操作和上溢。</p></li>
+</ul>
+</li>
+<li><p>-fp-trap-all<em>=mode[,mode,…]</em>：设置所有函数的浮点异常捕获模式。<em>mode</em>可以为：</p>
+<ul class="simple">
+<li><p>[no]divzero：是否启用被0除时的IEEE捕获。</p></li>
+<li><p>[no]inexact：是否启用不精确结果时的IEEE捕获。</p></li>
+<li><p>[no]invalid：是否启用无效操作时的IEEE捕获。</p></li>
+<li><p>[no]overflow：是否启用上溢时的IEEE捕获。</p></li>
+<li><p>[no]underflow：是否启用下溢时的IEEE捕获。</p></li>
+<li><p>[no]denormal：是否启用非正规时的IEEE捕获。</p></li>
+<li><p>all：启用上述所有的IEEE捕获。</p></li>
+<li><p>none：禁止启用上述所有的IEEE捕获。</p></li>
+<li><p>common：启用最常见的IEEE捕获：被0除、无效操作和上溢。</p></li>
+</ul>
+</li>
+<li><p>-ftz：赋值非常规操作结果为0。</p></li>
+<li><p>-mp1：提高浮点操作的精度和一致性。</p></li>
+<li><p>-pc<em>n</em>：设定浮点尾数精度。<em>n</em>可以为：</p>
+<ul class="simple">
+<li><p>32：四舍五入尾数到24位（单精度）。</p></li>
+<li><p>64：四舍五入尾数到53位（双精度）。</p></li>
+<li><p>80：四舍五入尾数到64位（扩展精度）。</p></li>
+</ul>
+</li>
+<li><p>-prec-div、-no-prec-div：是否提高浮点除的精度。</p></li>
+<li><p>-prec-sqrt、-no-prec-sqrt：是否提高开根的精度。</p></li>
+<li><p>-rcd：启用快速浮点数到整数转换。</p></li>
+</ul>
+</section>
+<section id="id8">
+<h3 id="id8">内联选项<a class="headerlink" href="#id8" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-gnu89-inline：设定编译器在C99模式时使用C89定义处理内联函数。</p></li>
+<li><p>-finline、-fno-inline：是否对__inline声明的函数进行内联，并执行C++内联。</p></li>
+<li><p>-finline-functions、-fno-inline-functions：对单个文件编译时启用函数内联。</p></li>
+<li><p>-finline-limit<em>=n</em>：设定内联函数的最大数。<em>n</em>为非负整数。</p></li>
+<li><p>-inline-calloc、-no-inline-calloc：是否设定编译器内联调用calloc()为调用malloc()和memset()。</p></li>
+<li><p>-inline-factor、-no-inline-factor：是否设定适用于所有内联选项定义的上限的比例乘法器。</p></li>
+<li><p>-inline-level<em>=n</em>：设定内联函数的展开级别。<em>n</em>可以为0、1、2.</p></li>
+</ul>
+</section>
+<section id="pch">
+<h3 id="pch">输出、调试及预编译头文件(PCH)选项<a class="headerlink" href="#pch" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-c：仅编译成对象文件（.o文件）。</p></li>
+<li><p>-debug <em>[keyword]</em>：设定是否生成调试信息。<em>keyword</em>可以为：</p>
+<ul>
+<li><p>none：不生成调试信息。</p></li>
+<li><p>full或all：生成完全调试信息。</p></li>
+<li><p>minimal：生成最少调试信息。</p></li>
+<li><p>[no]emit_column：设定是否针对调试生成列号信息。</p></li>
+<li><p>[no]expr-source-pos：设定是否在表达式粒度级别生成源位置信息。</p></li>
+<li><p>[no]inline-debug-info：设定是否针对内联代码生成增强调试信息。</p></li>
+<li><p>[no]macros：设定是否针对C/C++宏生成调试信息。</p></li>
+<li><p>[no]pubnames：设定是否生成DWARF debug_pubnames节。</p></li>
+<li><p>[no]semantic-stepping：设定是否生成针对断点和单步的增强调试信息。</p></li>
+<li><p>[no]variable-locations：设定是否编译器生成有助于寻找标量局部变量的增强型调试信息。</p></li>
+<li><p>extended：设定关键字值semantic-stepping和variable-locations。</p></li>
+<li><p>[no]parallel：设定是否编译器生成并行调试代码指令以有助于线程数据共享和可重入调用探测。</p></li>
+</ul>
+</li>
+<li><p>-g：包含调试信息。</p></li>
+<li><p>-g0：禁止生成符号调试信息。</p></li>
+<li><p>-gdwarf-<em>n</em>：设定生成调试信息时的DWARF版本，<em>n</em>可以为2、3、4。</p></li>
+<li><p>-o file：指定生成的文件名。</p></li>
+<li><p>-pch：设定编译器使用适当的预编译头文件。</p></li>
+<li><p>-pch-create <em>filename</em>：设定生成预编译头文件。</p></li>
+<li><p>-pch-dir <em>dir</em>：设定搜索预编译头文件的目录。</p></li>
+<li><p>-pch-use <em>filename</em>：设定使用的预编译头文件。</p></li>
+<li><p>-print-multi-lib：打印哪里系统库文件应该被发现。</p></li>
+<li><p>-S：设定编译器只是生成汇编文件但并不进行链接。</p></li>
+</ul>
+</section>
+<section id="id9">
+<h3 id="id9">预处理选项<a class="headerlink" href="#id9" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-B<em>dir</em>：设定头文件、库文件及可执行文件的搜索路径。</p></li>
+<li><p>-D<em>name[=value]</em>：设定编译时的宏及其值。</p></li>
+<li><p>-dD：输出预处理的源文件中的#define指令。</p></li>
+<li><p>-dM：输出预处理后的宏定义。</p></li>
+<li><p>-dN：与-dD类似，但只输出的#define指令的宏名。</p></li>
+<li><p>-E：设定预处理时输出到标注输出。</p></li>
+<li><p>-EP：设定预处理时输出到标注输出，忽略#line指令。</p></li>
+<li><p>-gcc、-no-gcc、-gcc-sys：判定确定的GNU宏(__GNUC__、__GNUC_MINOR__和__GNUC_PATCHLEVEL__)是否定义。</p></li>
+<li><p>-gcc-include-dir、-no-gcc-include-dir：设定是否将gcc设定的头文件路径加入到头文件路径中。</p></li>
+<li><p>-H：编译时显示头文件顺序并继续编译。</p></li>
+<li><p>-I：设定头文件附加搜索路径。</p></li>
+<li><p>-icc、-no-icc：设定Intel宏(__INTEL_COMPILER)是否定义。</p></li>
+<li><p>-idirafter<em>dir</em>：设定<em>dir</em>路径到第二个头文件搜索路径中。</p></li>
+<li><p>-imacros <em>filename</em>：允许一个头文件在编译时在其它头文件前面。</p></li>
+<li><p>-iprefix <em>prefix</em>：指定包含头文件的参考目录的前缀。</p></li>
+<li><p>-iquote <em>dir</em>：在搜索的头文件路径前面增加<em>dir</em>目录以供那些使用引号而不是尖括号的文件使用。</p></li>
+<li><p>-isystem<em>dir</em>：附加<em>dir</em>目录到系统头文件的开始。</p></li>
+<li><p>-iwithprefix<em>dir</em>：附加<em>dir</em>目录到通过-iprefix引入的前缀后，并将其放在头文件目录末尾的头文件搜索路径中。</p></li>
+<li><p>-iwithprefixbeforex<em>dir</em>：除头文件目录<em>dir</em>放置的位置与-I声明的一样外，与-iwithprefix类似。</p></li>
+<li><p>-M：让编译器针对各源文件生成makefile依赖行。</p></li>
+<li><p>-MD：预处理和编译，生成后缀为.d包含依赖关系的输出文件。</p></li>
+<li><p>-MF<em>filename</em>：让编译器在一个文件中生成makefile依赖信息。</p></li>
+<li><p>-MG：让编译器针对各源文件生成makefile依赖行。与-M类似，但将缺失的头文件作为生成的文件。</p></li>
+<li><p>-MM：让编译器针对各源文件生成makefile依赖行。与-M类似，但不包含系统头文件。</p></li>
+<li><p>-MMD：预处理和编译，生成后缀为.d包含依赖关系的输出文件。与-M类似，但不包含系统头文件。</p></li>
+<li><p>-MP：让编译器对每个依赖生成伪目标。</p></li>
+<li><p>-MQ<em>target</em>：对依赖生成改变默认目标规则。<em>target</em>是要使用的目标规则。与-MT类似，但引用特定Make字符。</p></li>
+<li><p>-MT<em>target</em>：对依赖生成改变默认目标规则。<em>target</em>是要使用的目标规则。</p></li>
+<li><p>-nostdinc++：对C++不搜索标准目录下的头文件，而搜索其它标准目录。</p></li>
+<li><p>-P：停止编译处理，并将结果写入文件。</p></li>
+<li><p>-pragma-optimization-level<em>=interpretation</em>：指定如没有前缀指定时，采用何种优化级别编译指令解释。<em>interpretation</em>可以为：</p>
+<ul>
+<li><p>Intel：Intel解释。</p></li>
+<li><p>GCC：GCC解释。</p></li>
+</ul>
+</li>
+<li><p>-U<em>name</em>：取消某个宏的预定义。</p></li>
+<li><p>-undef：取消所有宏的预定义。</p></li>
+<li><p>-X：从搜索路径中去除标准搜索路径。</p></li>
+</ul>
+</section>
+<section id="c-c">
+<h3 id="c-c">C/C++语言选项<a class="headerlink" href="#c-c" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-ansi：与gcc的-ansi选项兼容。</p></li>
+<li><p>-check<em>=keyword[, keyword…]</em>：设定在运行时检查某些条件。<em>keyword</em>可以为：</p>
+<ul>
+<li><p>[no]conversions：设定是否在转换成较小类型时进行检查。</p></li>
+<li><p>[no]stack：设定是否在堆栈帧检查。</p></li>
+<li><p>[no]uninit：设定是否对未初始化变量进行检查。</p></li>
+</ul>
+</li>
+<li><p>-fno-gnu-keywords：让编译器不将typeof作为一个关键字。</p></li>
+<li><p>-fpermissive：让编译器允许非一致性代码。</p></li>
+<li><p>-fsyntax-only：让编译器仅作语法检查，不生成目标代码。</p></li>
+<li><p>-funsigned-char：将默认字符类型变为无符号类型。</p></li>
+<li><p>-help-pragma：显示所有支持的编译指令。</p></li>
+<li><p>-intel-extensions、-no-intel-extensions：是否启用Intel
+C和C++语言扩展。</p></li>
+<li><p>-restrict、-no-restrict：设定是否采用约束限定进行指针消岐。</p></li>
+<li><p>-std<em>=val</em>：<em>val</em>可以为c89、c99、gnu89、gnu++89或c++0x，分别对应相应标准。</p></li>
+<li><p>-stdlib<em>[=keyword]</em>：设定链接时使用的C++库。<em>keyword</em>可以为：</p>
+<ul>
+<li><p>libstdc++：链接使用GNU libstdc++库。</p></li>
+<li><p>libc++：链接使用libc++库。</p></li>
+</ul>
+</li>
+<li><p>-strict-ansi：让编译器采用严格的ANSI一致性语法。</p></li>
+<li><p>-x <em>type</em>：<em>type</em>可以为c、c++、c-header、cpp-output、c++-cpp-output、assembler、assembler-with-cpp或none，分别表示c源文件等，以使所有源文件都被认为是此类型的。</p></li>
+<li><p>-Zp<em>[n]</em>：设定结构体在字节边界的对齐。n是字节大小边界，可以为1、2、4、8和16。</p></li>
+</ul>
+</section>
+<section id="id10">
+<h3 id="id10">Fortran语言选项<a class="headerlink" href="#id10" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-auto-scalar：INTEGER、REAL、COMPLEX和LOGICAL内在类型变量，如未声明有SAVE属性，将分配到运行时堆栈中，下次调用此函数时变量赋值。</p></li>
+<li><p>-allow
+<em>keyword</em>：设定编译器是否允许某些行为。<em>keyword</em>可以为[no]fpp_comments，声明fpp预处理器如何处理在预处理指令行中的Fortran行尾注释。</p></li>
+<li><p>-altparam、-noaltparam：设定是否允许不同的语法（不带括号）PARAMETER声明。</p></li>
+<li><p>-assume <em>keyword[, keyword…]</em>：设定某些假设。<em>keyword</em>可以为：none、[no]bscc、[no]buffered_io、[no]buffered_stdout、[no]byterecl、[no]cc_omp、[no]dummy_aliases、[no]fpe_summary、[no]ieee_fpe_flags、[no]minus0、[no]old_boz、[no]old_ldout_format、[no]old_logical_ldio、[no]old_maxminloc、[no]old_unit_star、[no]old_xor、[no]protect_constants、[no]protect_parens、[no]realloc_lhs、[no]source_include、[no]std_intent_in、[no]std_minus0_rounding、[no]std_mod_proc_name、[no]std_value、[no]underscore、[no]2underscores、[no]writeable-strings等</p></li>
+<li><p>-ccdefault <em>keyword</em>：设置文件显示在终端上时的回车类型。<em>keyword</em>可以为：</p>
+<ul>
+<li><p>none：设定编译器使用无回车控制预处理。</p></li>
+<li><p>default：设定编译器使用默认回车控制设定。</p></li>
+<li><p>fortran：设定编译器使用通常的第一个字符的Fortran解释。如字符0使得在输出一个记录时先输出一个空行。</p></li>
+<li><p>list：设定编译器记录之间出输出换行。</p></li>
+</ul>
+</li>
+<li><p>-check<em>=keyword[, keyword…]</em>：设定在运行时检查某些条件。<em>keyword</em>可以为：</p>
+<ul>
+<li><p>none：禁止所有检查。</p></li>
+<li><p>[no]arg_temp_created：设定是否在子函数调用前检查实参。</p></li>
+<li><p>[no]assume：设定是否在测试在ASSUME指令中的标量布尔表达式为真，或在ASSUME_ALIGNED指令中的地址对齐声明的类型边界时进行检查。</p></li>
+<li><p>[no]bounds：设定是否对数组下标和字符子字符串表达式进行检查。</p></li>
+<li><p>[no]format：设定是否对格式化输出的数据类型进行检查。</p></li>
+<li><p>[no]output_conversion：设定是否对在指定的格式描述域内的数据拟合进行检查。</p></li>
+<li><p>[no]pointers：设定是否对存在一些分离的或未初始化的指针或为分配的可分配目标时进行检查。</p></li>
+<li><p>[no]stack：设定是否在堆栈帧检查。</p></li>
+<li><p>[no]uninit：设定是否对未初始化变量进行检查。</p></li>
+<li><p>all：启用所有检查。</p></li>
+</ul>
+</li>
+<li><p>-cpp：对源代码进行预处理，等价于-fpp。</p></li>
+<li><p>-extend-source<em>[size]</em>：指明固定格式的Fortran源代码宽度，<em>size</em>可为72、80和132。也可直接用-72、-80和-132指定，默认为72字符。</p></li>
+<li><p>-fixed：指明Fortran源代码为固定格式，默认由文件后缀设定格式类别。</p></li>
+<li><p>-free：指明Fortran源程序为自由格式，默认由文件后缀设定格式类别。</p></li>
+<li><p>-nofree：指明Fortran源程序为固定格式。</p></li>
+<li><p>-implicitnone：指明默认变量名为未定义。建议在写程序时添加implicit none语句，以避免出现由于默认类型造成的错误。</p></li>
+<li><p>-names <em>keyword</em>：设定如何解释源代码的标志符和外部名。<em>keyword</em>可以为：</p>
+<ul>
+<li><p>lowercase：让编译器忽略标识符的大小写不同，并转换外部名为小写。</p></li>
+<li><p>uppercase：让编译器忽略标识符的大小写不同，并转换外部名为大写。</p></li>
+<li><p>as_is：让编译器区分标识符的大小写，并保留外部名的大小写。</p></li>
+</ul>
+</li>
+<li><p>-pad-source、-nopad-source：对固定格式的源码记录是否采用空白填充行尾。</p></li>
+<li><p>-stand <em>keyword</em>：以指定Fortran标准进行编译，编译时显示源文件中不符合此标准的信息。<em>keyword</em>可为f03、f90、f95和none，分别对应显示不符合Fortran
+2003、90、95的代码信息和不显示任何非标准的代码信息，也可写为-std<em>keyword</em>，此时<em>keyword</em>不带f，可为03、90、95。</p></li>
+<li><p>-standard-semantics：设定编译器的当前Fortran标准行为是否完全实现。</p></li>
+<li><p>-syntax-only：仅仅检查代码的语法错误，并不进行其它操作。</p></li>
+<li><p>-wrap-margin、-no-wrap-margin：提供一种在Fortran列表输出时禁止右边缘包装。</p></li>
+<li><p>-us：编译时给外部用户定义的函数名添加一个下划线，等价于-assume
+underscore，如果编译时显示_函数找不到时也许添加此选项即可解决。</p></li>
+</ul>
+</section>
+<section id="id11">
+<h3 id="id11">数据选项<a class="headerlink" href="#id11" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>共有选项</p>
+<ul>
+<li><p>-fcommon、-fno-common：设定编译器是否将common符号作为全局定义。</p></li>
+<li><p>-fpic、-fno-pic：是否生成位置无关代码。</p></li>
+<li><p>-fpie：类似-fpic生成位置无关代码，但生成的代码只能链接到可执行程序。</p>
+<ul>
+<li><p>-gcc：定义GNU宏。</p></li>
+<li><p>-no-gcc：取消定义GNU宏。</p></li>
+<li><p>-gcc-sys：只有在编译系统头文件时定义GNU宏。</p></li>
+</ul>
+</li>
+<li><p>-mcmodel=<em>mem_model</em>：设定生成代码和存储数据时的内存模型。<em>mem_model</em>可以为：</p>
+<ul>
+<li><p>small：让编译器限制代码和数据使用最开始的2GB地址空间。对所有代码和数据的访问可以使用指令指针(IP)相对地址。</p></li>
+<li><p>medium：让编译器限制代码使用最开始的2GB地址空间，对数据没有内存限制。对所有代码的访问可以使用指令指针（IP）相对地址，但对数据的访问必须采用绝对地址。</p></li>
+<li><p>large：对代码和数据不做内存限制。所有访问都得使用绝对地址。</p></li>
+</ul>
+</li>
+<li><p>-mlong-double-<em>n</em>：覆盖掉默认的长双精度数据类型配置。<em>n</em>可以为：</p>
+<ul>
+<li><p>64：设定长双精度数据为64位。</p></li>
+<li><p>80：设定长双精度数据为80位。</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>C/C++专有选项</p>
+<ul>
+<li><p>-auto-ilp32：让编译器分析程序设定能否将64位指针缩成32位指针，能否将64位长整数缩成32位长整数。</p></li>
+<li><p>-auto-p32：让编译器分析程序设定能否将64位指针缩成32位指针。</p></li>
+<li><p>-check-pointers=<em>keyword</em>：设定编译器是否检查使用指针访问的内存边界。<em>keyword</em>可以为：</p>
+<ul>
+<li><p>none：禁止检查，此为默认选项。</p></li>
+<li><p>rw：检查通过指针读写的内存边界。</p></li>
+<li><p>write：只检查通过内存写的内存边界。</p></li>
+</ul>
+</li>
+<li><p>-check-pointers-dangling<em>keyword</em>：设定编译器是否对悬挂（dangling）指针参考进行检查。<em>keyword</em>可以为：</p>
+<ul>
+<li><p>none：禁止检查悬挂指针参考，此为默认选项。</p></li>
+<li><p>heap：检查heap的悬挂指针参考。</p></li>
+<li><p>stack：检查stack的悬挂指针参考。</p></li>
+<li><p>all：检查上述所有的悬挂指针参考。</p></li>
+</ul>
+</li>
+<li><p>-fkeep-static-consts、-fno-keep-static-consts：设定编译器是否保留在源文件中没有参考的变量分配。</p></li>
+</ul>
+</li>
+<li><p>Fortran专有选项</p>
+<ul>
+<li><p>-convert <em>[keyword]</em>：转换无格式数据的类型，比如<em>keyword</em>为big_endian和little_endian时，分别表示无格式的输入输出为big_endian和little_endian格式，更多格式类型，请看编译器手册。</p></li>
+<li><p>-double-size <em>size</em>：设定DOUBLE PRECISION和DOUBLE COMPLEX声明、常数、函数和内部函数的默认KIND。<em>size</em>可以为64或128，分别对应KIND=8和KIND=16。</p></li>
+<li><p>-dyncom <em>“common1,common2,…”</em>：对指定的common块启用运行时动态分配。</p></li>
+<li><p>-fzero-initialized-in-bss、-fno-zero-initialized-in-bss：设定编译器是否将数据显式赋值为0的变量放置在DATA块内。</p></li>
+<li><p>-intconstant、-nointconstant：让编译器使用FORTRAN 77语法设定整型常数的KIND参数。</p></li>
+<li><p>-integer-size <em>size</em>：设定整型和逻辑变量的默认KIND。<em>size</em>可以为16、32或64，分别对应KIND=2、KIND=4或KIND=8。</p></li>
+<li><p>-no-bss-init：让编译器将任何未初始化变量和显式初始化为0的变量放置在DATA块。默认不启用，放置在BSS块。</p></li>
+<li><p>-real-size <em>size</em>：设定实型变量的默认KIND。<em>size</em>可以为32、64或18，分别对应KIND=4、KIND=8或KIND=16。</p></li>
+<li><p>-save：强制变量值存储在静态内存中。此选项保存递归函数和用AUTOMATIC声明的所有变量（除本地变量外）在静态分配中，下次调用时可继续用。默认为-auto-scalar，内在类型INTEGER、REAL、COMPLEX和LOGICAL变量分配到运行时堆栈中。</p></li>
+<li><p>-zero、-nozero：是否将所有保存的但未初始化的内在类型INTEGER、REAL、COMPLEX或LOGICAL的局部变量值初始为0。</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id12">
+<h3 id="id12">编译器诊断选项<a class="headerlink" href="#id12" title="此标题的永久链接">¶</a></h3>
+<ul>
+<li><p>-diag-<em>type=diag-list</em>：控制显示的诊断信息。<em>type</em>可以为：</p>
+<ul class="simple">
+<li><p>enable：启用一个或一组诊断信息。</p></li>
+<li><p>disable：禁用一个或一组诊断信息。</p></li>
+<li><p>error：让编译器将诊断信息变为错误。</p></li>
+<li><p>warning：让编译器将诊断信息变成警告</p></li>
+<li><p>remark：让编译器将诊断信息变为备注。</p></li>
+</ul>
+<p><em>diag-list</em>可为：driver、port-win、thread、vec、par 、openmp 、warn、error 、remark 、cpu-dispatch 、id[,id,…] 、tag[,tag,…]等。</p>
+</li>
+<li><p>-traceback、-notraceback：编译时在对象文件中生成额外的信息使得在运行出错时可以提供源文件回朔信息。</p></li>
+<li><p>-w：编译时不显示任何警告，只显示错误。</p></li>
+<li><p>-w<em>n</em>：设置编译器生成的诊断信息级别。<em>n</em>可以为：</p>
+<ul class="simple">
+<li><p>0：对错误生成诊断信息，屏蔽掉警告信息。</p></li>
+<li><p>1：对错误和警告生成诊断信息。此为默认选项。</p></li>
+<li><p>2：对错误和警告生成诊断信息，并增加些额外的警告信息。</p></li>
+<li><p>3：对备注、错误和警告生成诊断信息，并在级别2的基础上再增加额外警告信息。建议对产品使用此级别。</p></li>
+<li><p>4：在级别3的基础上再增加一些警告和备注信息，这些增加的信息一般可以安全忽略。</p></li>
+</ul>
+</li>
+<li><p>-Wabi、-Wno-abi：设定生成的代码不是C++ ABI兼容时是否显示警告信息。</p></li>
+<li><p>-Wall：编译时显示警告和错误信息。</p></li>
+<li><p>-Wbrief：采用简短方式显示诊断信息。</p></li>
+<li><p>-Wcheck：让编译器在对特定代码在编译时进行检查。</p></li>
+<li><p>-Werror：将所有警告信息变为错误信息。</p></li>
+<li><p>-Werror-all将所有警告和备注信息变为错误信息。</p></li>
+<li><p>-Winline：设定编译器显示哪些函数被内联，哪些未被内联。</p></li>
+<li><p>-Wunused-function、-Wno-unused-functio：设定是否在声明的函数未使用时显示警告信息。</p></li>
+<li><p>-Wunused-variable、-Wno-unused-variable：设定是否在声明的变量未使用时显示警告信息。</p></li>
+</ul>
+</section>
+<section id="id13">
+<h3 id="id13">兼容性选项<a class="headerlink" href="#id13" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-f66：使用FORTRAN 66标准，默认为使用 Fortran 95标准。</p></li>
+<li><p>-f77rtl、-nof77rtl： 是否使用FORTRAN 77运行时行为，默认为使用Intel Fortran运行时行为。控制以下行为：</p>
+<ul>
+<li><p>当unit没有与一个文件对应时，一些INQUIRE说明符将返回不同的值：</p>
+<ul>
+<li><p>NUMBER= 返回0；</p></li>
+<li><p>ACCESS= 返回’UNKNOWN’；</p></li>
+<li><p>BLANK= 返回’UNKNOWN’；</p></li>
+<li><p>FORM= 返回’UNKNOWN’。</p></li>
+</ul>
+</li>
+<li><p>PAD= 对格式化输入默认为”NO’。</p></li>
+<li><p>NAMELIST和列表输入的字符串必需用单引号或双引号分隔。</p></li>
+<li><p>当处理NAMELIST输入时：</p>
+<ul>
+<li><p>每个记录的第一列被忽略。</p></li>
+<li><p>出现在组名前的’$’或’&amp;’必须在输入记录的第二列。</p></li>
+</ul>
+</li>
+<li><p>-fpscomp [keyword[, keyword…]]、-nofpscomp：设定是否某些特征与IntelFortran或Microsoft* Fortran PowerStation兼容。<em>keyword</em>可以为：</p>
+<ul>
+<li><p>none：没有选项需要用于兼容性。</p></li>
+<li><p>[no]filesfromcmd：设定当OPEN声明中FILE=说明符为空时的兼容性。</p></li>
+<li><p>[no]general：设定当Fortran PowerStation和IntelFortran语法存在不同时的兼容性。</p></li>
+<li><p>[no]ioformat：设定列表格式和无格式IO时的兼容性。</p></li>
+<li><p>[no]libs：设定可移植性库是否传递给链接器。</p></li>
+<li><p>[no]ldio_spacing：设定是否在运行时在数值量后字符值前插入一个空白。</p></li>
+<li><p>[no]logicals：设定代表LOGICAL值的兼容性。</p></li>
+<li><p>all：设定所有选项用于兼容性。</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>-fabi-version=<em>n</em>：设定使用指定版本的ABI实现。<em>n</em>可以为：</p>
+<ul>
+<li><p>0：使用最新的ABI实现。</p></li>
+<li><p>1：使用gcc 3.2和gcc 3.3使用的ABI实现。</p></li>
+<li><p>2：使用gcc 3.4及更高的gcc中使用的ABI实现。</p></li>
+</ul>
+</li>
+<li><p>-gcc-name=<em>name</em>：设定使用的gcc编译器的名字。</p></li>
+<li><p>-gxx-name<em>name</em>：设定使用的g++编译器的名字。</p></li>
+</ul>
+</section>
+<section id="id14">
+<h3 id="id14">链接和链接器选项<a class="headerlink" href="#id14" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-Bdynamic：在运行时动态链接所需要的库。</p></li>
+<li><p>-Bstatic ：静态链接用户生成的库。</p></li>
+<li><p>-cxxlib<em>[=dir]</em>、-cxxlib-nostd、-no-cxxlib：设定是否使用gcc提供的C++运行时库及头文件。<em>dir</em>为gcc二进制及库文件的顶层目录。</p></li>
+<li><p>-I<em>dir</em>：指明头文件的搜索路径。</p></li>
+<li><p>-L<em>dir</em>：指明库的搜索路径。</p></li>
+<li><p>-l<em>string</em>：指明所需链接的库名，如库名为libxyz.a，则可用-lxyz指定。</p></li>
+<li><p>-no-libgcc：禁止使用特定gcc库链接。</p></li>
+<li><p>-nodefaultlibs：禁止使用默认库链接。</p></li>
+<li><p>-nostartfiles：禁止使用标准启动文件链接。</p></li>
+<li><p>-nostdlib：禁止使用标准启动和库文件链接。</p></li>
+<li><p>-pie、-no-pie：设定编译器是否生成需要链接进可执行程序的位置独立代码</p></li>
+<li><p>-pthread：对多线程启用pthreads库。</p></li>
+<li><p>-shared：生成共享对象文件而不是可执行文件，必须在编译每个对象文件时使用-fpic选项。</p></li>
+<li><p>-shared-intel：动态链接Intel库。</p></li>
+<li><p>-shared-libgcc：动态链接GNU libgcc库。</p></li>
+<li><p>-static：静态链接所有库。</p></li>
+<li><p>-static-intel：静态链接Intel库。</p></li>
+<li><p>-static-libgcc：静态链接GNU libgcc库。</p></li>
+<li><p>-static-libstdc++：静态链接GNU libstdc++库。</p></li>
+<li><p>-u <em>symbol</em>：设定指定的符号未定义。</p></li>
+<li><p>-v：显示驱动工具编译信息。</p></li>
+<li><p>-Wa<em>,option1[,option2,…]</em>：传递参数给汇编器进行处理。</p></li>
+<li><p>-Wl<em>,option1[,option2,…]</em>：传递参数给链接器进行处理。</p></li>
+<li><p>-Wp<em>,option1[,option2,…]</em>：传递参数给预处理器。</p></li>
+<li><p>-Xlinker <em>option</em>：将option信息传递给链接器。</p></li>
+</ul>
+</section>
+<section id="id15">
+<h3 id="id15">其它选项<a class="headerlink" href="#id15" title="此标题的永久链接">¶</a></h3>
+<ul>
+<li><p>-help <em>[category]</em>：显示帮助。</p></li>
+<li><p>-sox<em>[=keyword[,keyword]]</em>、-no-sox：设定是否让编译时在生成的可执行文件中保存编译选项和版本等信息，也可以指定是否保存子程序等信息。</p>
+<ul class="simple">
+<li><p>inline：包含在各目标文件中的内联子程序名。</p></li>
+<li><p>profile：包含编译时采用-prof-use的子程序列表，以及存储概要信息的.dpi文件名和指明使用的和忽略的概要信息。</p></li>
+</ul>
+<p>存储的信息可以使用以下方法查看：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">objdump</span> <span class="pre">-sj</span> <span class="pre">.comment</span> <span class="pre">a.out</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">strings</span> <span class="pre">-a</span> <span class="pre">a.out</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">comment:</span></code></p></li>
+</ul>
+</li>
+<li><p>-V：显示版本信息。</p></li>
+<li><p>–version：显示版本信息。</p></li>
+<li><p>-watch<em>[=keyword[, keyword…]]</em>、-nowatch：设定是否在控制台显示特定信息。<em>keyword</em>可以为：</p>
+<ul class="simple">
+<li><p>none：禁止cmd和source。</p></li>
+<li><p>[no]cmd：设定是否显示驱动工具命令及执行。</p></li>
+<li><p>[no]source：设定是否显示编译的文件名。</p></li>
+<li><p>all：启用cmd和source。</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="index.html" title="Intel、PGI及GNU C/C++ Fortran编译器介绍"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> Intel、PGI及GNU C/C++ Fortran编译器介绍 </span>
+              </div>
+            </a>
+          
+          
+            <a href="pgi.html" title="PGI C/C++ Fortran编译器"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> PGI C/C++ Fortran编译器 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2021, 中国科大超级计算中心.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

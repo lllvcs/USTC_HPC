@@ -1,0 +1,1065 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>程序调试 &#8212; 中国科大超级计算中心用户使用文档 2021-03 文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="Intel MKL数值函数库" href="../intel-mkl/intel-mkl.html" />
+    <link rel="prev" title="MPI并行程序编译及运行" href="../mpi-application/mpi-application.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=#4000FF data-md-color-accent=light-blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#debug/debug" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="中国科大超级计算中心用户使用文档 2021-03 文档"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../_static/logo.png" height="26"
+                   alt="中国科大超级计算中心用户使用文档 2021-03 文档 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">中国科大超算中心用户使用手册</span>
+          <span class="md-header-nav__topic"> 程序调试 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://git.ustc.edu.cn/scc/user-doc" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    手册源码git
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../"versions.json"",
+        target_loc = "../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">中国科大超级计算中心用户使用文档 2021-03 文档</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="中国科大超级计算中心用户使用文档 2021-03 文档" class="md-nav__button md-logo">
+      
+        <img src="../_static/logo.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="中国科大超级计算中心用户使用文档 2021-03 文档">中国科大超算中心用户使用手册</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://git.ustc.edu.cn/scc/user-doc" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    手册源码git
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../preface.html" class="md-nav__link">前言</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../introduction/index.html" class="md-nav__link">现有超级计算系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../login-ftp/login-ftp.html" class="md-nav__link">用户登录与文件传输</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../module-environment/module-environment.html" class="md-nav__link">设置编译及运行环境</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../serial-compiling/serial-compiling.html" class="md-nav__link">串行及OpenMP程序编译及运行</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../compiler/index.html" class="md-nav__link">Intel、PGI及GNU C/C++ Fortran编译器介绍</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../gpu-computing/gpu-computing.html" class="md-nav__link">GPU异构计算和CUDA程序简介</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../mpi-application/mpi-application.html" class="md-nav__link">MPI并行程序编译及运行</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> 程序调试 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">程序调试</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#debug-debug--page-root" class="md-nav__link">程序调试</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#gdb" class="md-nav__link">GDB调试器简介</a>
+        </li>
+        <li class="md-nav__item"><a href="#gdbstart" class="md-nav__link">基本启动方式[gdbstart]</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">选择启动时文件</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">记录日志</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">退出GDB</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">准备所需要调试的程序</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">准备调试代码源代码</a>
+        </li>
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">准备编译器和链接器环境</a>
+        </li>
+        <li class="md-nav__item"><a href="#id9" class="md-nav__link">调试优化编译的代码</a>
+        </li>
+        <li class="md-nav__item"><a href="#id10" class="md-nav__link">准备所需要调试的并行程序</a>
+        </li>
+        <li class="md-nav__item"><a href="#id11" class="md-nav__link">编译所要调试的程序</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id12" class="md-nav__link">开始调试程序</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id13" class="md-nav__link">显示源代码</a>
+        </li>
+        <li class="md-nav__item"><a href="#id14" class="md-nav__link">运行程序</a>
+        </li>
+        <li class="md-nav__item"><a href="#id15" class="md-nav__link">设置和删除断点</a>
+        </li>
+        <li class="md-nav__item"><a href="#id16" class="md-nav__link">控制进程环境</a>
+        </li>
+        <li class="md-nav__item"><a href="#id17" class="md-nav__link">执行一行代码</a>
+        </li>
+        <li class="md-nav__item"><a href="#id18" class="md-nav__link">执行代码直到</a>
+        </li>
+        <li class="md-nav__item"><a href="#id19" class="md-nav__link">执行一行汇编指令</a>
+        </li>
+        <li class="md-nav__item"><a href="#id20" class="md-nav__link">显示变量或表达式值</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id21" class="md-nav__link">传递命令给调试器</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id22" class="md-nav__link">命令、文件名和变量补全</a>
+        </li>
+        <li class="md-nav__item"><a href="#id23" class="md-nav__link">自定义命令</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id24" class="md-nav__link">调试并行程序</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#openmp" class="md-nav__link">调试OpenMP等多线程程序</a>
+        </li>
+        <li class="md-nav__item"><a href="#mpi" class="md-nav__link">调试MPI并行应用</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+  </ul>
+</nav>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#gdb" class="md-nav__link">GDB调试器简介</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#gdbstart" class="md-nav__link">基本启动方式[gdbstart]</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#id2" class="md-nav__link">选择启动时文件</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id4" class="md-nav__link">记录日志</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id5" class="md-nav__link">退出GDB</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id6" class="md-nav__link">准备所需要调试的程序</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#id7" class="md-nav__link">准备调试代码源代码</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id8" class="md-nav__link">准备编译器和链接器环境</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id9" class="md-nav__link">调试优化编译的代码</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id10" class="md-nav__link">准备所需要调试的并行程序</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id11" class="md-nav__link">编译所要调试的程序</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id12" class="md-nav__link">开始调试程序</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#id13" class="md-nav__link">显示源代码</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id14" class="md-nav__link">运行程序</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id15" class="md-nav__link">设置和删除断点</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id16" class="md-nav__link">控制进程环境</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id17" class="md-nav__link">执行一行代码</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id18" class="md-nav__link">执行代码直到</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id19" class="md-nav__link">执行一行汇编指令</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id20" class="md-nav__link">显示变量或表达式值</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id21" class="md-nav__link">传递命令给调试器</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#id22" class="md-nav__link">命令、文件名和变量补全</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id23" class="md-nav__link">自定义命令</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id24" class="md-nav__link">调试并行程序</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#openmp" class="md-nav__link">调试OpenMP等多线程程序</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#mpi" class="md-nav__link">调试MPI并行应用</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../intel-mkl/intel-mkl.html" class="md-nav__link">Intel MKL数值函数库</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../compile-install/compile-install.html" class="md-nav__link">应用程序的编译与安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../slurm/index.html" class="md-nav__link">Slurm作业调度系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../lsf/lsf.html" class="md-nav__link">LSF作业调度系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../latex.html" class="md-nav__link">LaTeX pdf版</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../contact.html" class="md-nav__link">联系方式</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#debug-debug--page-root" class="md-nav__link">程序调试</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#gdb" class="md-nav__link">GDB调试器简介</a>
+        </li>
+        <li class="md-nav__item"><a href="#gdbstart" class="md-nav__link">基本启动方式[gdbstart]</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">选择启动时文件</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">记录日志</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">退出GDB</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">准备所需要调试的程序</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">准备调试代码源代码</a>
+        </li>
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">准备编译器和链接器环境</a>
+        </li>
+        <li class="md-nav__item"><a href="#id9" class="md-nav__link">调试优化编译的代码</a>
+        </li>
+        <li class="md-nav__item"><a href="#id10" class="md-nav__link">准备所需要调试的并行程序</a>
+        </li>
+        <li class="md-nav__item"><a href="#id11" class="md-nav__link">编译所要调试的程序</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id12" class="md-nav__link">开始调试程序</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id13" class="md-nav__link">显示源代码</a>
+        </li>
+        <li class="md-nav__item"><a href="#id14" class="md-nav__link">运行程序</a>
+        </li>
+        <li class="md-nav__item"><a href="#id15" class="md-nav__link">设置和删除断点</a>
+        </li>
+        <li class="md-nav__item"><a href="#id16" class="md-nav__link">控制进程环境</a>
+        </li>
+        <li class="md-nav__item"><a href="#id17" class="md-nav__link">执行一行代码</a>
+        </li>
+        <li class="md-nav__item"><a href="#id18" class="md-nav__link">执行代码直到</a>
+        </li>
+        <li class="md-nav__item"><a href="#id19" class="md-nav__link">执行一行汇编指令</a>
+        </li>
+        <li class="md-nav__item"><a href="#id20" class="md-nav__link">显示变量或表达式值</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id21" class="md-nav__link">传递命令给调试器</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id22" class="md-nav__link">命令、文件名和变量补全</a>
+        </li>
+        <li class="md-nav__item"><a href="#id23" class="md-nav__link">自定义命令</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id24" class="md-nav__link">调试并行程序</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#openmp" class="md-nav__link">调试OpenMP等多线程程序</a>
+        </li>
+        <li class="md-nav__item"><a href="#mpi" class="md-nav__link">调试MPI并行应用</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="id1">
+<h1 id="debug-debug--page-root">程序调试<a class="headerlink" href="#debug-debug--page-root" title="此标题的永久链接">¶</a></h1>
+<p>从Intel C/C++ Fortran编译器2015版开始，采用的是Intel改造的GDB调试器，命令为<code class="docutils literal notranslate"><span class="pre">gdb-ia</span></code>。PGI调试器很多调试命令类似GDB调试器，请自己查看相关资料。</p>
+<section id="gdb">
+<h2 id="gdb">GDB调试器简介<a class="headerlink" href="#gdb" title="此标题的永久链接">¶</a></h2>
+<p>GDB调试器可以让使用者查看其它程序运行时内部发生了什么或查看其它程序崩溃时程序在做什么。主要包括以下四项功能以便帮助找出bug：</p>
+<ul class="simple">
+<li><p>启动程序，并指定任何可能影响行为的东西。</p></li>
+<li><p>使程序在特定条件下停止。</p></li>
+<li><p>当程序停止时，检查发生了什么。</p></li>
+<li><p>修改程序中的一些东西，以便能用正确的东西影响bug，并获得进一步信息。</p></li>
+</ul>
+<p>GDB调试可用于调试采用C/C++、Fortran、D、Modula-2、OpenCL C、Pascal、Objective-C等编写的程序。</p>
+</section>
+<section id="gdbstart">
+<h2 id="gdbstart">基本启动方式[gdbstart]<a class="headerlink" href="#gdbstart" title="此标题的永久链接">¶</a></h2>
+<p>GDB调试器在Linux系统上可以采用命令行（command line）和图形界面（GUI，借助Eclipse* IDE或xxgdb）两种方式进行调试。</p>
+<p>图形界面的GDB调试器相对简单，本手册主要介绍基于命令行的GDB调试器。基于命令行的启动方式主要有如下几种：</p>
+<ul>
+<li><p>最常用的方式是只跟程序名为参数，启动调试程序：</p>
+<p><code class="docutils literal notranslate"><span class="pre">gdb</span> <span class="pre">program</span></code></p>
+</li>
+<li><p>启动应用程序及以前其出错时生成的core文件：</p>
+<p><code class="docutils literal notranslate"><span class="pre">gdb</span> <span class="pre">program</span> <span class="pre">core</span></code></p>
+</li>
+<li><p>利用运行程序的进程号吸附到运行中程序进行调试：</p>
+<p><code class="docutils literal notranslate"><span class="pre">gdb</span> <span class="pre">program</span> <span class="pre">1234</span></code></p>
+</li>
+<li><p>如果需要调试的程序有参数，那么需要添加–args参数：</p>
+<p><code class="docutils literal notranslate"><span class="pre">gdb</span> <span class="pre">--args</span> <span class="pre">gcc</span> <span class="pre">-O2</span> <span class="pre">-c</span> <span class="pre">foo.c</span></code></p>
+</li>
+<li><p>采用静默方式启动，不打印启动后的版权信息等：</p>
+<p><code class="docutils literal notranslate"><span class="pre">gdb</span> <span class="pre">--silent</span></code></p>
+</li>
+<li><p>仅显示帮助信息等：</p>
+<p><code class="docutils literal notranslate"><span class="pre">gdb</span> <span class="pre">--help</span></code></p>
+</li>
+</ul>
+<section id="id2">
+<h3 id="id2">选择启动时文件<a class="headerlink" href="#id2" title="此标题的永久链接">¶</a></h3>
+<p>当GDB启动的时候，它读取除选项之外的任何参数用于指定可执行程序文件和core文件（或进程号），这与分别采用-se和-c（或-p）参数类似（gdb读取参数时，如第一个参数没有关联选项标记，那么等价于跟着-se选项之后的参数，如第二个参数没有关联选项标记，那么等价于跟着-c/-p选项之后的参数）。如果第二个参数以十进制数字开始，那么gdb尝试将其作为进程号并进行吸附，如果失败，则尝试作为core文件打开。如果以数字开始的core文件，那么可以在此之前添加./以防止被认为是进程号，例如./12345。很多选项同时具有长格式和短格式两种格式，如果采用了截断的长格式选项，且长度足够避免歧义，那么也可以被重新辨认为长格式。（如果你喜欢，可以采用–而不是-来标记选项参数）。</p>
+<ul>
+<li><p>-symbols file、-s file：从文件file中读取符号表。</p></li>
+<li><p>-exec file、-e file：适当时采用文件file作为可执行程序，并且与core dump文件关联时用于检查纯数据。</p></li>
+<li><p>-se file：从文件file中读取符号表，并且将其作为可执行文件。</p></li>
+<li><p>-core file、-c file：将文件file作为core dump文件进行检查。</p></li>
+<li><p>-pid number、-p number：将附带的命令吸附到进程号number。</p></li>
+<li><p>-command file、-x file：指定启动后执行的命令文件file，文件file中保存一系列命令，启动后会顺序执行。</p></li>
+<li><p>-eval-command command、-ex command：执行单个gdb命令，此选项可以多次使用以多次调用命令。需要时，此选项也许与-command交替，如：</p>
+<p><code class="docutils literal notranslate"><span class="pre">gdb</span> <span class="pre">-ex</span> <span class="pre">'target</span> <span class="pre">sim'</span> <span class="pre">-ex</span> <span class="pre">'load'</span> <span class="pre">-x</span> <span class="pre">setbreakpoints</span> <span class="pre">-ex</span> <span class="pre">'run'</span> <span class="pre">a.out</span></code></p>
+</li>
+<li><p>-init-command file、-ix file：从文件file中加载并执行命令，此过程在加载inferior <a class="footnote-reference brackets" href="#id25" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> 之前（但在加载gdbinit文件之后）。</p></li>
+<li><p>-init-eval-command command、-iex command：在加载inferior之前（但在加载gdbinit文件之后）执行命令command。</p></li>
+<li><p>-directory directory、-d directory：添加目录directory到源文件和脚本文件的搜索目录</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3 id="id4">记录日志<a class="headerlink" href="#id4" title="此标题的永久链接">¶</a></h3>
+<p>可以采用以下方式记录日志等，启动GDB后执行：</p>
+<ul class="simple">
+<li><p>启用日志：<code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">logging</span> <span class="pre">on</span></code></p></li>
+<li><p>关闭日志：<code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">logging</span> <span class="pre">off</span></code></p></li>
+<li><p>记录日志到文件file（默认为gdb.txt）：<code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">logging</span> <span class="pre">file</span> <span class="pre">file</span></code></p></li>
+<li><p>设定日志是否覆盖原有文件（默认为追加）：<code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">logging</span> <span class="pre">overwrite</span> <span class="pre">[on|off]</span></code></p></li>
+<li><p>设定日志是否重定向（默认为显示在终端及文件中）：<code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">logging</span> <span class="pre">redirect</span> <span class="pre">[on|off]</span></code></p></li>
+<li><p>显示当前日志设置：<code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">logging</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="id5">
+<h2 id="id5">退出GDB<a class="headerlink" href="#id5" title="此标题的永久链接">¶</a></h2>
+<p>退出调试器，在GDB内部命令执行完后的命令行，输入以下两者之一：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">quit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;ctrl+d&gt;</span></code></p></li>
+</ul>
+</section>
+<section id="id6">
+<h2 id="id6">准备所需要调试的程序<a class="headerlink" href="#id6" title="此标题的永久链接">¶</a></h2>
+<section id="id7">
+<h3 id="id7">准备调试代码源代码<a class="headerlink" href="#id7" title="此标题的永久链接">¶</a></h3>
+<p>调试程序时，一般无需修改程序源代码，但是在程序中建议做如下改变：</p>
+<ul class="simple">
+<li><p>如果程序运行后，利用调试器难于终止，请设置一个初始停止点；</p></li>
+<li><p>在源代码增加一些断言，以便帮助定位错误。</p></li>
+</ul>
+</section>
+<section id="id8">
+<h3 id="id8">准备编译器和链接器环境<a class="headerlink" href="#id8" title="此标题的永久链接">¶</a></h3>
+<p>调试信息被编译器存储在.o文件。信息的级别和格式由编译器选项控制。</p>
+<p>对于Intel C/C++ Fortran编译器，采用-g或-debug选项，例如：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">icc</span> <span class="pre">-g</span> <span class="pre">hello.c</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">icpc</span> <span class="pre">-g</span> <span class="pre">hello.cpp</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ifort</span> <span class="pre">-g</span> <span class="pre">hello.f90</span></code></p></li>
+</ul>
+<p>对于GCC编译器，采用-g选项。对于一些较老版本的GCC，此选项也许会产生DWARF-1标准的调试信息，如果这样，请使用-gdwarf-2选项，例如：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">gcc</span> <span class="pre">-gdwarf-2</span> <span class="pre">hello.c</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">g++</span> <span class="pre">-gdwarf-2</span> <span class="pre">hello.cpp</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gfortran</span> <span class="pre">-gdwarf-2</span> <span class="pre">hello.f90</span></code></p></li>
+</ul>
+<p>调试信息将通过<code class="docutils literal notranslate"><span class="pre">ld</span></code>命令导入到a.out（可执行程序）或.so（共享库）文件中。</p>
+<p>如果是在调试优化编译的代码，采用-g选项将自动增加-O0选项。</p>
+<p>请参看调试优化编译的代码部分中关于-g和相关扩展调试选项及它们的与优化之间的关系。</p>
+</section>
+<section id="id9">
+<h3 id="id9">调试优化编译的代码<a class="headerlink" href="#id9" title="此标题的永久链接">¶</a></h3>
+<p>GDB调试器可以通过使用-g参数帮助调试优化编译的程序。但是关于此程序的信息也许并不准确，尤其是变量的地址和值经常没有被正确报告，这是因为通用调试信息模式无法全部表示-O1、-O2、-O3及其它优化选项的复杂性。</p>
+<p>为了避免此限制，采用Intel编译器编译程序时在所需的-O1、-O2或-O3优化选项同时指明-g和-debug扩展选项。这会产生具有更多高级但更少通用支持的调试信息，主要激活以下：</p>
+<ul class="simple">
+<li><p>给出变量的正确地址和值，不管其是在寄存器或不同时间在不同地址时。注意：</p>
+<ul>
+<li><p>在程序中，一些变量可能被优化掉或转换成不同类型的数据，或其地址没有在所有点都被记录。在这些情形下，打印变量时将显示无值。</p></li>
+<li><p>否则，这些值和地址将正确，但这些寄存器没有地址，调试器中<code class="docutils literal notranslate"><span class="pre">print</span> <span class="pre">&amp;i</span></code>命令将打印一条警告。</p></li>
+<li><p>尽管<code class="docutils literal notranslate"><span class="pre">break</span> <span class="pre">main</span></code>命令通常将在程序开始处理后停止，但程序大多数变量和参数在程序的开始处理和结束处理时是未定义的。</p></li>
+</ul>
+</li>
+<li><p>在堆栈追踪中显示内联函数，这通过使用inline关键词识别。注意：</p>
+<ul>
+<li><p>只有在堆栈顶端和通常（非内联）调用的函数显示指令指针，其原因在于其它函数与其调用的内联函数共享硬件定义的堆栈帧。</p></li>
+<li><p>返回指令将只返回对那些采用调用指令时是非内联调用函数的控制，其原因在于内联调用没有定义返回地址。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">up</span></code>、<code class="docutils literal notranslate"><span class="pre">down</span></code>和<code class="docutils literal notranslate"><span class="pre">call</span></code>命令以通常方式工作。</p></li>
+</ul>
+</li>
+<li><p>允许在内联函数中设置断点。</p></li>
+</ul>
+</section>
+<section id="id10">
+<h3 id="id10">准备所需要调试的并行程序<a class="headerlink" href="#id10" title="此标题的永久链接">¶</a></h3>
+<p>编译时必须用-g等调试参数编译源代码才可以使用GDB调试器特性，比如分析共享数据或在重入函数调用中停止。</p>
+<p>为了使用并行调试特性，需要：</p>
+<ul class="simple">
+<li><p>如果存在makefile编译配置文件，请对它进行编辑。</p></li>
+<li><p>在命令行添加编译器选项-debug parallel（Intel编译器针对OpenMP多线程）。</p></li>
+<li><p>重编译程序。</p></li>
+</ul>
+</section>
+<section id="id11">
+<h3 id="id11">编译所要调试的程序<a class="headerlink" href="#id11" title="此标题的永久链接">¶</a></h3>
+<p>下面以常做为例子的hello程序为例介绍。</p>
+<ul>
+<li><p>hello.c例子：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">"Hello World!"</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>编译：</p>
+<p><code class="docutils literal notranslate"><span class="pre">icc</span> <span class="pre">-g</span> <span class="pre">helloworld.c</span> <span class="pre">-o</span> <span class="pre">helloworld</span></code></p>
+</li>
+<li><p>hello.f90例子：</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="k">program </span><span class="n">main</span>
+<span class="k">print</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="s2">"Hello World!"</span>
+<span class="k">end program </span><span class="n">main</span>
+</pre></div>
+</div>
+<p>编译：</p>
+<p><code class="docutils literal notranslate"><span class="pre">ifort</span> <span class="pre">-debug</span> <span class="pre">-O0</span> <span class="pre">helloworld.f90</span> <span class="pre">-o</span> <span class="pre">helloworld</span></code></p>
+</li>
+</ul>
+</section>
+</section>
+<section id="id12">
+<h2 id="id12">开始调试程序<a class="headerlink" href="#id12" title="此标题的永久链接">¶</a></h2>
+<p>启动调试：<code class="docutils literal notranslate"><span class="pre">gdb</span> <span class="pre">helloworld</span></code>。更多启动方式参见<a class="reference external" href="#gdbstart">[gdbstart]</a>。</p>
+<section id="id13">
+<h3 id="id13">显示源代码<a class="headerlink" href="#id13" title="此标题的永久链接">¶</a></h3>
+<p>在调试器启动后的命令行中输入<code class="docutils literal notranslate"><span class="pre">list</span></code>命令可以显示源代码，如输入<code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">main</span></code>，将显示main函数的代码。</p>
+</section>
+<section id="id14">
+<h3 id="id14">运行程序<a class="headerlink" href="#id14" title="此标题的永久链接">¶</a></h3>
+<p>在命令行中输入<code class="docutils literal notranslate"><span class="pre">run</span></code>，将开始运行程序。</p>
+</section>
+<section id="id15">
+<h3 id="id15">设置和删除断点<a class="headerlink" href="#id15" title="此标题的永久链接">¶</a></h3>
+<ul>
+<li><p>设置断点：</p>
+<ul>
+<li><p>输入以下命令：<code class="docutils literal notranslate"><span class="pre">break</span> <span class="pre">main</span></code></p>
+<p>此时在程序main处设置了一个断点。</p>
+</li>
+<li><p>输入<code class="docutils literal notranslate"><span class="pre">run</span></code>再次运行程序</p>
+<p>应用将停止在设置的断点处。</p>
+</li>
+</ul>
+</li>
+<li><p>删除断点：</p>
+<ul>
+<li><p>列出所有设置的断点ID号：<code class="docutils literal notranslate"><span class="pre">info</span> <span class="pre">breakpoints</span></code></p>
+<p>调试器将显示所有存在的断点。</p>
+</li>
+<li><p>指明所要删除的断点ID号。如果从开始调试后没有设置其它断点，那么只有1个断点，其ID号为1。</p></li>
+<li><p>删除此断点：<code class="docutils literal notranslate"><span class="pre">delete</span> <span class="pre">breakpoint</span> <span class="pre">1</span></code></p>
+<p>那么将删除设置断点1。</p>
+</li>
+<li><p>重新运行程序。</p>
+<p>那么程序将运行并显示“Hello World!”，并退出程序。</p>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id16">
+<h3 id="id16">控制进程环境<a class="headerlink" href="#id16" title="此标题的永久链接">¶</a></h3>
+<p>用户可以：1、对进程的环境变量进行设置或者取消设置以便在将来使用；2、设置与当前调试器环境和启动调试器的shell不同的环境。设置的变量将影响后续调试的新进程。环境命令不影响当前运行进程。设置的环境变量不改变或显示调试器的环境变量，它们只影响新产生的进程。</p>
+<ul class="simple">
+<li><p>显示当前集的所有环境变量：<code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">environment</span></code></p></li>
+<li><p>增加或改变环境变量：<code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">environment</span></code></p></li>
+<li><p>取消一个环境变量：<code class="docutils literal notranslate"><span class="pre">unset</span> <span class="pre">environment</span></code></p></li>
+</ul>
+<p>注意：GDB调试器没有命令可以简单回到调试器启动时的环境变量的初始状态，用户必须正确设置和取消环境变量。</p>
+</section>
+<section id="id17">
+<h3 id="id17">执行一行代码<a class="headerlink" href="#id17" title="此标题的永久链接">¶</a></h3>
+<p>如果源代码当前行是函数调用，那么可以步入(step into)或者跨越(step over)此函数。</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">step</span></code>命令：应用程序执行一行代码，如果此行是函数调用，那么应用程序步入到函数中，即不执行完此函数调用。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">next</span></code>命令：应用程序执行一行代码，如果此行是函数调用，那么应用程序跨越此函数，即执行完此函数调用。</p></li>
+</ol>
+</section>
+<section id="id18">
+<h3 id="id18">执行代码直到<a class="headerlink" href="#id18" title="此标题的永久链接">¶</a></h3>
+<p>运行代码直到某行或某个表达式，可用<code class="docutils literal notranslate"><span class="pre">until</span></code>命令。</p>
+</section>
+<section id="id19">
+<h3 id="id19">执行一行汇编指令<a class="headerlink" href="#id19" title="此标题的永久链接">¶</a></h3>
+<p>如果应用的当前指令为函数调用，那么可以步入或者跨越此函数。</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">stepi</span></code>命令：应用程序执行一行汇编指令，如果此行指令是函数调用，那么应用程序步入到函数中。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nexti</span></code>命令：应用程序执行一行汇编指令，如果此行指令当前行是跳出或调用，那么应用程序跨越过它。</p></li>
+</ol>
+</section>
+<section id="id20">
+<h3 id="id20">显示变量或表达式值<a class="headerlink" href="#id20" title="此标题的永久链接">¶</a></h3>
+<p>利用<code class="docutils literal notranslate"><span class="pre">print</span></code>命令可以显示变量值或表达式的值。如：</p>
+<ul class="simple">
+<li><p>显示变量val2的当前值：<code class="docutils literal notranslate"><span class="pre">print</span> <span class="pre">val2</span></code></p></li>
+<li><p>显示表达式val2*2的值：<code class="docutils literal notranslate"><span class="pre">print</span> <span class="pre">val2*2</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="id21">
+<h2 id="id21">传递命令给调试器<a class="headerlink" href="#id21" title="此标题的永久链接">¶</a></h2>
+<section id="id22">
+<h3 id="id22">命令、文件名和变量补全<a class="headerlink" href="#id22" title="此标题的永久链接">¶</a></h3>
+<p>GDB调试器支持命令、文件名和变量的补全。在GDB调试器命令行中开始键入一个命令、文件名或变量名，然后按Tab键。如果有不只一个备选，调试器会发出铃声。再一次按Tab键，将列出备选。</p>
+<p>利用单引号和双引号影响可能备选集。利用单引号填充C++名字，包含特殊字符“:”、“<span class="math notranslate nohighlight">\(&lt;\)</span>”、“<span class="math notranslate nohighlight">\(&gt;\)</span>”、“(”、“)”等。利用双引号告诉调试器在文件名中查看备选。</p>
+</section>
+<section id="id23">
+<h3 id="id23">自定义命令<a class="headerlink" href="#id23" title="此标题的永久链接">¶</a></h3>
+<p>GDB调试器支持用户自定义命令。</p>
+<p>用户定义的命令支持在定义体内包含if、while、loop_break和loop_continue命令。用户定义的命令最多可有10个参数，以空白分割。参数名依次为$arg0、$arg1、$arg2、<span class="math notranslate nohighlight">\(\dots\)</span>、$arg9。参数总数存储在$argc中。</p>
+<p>其步骤为：</p>
+<ul class="simple">
+<li><p>输入define commandname</p></li>
+<li><p>每行输入一个命令</p></li>
+<li><p>输入end</p></li>
+</ul>
+</section>
+</section>
+<section id="id24">
+<h2 id="id24">调试并行程序<a class="headerlink" href="#id24" title="此标题的永久链接">¶</a></h2>
+<section id="openmp">
+<h3 id="openmp">调试OpenMP等多线程程序<a class="headerlink" href="#openmp" title="此标题的永久链接">¶</a></h3>
+<p>一个单独的程序可以有不止一个线程执行，但一般来说，一个程序的线程除了它们共享一个地址空间外，还类似于多个进程。另一方面，每个县城具有自己的寄存器和执行堆栈，也许还占有私有内存。</p>
+<p>线程是进程内部单个、串行控制流。每个线程包含单个执行点。线程在单个地址空间中（共享）执行；因此，进程的线程可以读写相同的内存地址。</p>
+<p>多个进程执行时，当用户需要关注某个进程时，它却恼人地或不切实际地枚举所有进程。</p>
+<p>当为了设置代码断点而定义停止线程和线程过滤器时，用户需要定义线程集。</p>
+<p>用户可以以紧凑方式指定进程或线程集，集可包含一个或多个范围。用户可以对每个进程集执行普通操作，调试器变量既可以存储集也可以存储范围以便操作、引用和查看。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">info</span> <span class="pre">threas</span></code>：查看线程集</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">thread</span></code>：在线程间进行切换，如thread 2</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">thread</span> <span class="pre">apply</span></code>：对线程应用特定命令，如thread apply 2 break 164</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">thread</span> <span class="pre">apply</span> <span class="pre">all</span></code>：对所有线程应用特定命令</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">thread</span> <span class="pre">find</span></code>：发现满足某些特定条件的线程</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">thread</span> <span class="pre">name</span></code>：给当前线程设定名字</p></li>
+</ul>
+<p>注意：线程与当前执行到多线程程序中的位置有关系，在单线程执行的地方只显示一个线程，在多线程执行的地方会显示多线程。</p>
+<p>对各线程就可采用普通GDB命令对单个进程分别进行调试。</p>
+</section>
+<section id="mpi">
+<h3 id="mpi">调试MPI并行应用<a class="headerlink" href="#mpi" title="此标题的永久链接">¶</a></h3>
+<p>采用Intel MPI时，可以采用类似下面命令调用GDB调试器：</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-gdb</span> <span class="pre">-n</span> <span class="pre">4</span> <span class="pre">./tmissem-dbg</span></code></p>
+<p>之后可以像单进程程序一样调试程序。</p>
+<p>也可以吸附到一个运行中的程序：</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-n</span> <span class="pre">4</span> <span class="pre">-gdba</span> <span class="pre">&lt;pid&gt;</span></code></p>
+<p>其中&lt;pid&gt;为MPI进程的进程号。</p>
+<p>如：<code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-gdb</span> <span class="pre">-n</span> <span class="pre">4</span> <span class="pre">./tmissem-dbg</span></code>显示：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpigdb</span><span class="p">:</span> <span class="n">np</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">mpigdb</span><span class="p">:</span> <span class="n">attaching</span> <span class="n">to</span> <span class="mi">13526</span> <span class="o">./</span><span class="n">tmissem</span><span class="o">-</span><span class="n">dbg</span> <span class="n">tc4600v4</span>
+<span class="n">mpigdb</span><span class="p">:</span> <span class="n">attaching</span> <span class="n">to</span> <span class="mi">13527</span> <span class="o">./</span><span class="n">tmissem</span><span class="o">-</span><span class="n">dbg</span> <span class="n">tc4600v4</span>
+<span class="n">mpigdb</span><span class="p">:</span> <span class="n">attaching</span> <span class="n">to</span> <span class="mi">13528</span> <span class="o">./</span><span class="n">tmissem</span><span class="o">-</span><span class="n">dbg</span> <span class="n">tc4600v4</span>
+<span class="n">mpigdb</span><span class="p">:</span> <span class="n">attaching</span> <span class="n">to</span> <span class="mi">13529</span> <span class="o">./</span><span class="n">tmissem</span><span class="o">-</span><span class="n">dbg</span> <span class="n">tc4600v4</span>
+</pre></div>
+</div>
+<p>上面np=4显示使用了4个进程启动MPI程序，13526之类的为系统MPI程序进程号（不是MPI rank号），./tmissem-dbg为应用程序，tc4600v4为对应节点。</p>
+<p>查看源码，执行<code class="docutils literal notranslate"><span class="pre">list</span></code>：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[2,3]   200 implicit none
+[0,1]   200 implicit none
+[2,3]   201 include 'mpif.h'
+[0,1]   201 include 'mpif.h'
+[2,3]   202 integer nmstep,ik,NStep,jk,i,PNum
+[0,1]   202 integer nmstep,ik,NStep,jk,i,PNum
+[2,3]   203 !real pathxyz(3,100000),t_p(3) !path
+[0,1]   203 !real pathxyz(3,100000),t_p(3) !path
+[2,3]   204 real    Time_S
+[0,1]   204 real    Time_S
+[2,3]   205 real(8)  T3
+[0,1]   205 real(8)  T3
+[2,3]   206 character*2 resf
+[0,1]   206 character*2 resf
+[2,3]   207
+[0,1]   207
+[2,3]   208 call MPI_Init(ierr)
+[0,1]   208 call MPI_Init(ierr)
+</pre></div>
+</div>
+<p>上面[0-3]、[0,1]之类的为MPI进程编号，表示改行后面显示的内容为这些进程的。</p>
+<p><code class="docutils literal notranslate"><span class="pre">z</span></code>命令可设置对某MPI进程进行操作，如<code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">0,1,3</span></code>命令设置当前进程集包含进程0、1、3：</p>
+<p>mpigdb: set active processes to 0 1 3</p>
+<p><code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">all</span></code>切换到全部进程。</p>
+<p>之后对各进程就可采用普通GDB命令对单个进程分别进行调试。</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id25" role="note">
+<span class="label"><span class="fn-bracket">[</span><a href="#id3" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p>GDB采用对象表示每个程序执行状态，这个对象被称为inferior。典型的，一个inferior对应一个进程，但是更通常的是对应一个没有进程的目标。inferior有可能在进程执行之前生成，并且可以在进程停止后驻留。inferior具有独有的与进程号不同的标志符。尽管一些嵌入的目标也许具有多个运行在单个地址空间内不同部分的多个inferior，但通常每个inferior具有自己隔离的地址空间。反过来，每个inferior又有多个线程运行它。在GDB中可以用info
+inferiors查看。</p>
+</aside>
+</aside>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../mpi-application/mpi-application.html" title="MPI并行程序编译及运行"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> MPI并行程序编译及运行 </span>
+              </div>
+            </a>
+          
+          
+            <a href="../intel-mkl/intel-mkl.html" title="Intel MKL数值函数库"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> Intel MKL数值函数库 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2021, 中国科大超级计算中心.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

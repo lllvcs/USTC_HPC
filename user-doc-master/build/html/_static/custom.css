@@ -1,0 +1,6 @@
+p {
+  text-indent: 2em;
+}
+table, th, td, li, H1, H2, H3, H4 p {
+  text-indent: 0em;
+}

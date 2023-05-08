@@ -1,0 +1,570 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>应用程序的编译与安装 &#8212; 中国科大超级计算中心用户使用文档 2021-03 文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="Slurm作业调度系统" href="../slurm/index.html" />
+    <link rel="prev" title="Intel MKL数值函数库" href="../intel-mkl/intel-mkl.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=#4000FF data-md-color-accent=light-blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#compile-install/compile-install" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="中国科大超级计算中心用户使用文档 2021-03 文档"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../_static/logo.png" height="26"
+                   alt="中国科大超级计算中心用户使用文档 2021-03 文档 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">中国科大超算中心用户使用手册</span>
+          <span class="md-header-nav__topic"> 应用程序的编译与安装 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://git.ustc.edu.cn/scc/user-doc" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    手册源码git
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../"versions.json"",
+        target_loc = "../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">中国科大超级计算中心用户使用文档 2021-03 文档</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="中国科大超级计算中心用户使用文档 2021-03 文档" class="md-nav__button md-logo">
+      
+        <img src="../_static/logo.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="中国科大超级计算中心用户使用文档 2021-03 文档">中国科大超算中心用户使用手册</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://git.ustc.edu.cn/scc/user-doc" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    手册源码git
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../preface.html" class="md-nav__link">前言</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../introduction/index.html" class="md-nav__link">现有超级计算系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../login-ftp/login-ftp.html" class="md-nav__link">用户登录与文件传输</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../module-environment/module-environment.html" class="md-nav__link">设置编译及运行环境</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../serial-compiling/serial-compiling.html" class="md-nav__link">串行及OpenMP程序编译及运行</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../compiler/index.html" class="md-nav__link">Intel、PGI及GNU C/C++ Fortran编译器介绍</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../gpu-computing/gpu-computing.html" class="md-nav__link">GPU异构计算和CUDA程序简介</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../mpi-application/mpi-application.html" class="md-nav__link">MPI并行程序编译及运行</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../debug/debug.html" class="md-nav__link">程序调试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../intel-mkl/intel-mkl.html" class="md-nav__link">Intel MKL数值函数库</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> 应用程序的编译与安装 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">应用程序的编译与安装</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#compile-install-compile-install--page-root" class="md-nav__link">应用程序的编译与安装</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">二进制程序的安装</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">源代码程序的安装</a>
+        </li></ul>
+            </nav>
+        </li>
+  </ul>
+</nav>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#id4" class="md-nav__link">二进制程序的安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id6" class="md-nav__link">源代码程序的安装</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../slurm/index.html" class="md-nav__link">Slurm作业调度系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../lsf/lsf.html" class="md-nav__link">LSF作业调度系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../latex.html" class="md-nav__link">LaTeX pdf版</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../contact.html" class="md-nav__link">联系方式</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#compile-install-compile-install--page-root" class="md-nav__link">应用程序的编译与安装</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">二进制程序的安装</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">源代码程序的安装</a>
+        </li></ul>
+            </nav>
+        </li>
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="id1">
+<h1 id="compile-install-compile-install--page-root">应用程序的编译与安装<a class="headerlink" href="#compile-install-compile-install--page-root" title="此标题的永久链接">¶</a></h1>
+<p>应用程序一般有两种方式发布：</p>
+<ul class="simple">
+<li><p>二进制方式：用户无需编译，只要解压缩后设置相关环境变量等即可。如Gaussian <a class="footnote-reference brackets" href="#id9" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>，国内用户只能购买到已经编译好的二进制可执行文件，有些国家和地区能购买到源代码。</p></li>
+<li><p>源代码方式：</p>
+<ul>
+<li><p>用户需要自己编译，并且可以按照需要修改编译参数以编译成最适合自己的可执行程序，之后再设置环境变量等使用，如VASP <a class="footnote-reference brackets" href="#id10" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>。</p></li>
+<li><p>源代码编译时经常用到的编译命令为<code class="docutils literal notranslate"><span class="pre">make</span></code>，编译配置文件为，请查看<code class="docutils literal notranslate"><span class="pre">make</span></code>命令用法及文件说明。</p></li>
+</ul>
+</li>
+</ul>
+<p>应用程序一般都有官方的安装说明，建议在安装前，首先仔细查看一下，比如到其主页或者查看解压缩后的目录中的类似：install*、readme*等文件。</p>
+<section id="id4">
+<h2 id="id4">二进制程序的安装<a class="headerlink" href="#id4" title="此标题的永久链接">¶</a></h2>
+<p>以二进制方式发布的程序，安装相对简单，一般只要解压缩后设置好环境变量即可，以Gaussian09为例：</p>
+<ul class="simple">
+<li><p>将压缩包复制到某个地方，如</p></li>
+<li><p>解压缩：<code class="docutils literal notranslate"><span class="pre">tar</span> <span class="pre">xvf</span> <span class="pre">gaussian09.tar.gz</span></code> <a class="footnote-reference brackets" href="#id11" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p></li>
+<li><p>设置环境变量：修改 <code class="docutils literal notranslate"><span class="pre">~/.bashrc</span></code> ，添加：</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">##Add for g09</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">g09root</span><span class="o">=</span><span class="s2">"/opt"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">GAUSS_SCRDIR</span><span class="o">=</span><span class="s2">"/tmp"</span>
+.<span class="w"> </span><span class="nv">$g09root</span>/g09/bsd/g09.profile
+<span class="c1">##End for g09</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>刷新环境设置： <code class="docutils literal notranslate"><span class="pre">.</span> <span class="pre">~/.bashrc</span></code>  或重新登录下。</p></li>
+</ul>
+</section>
+<section id="id6">
+<h2 id="id6">源代码程序的安装<a class="headerlink" href="#id6" title="此标题的永久链接">¶</a></h2>
+<p>以源代码发布的程序安装相对复杂，需了解所采用的编译环境，并对配置等做相应修改（主要修改编译命令、库、头文件等编译参数等）。以VASP为例：</p>
+<ul>
+<li><p>查看安装说明：其主页上的文档：<a class="reference external" href="http://www.vasp.at/index.php/documentation">http://www.vasp.at/index.php/documentation</a></p></li>
+<li><p>解压缩文件：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tar</span> <span class="pre">xvf</span> <span class="pre">vasp.5.lib.tar.gz</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tar</span> <span class="pre">xvf</span> <span class="pre">vasp.5.2.tar.gz</span></code></p></li>
+</ul>
+</li>
+<li><p>查看说明：install、readme文件等，VASP解压后的目录中未含有，可以参见上述主页文档安装。</p></li>
+<li><p>生成默认配置文件：<code class="docutils literal notranslate"><span class="pre">./configure</span></code>。</p>
+<ul>
+<li><p>VASP不需要<code class="docutils literal notranslate"><span class="pre">./configure</span></code>命令生成，而是提供了几个针对不同系统和编译器的makefile模板，可以复制成</p></li>
+<li><p>其它程序也许需要<code class="docutils literal notranslate"><span class="pre">./configure</span></code>生成所需要的，在运行<code class="docutils literal notranslate"><span class="pre">./configure</span></code>之前，一般可以运行<code class="docutils literal notranslate"><span class="pre">./configure</span> <span class="pre">-h</span></code>查看其选项。如对Open
+MPI 1.6.4，可以运行以下命令生成：</p>
+<p><code class="docutils literal notranslate"><span class="pre">F77=ifort</span> <span class="pre">FC=ifort</span> <span class="pre">CC=icc</span> <span class="pre">CXX=icpc</span> <span class="pre">./configure</span> <span class="pre">--prefix=/opt/openmpi-1.6.4</span></code></p>
+<p>其中：</p>
+<ul class="simple">
+<li><p>F77：编译Fortran77源文件的编译器命令</p></li>
+<li><p>FC：编译Fortran90源文件的编译器命令</p></li>
+<li><p>CC：编译C源文件的编译器命令</p></li>
+<li><p>CXX：编译C++源文件的编译器命令</p></li>
+<li><p>–prefix：安装到的目录前缀</p></li>
+</ul>
+<p>另外一些在Makefile中常见变量为：</p>
+<ul class="simple">
+<li><p>CPP：预处理参数</p></li>
+<li><p>CLAGS：C程序编译参数</p></li>
+<li><p>CXXFLAGS：C程序编译参数</p></li>
+<li><p>F90：编译Fortran90及以后源文件的编译器命令</p></li>
+<li><p>FFLAGS：Fortran编译参数</p></li>
+<li><p>OFLAG：优化参数</p></li>
+<li><p>INCLUDE：头文件参数</p></li>
+<li><p>LIB：库文件参数</p></li>
+<li><p>LINK：链接参数</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>修改文件配置，设定编译环境等：</p>
+<ul class="simple">
+<li><p>对做如下修改：</p>
+<ul>
+<li><p>设定编译Fortran的编译器命令为Intel Fortran编译器命令：FC=ifort</p></li>
+</ul>
+</li>
+<li><p>对做如下修改：</p>
+<ul>
+<li><p>设定BLAS库使用Intel MKL中的BLAS：BLAS=-mkl <a class="footnote-reference brackets" href="#id12" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p></li>
+<li><p>打开FFT3D支持：去掉FFT3D = fft3dfurth.o fft3dlib.o前的# <a class="footnote-reference brackets" href="#id13" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></p></li>
+<li><p>设定MPI Fortran编译器为Intel MPI编译器：FC=mpiifort</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>编译：<code class="docutils literal notranslate"><span class="pre">make</span></code></p>
+<ul class="simple">
+<li><p>先在目录中执行<code class="docutils literal notranslate"><span class="pre">make</span></code></p></li>
+<li><p>如未出错，则再在目录中执行<code class="docutils literal notranslate"><span class="pre">make</span></code></p></li>
+</ul>
+</li>
+<li><p>安装：<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install</span></code>。VASP不需要，有些程序需要执行此步。</p></li>
+<li><p>设置环境变量：比如在中设置安装后的可执行程序目录在环境变量<code class="docutils literal notranslate"><span class="pre">PATH</span></code>中：</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/opt/vasp.5.2
+</pre></div>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id9" role="note">
+<span class="label"><span class="fn-bracket">[</span><a href="#id2" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p>Gaussian主页：<a class="reference external" href="http://www.gaussian.com/">http://www.gaussian.com/</a></p>
+</aside>
+<aside class="footnote brackets" id="id10" role="note">
+<span class="label"><span class="fn-bracket">[</span><a href="#id3" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p>VASP主页：<a class="reference external" href="http://www.vasp.at/">http://www.vasp.at/</a></p>
+</aside>
+<aside class="footnote brackets" id="id11" role="note">
+<span class="label"><span class="fn-bracket">[</span><a href="#id5" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p>当前主流Linux系统，<code class="docutils literal notranslate"><span class="pre">tar</span></code>命令已经能自动识别.gz和.bz压缩，无需再明确添加z或j参数来指定。</p>
+</aside>
+<aside class="footnote brackets" id="id12" role="note">
+<span class="label"><span class="fn-bracket">[</span><a href="#id7" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
+<p>因为2013版本的Intel编译器支持-mkl选项自动Intel
+MKL库，因此可以这么设置。</p>
+</aside>
+<aside class="footnote brackets" id="id13" role="note">
+<span class="label"><span class="fn-bracket">[</span><a href="#id8" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
+<p>在Makefile中#表示注释</p>
+</aside>
+</aside>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../intel-mkl/intel-mkl.html" title="Intel MKL数值函数库"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> Intel MKL数值函数库 </span>
+              </div>
+            </a>
+          
+          
+            <a href="../slurm/index.html" title="Slurm作业调度系统"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> Slurm作业调度系统 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2021, 中国科大超级计算中心.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

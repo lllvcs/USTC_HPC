@@ -1,0 +1,258 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}前言}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}现有超级计算系统}{2}{chapter.2}%
+\contentsline {section}{\numberline {2.1}瀚海22超级计算系统}{2}{section.2.1}%
+\contentsline {section}{\numberline {2.2}瀚海20超级计算系统}{4}{section.2.2}%
+\contentsline {section}{\numberline {2.3}曙光TC4600百万亿次超级计算系统}{8}{section.2.3}%
+\contentsline {chapter}{\numberline {3}用户登录与文件传输}{13}{chapter.3}%
+\contentsline {chapter}{\numberline {4}设置编译及运行环境}{15}{chapter.4}%
+\contentsline {chapter}{\numberline {5}串行及OpenMP程序编译及运行}{18}{chapter.5}%
+\contentsline {section}{\numberline {5.1}串行C/C++程序的编译}{19}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}输入输出文件后缀与类型的关系}{19}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}串行C/C++程序编译举例}{19}{subsection.5.1.2}%
+\contentsline {section}{\numberline {5.2}串行Fortran程序的编译}{21}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}输入输出文件后缀与类型的关系}{21}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}串行Fortran程序编译举例}{21}{subsection.5.2.2}%
+\contentsline {section}{\numberline {5.3}OpenMP程序的编译与运行}{23}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}OpenMP程序的编译}{23}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}OpenMP程序的运行}{24}{subsection.5.3.2}%
+\contentsline {chapter}{\numberline {6}Intel、PGI及GNU C/C++ Fortran编译器介绍}{25}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Intel C/C++ Fortran编译器}{25}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Intel C/C++ Fortran编译器简介}{25}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}编译错误}{26}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.1.3}Fortran程序运行错误}{27}{subsection.6.1.3}%
+\contentsline {subsection}{\numberline {6.1.4}Intel Parallel Studio XE版重要编译选项}{27}{subsection.6.1.4}%
+\contentsline {subsubsection}{优化选项}{29}{subsubsection*.6}%
+\contentsline {subsubsection}{代码生成选项}{29}{subsubsection*.7}%
+\contentsline {subsubsection}{过程间优化(IPO)选项}{31}{subsubsection*.8}%
+\contentsline {subsubsection}{高级优化选项}{31}{subsubsection*.9}%
+\contentsline {subsubsection}{概要导向优化(PGO)选项}{32}{subsubsection*.10}%
+\contentsline {subsubsection}{优化报告选项}{32}{subsubsection*.11}%
+\contentsline {subsubsection}{OpenMP和并行处理选项}{33}{subsubsection*.12}%
+\contentsline {subsubsection}{浮点选项}{34}{subsubsection*.13}%
+\contentsline {subsubsection}{内联选项}{36}{subsubsection*.14}%
+\contentsline {subsubsection}{输出、调试及预编译头文件(PCH)选项}{37}{subsubsection*.15}%
+\contentsline {subsubsection}{预处理选项}{38}{subsubsection*.16}%
+\contentsline {subsubsection}{C/C++语言选项}{39}{subsubsection*.17}%
+\contentsline {subsubsection}{Fortran语言选项}{40}{subsubsection*.18}%
+\contentsline {subsubsection}{数据选项}{41}{subsubsection*.19}%
+\contentsline {subsubsection}{编译器诊断选项}{43}{subsubsection*.20}%
+\contentsline {subsubsection}{兼容性选项}{44}{subsubsection*.21}%
+\contentsline {subsubsection}{链接和链接器选项}{45}{subsubsection*.22}%
+\contentsline {subsubsection}{其它选项}{46}{subsubsection*.23}%
+\contentsline {section}{\numberline {6.2}PGI C/C++ Fortran编译器}{46}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}PGI C/C++ Fortran编译器简介}{46}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}编译错误}{47}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}Fortran程序运行错误}{48}{subsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.2.4}PGI C/C++编译器重要编译选项}{48}{subsection.6.2.4}%
+\contentsline {subsubsection}{一般选项}{48}{subsubsection*.24}%
+\contentsline {subsubsection}{优化选项}{49}{subsubsection*.25}%
+\contentsline {subsubsection}{调试选项}{49}{subsubsection*.26}%
+\contentsline {subsubsection}{预处理选项}{50}{subsubsection*.27}%
+\contentsline {subsubsection}{链接选项}{50}{subsubsection*.28}%
+\contentsline {subsubsection}{C/C++语言选项}{51}{subsubsection*.29}%
+\contentsline {subsubsection}{Fortran语言选项}{51}{subsubsection*.30}%
+\contentsline {subsubsection}{平台相关选项}{52}{subsubsection*.31}%
+\contentsline {section}{\numberline {6.3}GNU C/C++ Fortran编译器}{52}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}GNU C/C++ Fortran编译器简介}{52}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}编译错误}{52}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.3.3}GNU C/C++编译器GCC重要编译选项}{53}{subsection.6.3.3}%
+\contentsline {subsubsection}{控制文件类型的选项}{53}{subsubsection*.32}%
+\contentsline {subsubsection}{C/C++语言选项}{54}{subsubsection*.33}%
+\contentsline {subsubsection}{Fortran语言选项}{54}{subsubsection*.34}%
+\contentsline {subsubsection}{警告选项}{55}{subsubsection*.35}%
+\contentsline {subsubsection}{调试选项}{55}{subsubsection*.36}%
+\contentsline {subsubsection}{优化选项}{55}{subsubsection*.37}%
+\contentsline {subsubsection}{预处理选项}{55}{subsubsection*.38}%
+\contentsline {subsubsection}{链接选项}{56}{subsubsection*.39}%
+\contentsline {subsubsection}{i386和x86\sphinxhyphen {}64平台相关选项}{57}{subsubsection*.40}%
+\contentsline {subsubsection}{约定成俗选项}{57}{subsubsection*.41}%
+\contentsline {chapter}{\numberline {7}GPU异构计算和CUDA程序简介}{58}{chapter.7}%
+\contentsline {section}{\numberline {7.1}背景}{58}{section.7.1}%
+\contentsline {section}{\numberline {7.2}GPGPU}{58}{section.7.2}%
+\contentsline {section}{\numberline {7.3}GPU异构计算}{60}{section.7.3}%
+\contentsline {section}{\numberline {7.4}CUDA编程框架}{60}{section.7.4}%
+\contentsline {section}{\numberline {7.5}NVCC编译引擎}{61}{section.7.5}%
+\contentsline {subsection}{\numberline {7.5.1}nvcc预定义宏}{61}{subsection.7.5.1}%
+\contentsline {subsection}{\numberline {7.5.2}支持的输入文件后缀}{61}{subsection.7.5.2}%
+\contentsline {subsection}{\numberline {7.5.3}常用编译选项}{62}{subsection.7.5.3}%
+\contentsline {section}{\numberline {7.6}一个简单的例子}{66}{section.7.6}%
+\contentsline {subsection}{\numberline {7.6.1}代码示例}{66}{subsection.7.6.1}%
+\contentsline {subsection}{\numberline {7.6.2}程序解读}{67}{subsection.7.6.2}%
+\contentsline {subsection}{\numberline {7.6.3}编译运行}{68}{subsection.7.6.3}%
+\contentsline {subsection}{\numberline {7.6.4}小结}{69}{subsection.7.6.4}%
+\contentsline {section}{\numberline {7.7}One More Thing}{69}{section.7.7}%
+\contentsline {subsection}{\numberline {7.7.1}编译器}{70}{subsection.7.7.1}%
+\contentsline {subsection}{\numberline {7.7.2}数学库}{70}{subsection.7.7.2}%
+\contentsline {subsection}{\numberline {7.7.3}常用工具}{71}{subsection.7.7.3}%
+\contentsline {chapter}{\numberline {8}MPI并行程序编译及运行}{72}{chapter.8}%
+\contentsline {section}{\numberline {8.1}简介}{72}{section.8.1}%
+\contentsline {section}{\numberline {8.2}MPI并行程序的编译}{72}{section.8.2}%
+\contentsline {subsection}{\numberline {8.2.1}HPC\sphinxhyphen {}X ScalableHPC工具集}{72}{subsection.8.2.1}%
+\contentsline {subsubsection}{Mellanox Fabric集合通信加速(Fabric Collective Accelerator, FCA)}{74}{subsubsection*.48}%
+\contentsline {subsubsection}{统一通信\sphinxhyphen {}X架构(Unified Communication \sphinxhyphen {} X Framework, UCX)}{76}{subsubsection*.51}%
+\contentsline {subsubsection}{PGAS共享内存访问(OpenSHMEM)}{80}{subsubsection*.52}%
+\contentsline {subsection}{\numberline {8.2.2}Open MPI库}{83}{subsection.8.2.2}%
+\contentsline {subsection}{\numberline {8.2.3}Intel MPI库}{84}{subsection.8.2.3}%
+\contentsline {subsubsection}{编译命令}{85}{subsubsection*.56}%
+\contentsline {subsubsection}{编译命令参数}{85}{subsubsection*.57}%
+\contentsline {subsubsection}{环境变量}{87}{subsubsection*.58}%
+\contentsline {subsubsection}{编译举例}{89}{subsubsection*.59}%
+\contentsline {subsubsection}{调试}{89}{subsubsection*.60}%
+\contentsline {subsubsection}{追踪}{90}{subsubsection*.61}%
+\contentsline {subsubsection}{正确性检查}{90}{subsubsection*.62}%
+\contentsline {subsubsection}{统计收集}{90}{subsubsection*.63}%
+\contentsline {subsection}{\numberline {8.2.4}与编译器相关的编译选项}{90}{subsection.8.2.4}%
+\contentsline {section}{\numberline {8.3}MPI并行程序的运行}{90}{section.8.3}%
+\contentsline {chapter}{\numberline {9}程序调试}{91}{chapter.9}%
+\contentsline {section}{\numberline {9.1}GDB调试器简介}{91}{section.9.1}%
+\contentsline {section}{\numberline {9.2}基本启动方式{[}gdbstart{]}}{91}{section.9.2}%
+\contentsline {subsection}{\numberline {9.2.1}选择启动时文件}{92}{subsection.9.2.1}%
+\contentsline {subsection}{\numberline {9.2.2}记录日志}{93}{subsection.9.2.2}%
+\contentsline {section}{\numberline {9.3}退出GDB}{93}{section.9.3}%
+\contentsline {section}{\numberline {9.4}准备所需要调试的程序}{93}{section.9.4}%
+\contentsline {subsection}{\numberline {9.4.1}准备调试代码源代码}{93}{subsection.9.4.1}%
+\contentsline {subsection}{\numberline {9.4.2}准备编译器和链接器环境}{94}{subsection.9.4.2}%
+\contentsline {subsection}{\numberline {9.4.3}调试优化编译的代码}{94}{subsection.9.4.3}%
+\contentsline {subsection}{\numberline {9.4.4}准备所需要调试的并行程序}{95}{subsection.9.4.4}%
+\contentsline {subsection}{\numberline {9.4.5}编译所要调试的程序}{95}{subsection.9.4.5}%
+\contentsline {section}{\numberline {9.5}开始调试程序}{96}{section.9.5}%
+\contentsline {subsection}{\numberline {9.5.1}显示源代码}{96}{subsection.9.5.1}%
+\contentsline {subsection}{\numberline {9.5.2}运行程序}{96}{subsection.9.5.2}%
+\contentsline {subsection}{\numberline {9.5.3}设置和删除断点}{96}{subsection.9.5.3}%
+\contentsline {subsection}{\numberline {9.5.4}控制进程环境}{97}{subsection.9.5.4}%
+\contentsline {subsection}{\numberline {9.5.5}执行一行代码}{97}{subsection.9.5.5}%
+\contentsline {subsection}{\numberline {9.5.6}执行代码直到}{97}{subsection.9.5.6}%
+\contentsline {subsection}{\numberline {9.5.7}执行一行汇编指令}{97}{subsection.9.5.7}%
+\contentsline {subsection}{\numberline {9.5.8}显示变量或表达式值}{98}{subsection.9.5.8}%
+\contentsline {section}{\numberline {9.6}传递命令给调试器}{98}{section.9.6}%
+\contentsline {subsection}{\numberline {9.6.1}命令、文件名和变量补全}{98}{subsection.9.6.1}%
+\contentsline {subsection}{\numberline {9.6.2}自定义命令}{98}{subsection.9.6.2}%
+\contentsline {section}{\numberline {9.7}调试并行程序}{98}{section.9.7}%
+\contentsline {subsection}{\numberline {9.7.1}调试OpenMP等多线程程序}{98}{subsection.9.7.1}%
+\contentsline {subsection}{\numberline {9.7.2}调试MPI并行应用}{99}{subsection.9.7.2}%
+\contentsline {chapter}{\numberline {10}Intel MKL数值函数库}{101}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Intel MKL主要内容}{101}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Intel MKL目录内容}{102}{section.10.2}%
+\contentsline {section}{\numberline {10.3}链接Intel MKL}{103}{section.10.3}%
+\contentsline {subsection}{\numberline {10.3.1}快速入门}{103}{subsection.10.3.1}%
+\contentsline {subsubsection}{利用\sphinxhyphen {}mkl编译器参数}{103}{subsubsection*.66}%
+\contentsline {subsubsection}{使用单一动态库}{103}{subsubsection*.68}%
+\contentsline {subsubsection}{选择所需库进行链接}{104}{subsubsection*.69}%
+\contentsline {subsubsection}{使用链接行顾问}{104}{subsubsection*.70}%
+\contentsline {subsubsection}{使用命令行链接工具}{104}{subsubsection*.71}%
+\contentsline {subsection}{\numberline {10.3.2}链接举例}{105}{subsection.10.3.2}%
+\contentsline {subsubsection}{在Intel 64架构上链接}{105}{subsubsection*.72}%
+\contentsline {subsubsection}{在IA\sphinxhyphen {}32架构上链接}{106}{subsubsection*.73}%
+\contentsline {subsection}{\numberline {10.3.3}链接细节}{107}{subsection.10.3.3}%
+\contentsline {subsubsection}{在命令行上列出所需库链接}{107}{subsubsection*.74}%
+\contentsline {subsubsection}{动态选择接口和线程层链接}{108}{subsubsection*.75}%
+\contentsline {subsubsection}{使用接口库链接}{109}{subsubsection*.76}%
+\contentsline {subsubsection}{使用线程库链接}{110}{subsubsection*.77}%
+\contentsline {subsubsection}{使用计算库链接}{111}{subsubsection*.78}%
+\contentsline {subsubsection}{使用编译器运行库链接}{112}{subsubsection*.79}%
+\contentsline {subsubsection}{使用系统库链接}{112}{subsubsection*.80}%
+\contentsline {subsubsection}{冗长（Verbose）启用模式链接}{112}{subsubsection*.81}%
+\contentsline {section}{\numberline {10.4}性能优化等}{113}{section.10.4}%
+\contentsline {chapter}{\numberline {11}应用程序的编译与安装}{114}{chapter.11}%
+\contentsline {section}{\numberline {11.1}二进制程序的安装}{114}{section.11.1}%
+\contentsline {section}{\numberline {11.2}源代码程序的安装}{115}{section.11.2}%
+\contentsline {chapter}{\numberline {12}Slurm作业调度系统}{117}{chapter.12}%
+\contentsline {section}{\numberline {12.1}简介}{117}{section.12.1}%
+\contentsline {section}{\numberline {12.2}基本概念}{117}{section.12.2}%
+\contentsline {subsection}{\numberline {12.2.1}三种模式区别}{117}{subsection.12.2.1}%
+\contentsline {subsection}{\numberline {12.2.2}基本用户命令}{118}{subsection.12.2.2}%
+\contentsline {subsection}{\numberline {12.2.3}基本术语}{119}{subsection.12.2.3}%
+\contentsline {subsection}{\numberline {12.2.4}常用参考}{119}{subsection.12.2.4}%
+\contentsline {section}{\numberline {12.3}显示队列、节点信息：sinfo}{121}{section.12.3}%
+\contentsline {subsection}{\numberline {12.3.1}主要输出项}{122}{subsection.12.3.1}%
+\contentsline {subsection}{\numberline {12.3.2}主要参数}{123}{subsection.12.3.2}%
+\contentsline {section}{\numberline {12.4}查看队列中的作业信息：squeue}{127}{section.12.4}%
+\contentsline {subsection}{\numberline {12.4.1}主要输出项}{127}{subsection.12.4.1}%
+\contentsline {subsection}{\numberline {12.4.2}主要参数}{129}{subsection.12.4.2}%
+\contentsline {section}{\numberline {12.5}查看详细队列信息：scontrol show partition}{137}{section.12.5}%
+\contentsline {subsection}{\numberline {12.5.1}主要输出项}{138}{subsection.12.5.1}%
+\contentsline {section}{\numberline {12.6}查看详细节点信息：scontrol show node}{139}{section.12.6}%
+\contentsline {subsection}{\numberline {12.6.1}主要输出项}{140}{subsection.12.6.1}%
+\contentsline {section}{\numberline {12.7}查看详细作业信息：scontrol show job}{141}{section.12.7}%
+\contentsline {subsection}{\numberline {12.7.1}主要输出项}{142}{subsection.12.7.1}%
+\contentsline {section}{\numberline {12.8}查看服务质量(QoS)}{144}{section.12.8}%
+\contentsline {section}{\numberline {12.9}查看作业屏幕输出：speek}{144}{section.12.9}%
+\contentsline {section}{\numberline {12.10}提交作业命令共同说明}{145}{section.12.10}%
+\contentsline {subsection}{\numberline {12.10.1}主要参数}{145}{subsection.12.10.1}%
+\contentsline {subsection}{\numberline {12.10.2}IO重定向}{151}{subsection.12.10.2}%
+\contentsline {section}{\numberline {12.11}交互式提交并行作业：srun}{152}{section.12.11}%
+\contentsline {subsection}{\numberline {12.11.1}主要输入环境变量}{153}{subsection.12.11.1}%
+\contentsline {subsection}{\numberline {12.11.2}主要输出环境变量}{155}{subsection.12.11.2}%
+\contentsline {subsection}{\numberline {12.11.3}多程序运行配置}{157}{subsection.12.11.3}%
+\contentsline {subsection}{\numberline {12.11.4}常见例子}{158}{subsection.12.11.4}%
+\contentsline {section}{\numberline {12.12}批处理方式提交作业：sbatch}{161}{section.12.12}%
+\contentsline {subsection}{\numberline {12.12.1}主要输入环境变量}{162}{subsection.12.12.1}%
+\contentsline {subsection}{\numberline {12.12.2}主要输出环境变量}{164}{subsection.12.12.2}%
+\contentsline {subsection}{\numberline {12.12.3}串行作业提交}{166}{subsection.12.12.3}%
+\contentsline {subsection}{\numberline {12.12.4}OpenMP共享内存并行作业提交}{166}{subsection.12.12.4}%
+\contentsline {subsection}{\numberline {12.12.5}MPI并行作业提交}{167}{subsection.12.12.5}%
+\contentsline {subsection}{\numberline {12.12.6}GPU作业提交}{168}{subsection.12.12.6}%
+\contentsline {subsection}{\numberline {12.12.7}作业获取的节点名及对应CPU核数解析}{168}{subsection.12.12.7}%
+\contentsline {section}{\numberline {12.13}分配式提交作业：salloc}{170}{section.12.13}%
+\contentsline {subsection}{\numberline {12.13.1}作业获取的节点名及对应CPU核数解析}{170}{subsection.12.13.1}%
+\contentsline {subsection}{\numberline {12.13.2}主要选项}{172}{subsection.12.13.2}%
+\contentsline {subsection}{\numberline {12.13.3}主要输入环境变量}{172}{subsection.12.13.3}%
+\contentsline {subsection}{\numberline {12.13.4}主要输出环境变量}{173}{subsection.12.13.4}%
+\contentsline {subsection}{\numberline {12.13.5}例子}{175}{subsection.12.13.5}%
+\contentsline {section}{\numberline {12.14}将文件同步到各节点：sbcast}{175}{section.12.14}%
+\contentsline {subsection}{\numberline {12.14.1}主要参数}{176}{subsection.12.14.1}%
+\contentsline {subsection}{\numberline {12.14.2}主要环境变量}{176}{subsection.12.14.2}%
+\contentsline {subsection}{\numberline {12.14.3}例子}{176}{subsection.12.14.3}%
+\contentsline {section}{\numberline {12.15}吸附到作业步：sattach}{177}{section.12.15}%
+\contentsline {subsection}{\numberline {12.15.1}主要参数}{177}{subsection.12.15.1}%
+\contentsline {subsection}{\numberline {12.15.2}主要输入环境变量}{177}{subsection.12.15.2}%
+\contentsline {subsection}{\numberline {12.15.3}例子}{177}{subsection.12.15.3}%
+\contentsline {section}{\numberline {12.16}查看记账信息：sacct}{178}{section.12.16}%
+\contentsline {section}{\numberline {12.17}其它常用作业管理命令}{179}{section.12.17}%
+\contentsline {subsection}{\numberline {12.17.1}终止作业：scancel job\_id}{179}{subsection.12.17.1}%
+\contentsline {subsection}{\numberline {12.17.2}挂起排队中尚未运行的作业：scontrol hold job\_list}{179}{subsection.12.17.2}%
+\contentsline {subsection}{\numberline {12.17.3}继续排队被挂起的尚未运行作业：scontrol release job\_list}{179}{subsection.12.17.3}%
+\contentsline {subsection}{\numberline {12.17.4}重新运行作业：scontrol requeue job\_list}{179}{subsection.12.17.4}%
+\contentsline {subsection}{\numberline {12.17.5}重新挂起作业：scontrol requeuehold job\_list}{179}{subsection.12.17.5}%
+\contentsline {subsection}{\numberline {12.17.6}最优先等待运行作业：scontrol top job\_id}{180}{subsection.12.17.6}%
+\contentsline {subsection}{\numberline {12.17.7}等待某个作业运行完：scontrol wait\_job job\_id}{180}{subsection.12.17.7}%
+\contentsline {subsection}{\numberline {12.17.8}更新作业信息：scontrol update SPECIFICATION}{180}{subsection.12.17.8}%
+\contentsline {chapter}{\numberline {13}LSF作业调度系统}{181}{chapter.13}%
+\contentsline {section}{\numberline {13.1}作业运行的条件}{181}{section.13.1}%
+\contentsline {section}{\numberline {13.2}查看队列情况：bqueues}{182}{section.13.2}%
+\contentsline {subsection}{\numberline {13.2.1}查看队列详细情况：bqueues \sphinxhyphen {}l}{183}{subsection.13.2.1}%
+\contentsline {section}{\numberline {13.3}查看各节点的运行情况：lsload}{184}{section.13.3}%
+\contentsline {section}{\numberline {13.4}查看各节点的空闲情况：bhosts}{185}{section.13.4}%
+\contentsline {section}{\numberline {13.5}查看用户信息：busers}{186}{section.13.5}%
+\contentsline {section}{\numberline {13.6}提交作业：bsub}{186}{section.13.6}%
+\contentsline {subsection}{\numberline {13.6.1}提交到特定队列：bsub \sphinxhyphen {}q}{187}{subsection.13.6.1}%
+\contentsline {subsection}{\numberline {13.6.2}提交串行作业：bsub \sphinxhyphen {}n 1}{187}{subsection.13.6.2}%
+\contentsline {subsection}{\numberline {13.6.3}指明所需要的CPU核数：bsub \sphinxhyphen {}n}{187}{subsection.13.6.3}%
+\contentsline {subsection}{\numberline {13.6.4}提交到特定节点：bsub \sphinxhyphen {}m “host\_name”}{188}{subsection.13.6.4}%
+\contentsline {subsection}{\numberline {13.6.5}提交MPI作业：bsub \sphinxhyphen {}n NUM mpijob}{188}{subsection.13.6.5}%
+\contentsline {subsection}{\numberline {13.6.6}指明需要某种资源作业提交：bsub \sphinxhyphen {}R}{188}{subsection.13.6.6}%
+\contentsline {subsection}{\numberline {13.6.7}提交OpenMP等共享内存作业：bsub \sphinxhyphen {}R “span{[}hosts=1{]}” OMP\_NUM\_THREADS=}{189}{subsection.13.6.7}%
+\contentsline {subsection}{\numberline {13.6.8}MPI和OpenMP共享内存混合并行作业}{189}{subsection.13.6.8}%
+\contentsline {subsection}{\numberline {13.6.9}给作业起个名字：bsub \sphinxhyphen {}P project\_name}{189}{subsection.13.6.9}%
+\contentsline {subsection}{\numberline {13.6.10}运行排他性作业：bsub \sphinxhyphen {}x}{189}{subsection.13.6.10}%
+\contentsline {subsection}{\numberline {13.6.11}指明输出、输出文件运行：bsub \sphinxhyphen {}i \sphinxhyphen {}o \sphinxhyphen {}e}{190}{subsection.13.6.11}%
+\contentsline {subsection}{\numberline {13.6.12}指明输出目录提交：bsub \sphinxhyphen {}outdir output\_directory}{190}{subsection.13.6.12}%
+\contentsline {subsection}{\numberline {13.6.13}交互式运行作业：bsub \sphinxhyphen {}I}{191}{subsection.13.6.13}%
+\contentsline {subsection}{\numberline {13.6.14}满足依赖关系运行作业：bsub \sphinxhyphen {}w}{191}{subsection.13.6.14}%
+\contentsline {subsection}{\numberline {13.6.15}指定时间运行：bsub \sphinxhyphen {}b time}{191}{subsection.13.6.15}%
+\contentsline {subsection}{\numberline {13.6.16}指定运行时长：bsub \sphinxhyphen {}W time}{191}{subsection.13.6.16}%
+\contentsline {subsection}{\numberline {13.6.17}在运行前执行特定命令：bsub \sphinxhyphen {}E “pre\_command”}{192}{subsection.13.6.17}%
+\contentsline {subsection}{\numberline {13.6.18}在运行后执行特定命令：bsub \sphinxhyphen {}Ep “post\_command”}{192}{subsection.13.6.18}%
+\contentsline {subsection}{\numberline {13.6.19}LSF作业脚本}{192}{subsection.13.6.19}%
+\contentsline {section}{\numberline {13.7}终止作业：bkill}{193}{section.13.7}%
+\contentsline {section}{\numberline {13.8}挂起作业：bstop}{193}{section.13.8}%
+\contentsline {section}{\numberline {13.9}继续运行被挂起的作业：bresume}{193}{section.13.9}%
+\contentsline {section}{\numberline {13.10}设置作业最先运行：btop}{194}{section.13.10}%
+\contentsline {section}{\numberline {13.11}设置作业最后运行：bbot}{194}{section.13.11}%
+\contentsline {section}{\numberline {13.12}修改排队中的作业选项：bmod}{194}{section.13.12}%
+\contentsline {section}{\numberline {13.13}查看作业的排队和运行情况：bjobs}{194}{section.13.13}%
+\contentsline {section}{\numberline {13.14}查看作业负载：checkjob}{195}{section.13.14}%
+\contentsline {section}{\numberline {13.15}查看运行中作业的屏幕正常输出：bpeek}{195}{section.13.15}%
+\contentsline {chapter}{\numberline {14}LaTeX pdf版}{197}{chapter.14}%
+\contentsline {chapter}{\numberline {15}联系方式}{198}{chapter.15}%

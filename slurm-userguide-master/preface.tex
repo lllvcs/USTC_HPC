@@ -1,0 +1,28 @@
+\section{前言}
+
+本用户使用指南主要将对Slurm作业调度系统做一基本介绍，详细信息请参看相应的文档。
+
+为了便于查看，主要排版约定如下：
+\begin{itemize}
+	\item 文件名：\fl{/path/file}
+	\item 环境变量：\env{MKLROOT}
+	\item 命令：\LS{command parameters}
+	\item 脚本文件内容或长命令：
+\begin{SH}
+export OPENMPI=/opt/openmpi/1.8.2_intel-compiler-2015.1.133
+export PATH=$OPENMPI/bin:$PATH
+export MANPATH=$MANPATH:$OPENMPI/share/man
+\end{SH}
+%注意\lstinline[showspaces]{ }表示空格。
+\item 命令输出：
+\small
+\begin{OUT}
+QUEUE_NAME      PRIO STATUS          MAX JL/U JL/P JL/H NJOBS  PEND   RUN  SUSP 
+serial           50  Open:Active       -   16    -    -     0     0     0     0
+long             40  Open:Active       -    -    -    -     0     0     0     0
+normal           30  Open:Active       -    -    -    -     0     0     0     0
+\end{OUT}
+\end{itemize}
+
+由于受水平和时间所限，错误和不妥之处在所难免，欢迎指出错误和改进意见，本人将尽力完善。%本指南会经常更新，请从\url{http://211.86.151.155/docs/}上下载更新后的手册。
+

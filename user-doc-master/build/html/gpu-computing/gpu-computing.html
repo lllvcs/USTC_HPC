@@ -1,0 +1,1228 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>GPU异构计算和CUDA程序简介 &#8212; 中国科大超级计算中心用户使用文档 2021-03 文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="MPI并行程序编译及运行" href="../mpi-application/mpi-application.html" />
+    <link rel="prev" title="GNU C/C++ Fortran编译器" href="../compiler/gnu.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=#4000FF data-md-color-accent=light-blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#gpu-computing/gpu-computing" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="中国科大超级计算中心用户使用文档 2021-03 文档"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../_static/logo.png" height="26"
+                   alt="中国科大超级计算中心用户使用文档 2021-03 文档 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">中国科大超算中心用户使用手册</span>
+          <span class="md-header-nav__topic"> GPU异构计算和CUDA程序简介 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://git.ustc.edu.cn/scc/user-doc" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    手册源码git
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../"versions.json"",
+        target_loc = "../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">中国科大超级计算中心用户使用文档 2021-03 文档</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="中国科大超级计算中心用户使用文档 2021-03 文档" class="md-nav__button md-logo">
+      
+        <img src="../_static/logo.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="中国科大超级计算中心用户使用文档 2021-03 文档">中国科大超算中心用户使用手册</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://git.ustc.edu.cn/scc/user-doc" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    手册源码git
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../preface.html" class="md-nav__link">前言</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../introduction/index.html" class="md-nav__link">现有超级计算系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../login-ftp/login-ftp.html" class="md-nav__link">用户登录与文件传输</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../module-environment/module-environment.html" class="md-nav__link">设置编译及运行环境</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../serial-compiling/serial-compiling.html" class="md-nav__link">串行及OpenMP程序编译及运行</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../compiler/index.html" class="md-nav__link">Intel、PGI及GNU C/C++ Fortran编译器介绍</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> GPU异构计算和CUDA程序简介 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">GPU异构计算和CUDA程序简介</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#gpu-computing-gpu-computing--page-root" class="md-nav__link">GPU异构计算和CUDA程序简介</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">背景</a>
+        </li>
+        <li class="md-nav__item"><a href="#gpgpu" class="md-nav__link">GPGPU</a>
+        </li>
+        <li class="md-nav__item"><a href="#gpu" class="md-nav__link">GPU异构计算</a>
+        </li>
+        <li class="md-nav__item"><a href="#cuda" class="md-nav__link">CUDA编程框架</a>
+        </li>
+        <li class="md-nav__item"><a href="#nvcc" class="md-nav__link">NVCC编译引擎</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">nvcc预定义宏</a>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">支持的输入文件后缀</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">常用编译选项</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">一个简单的例子</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id9" class="md-nav__link">代码示例</a>
+        </li>
+        <li class="md-nav__item"><a href="#id10" class="md-nav__link">程序解读</a>
+        </li>
+        <li class="md-nav__item"><a href="#id11" class="md-nav__link">编译运行</a>
+        </li>
+        <li class="md-nav__item"><a href="#id13" class="md-nav__link">小结</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#one-more-thing" class="md-nav__link">One More Thing</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id15" class="md-nav__link">编译器</a>
+        </li>
+        <li class="md-nav__item"><a href="#id16" class="md-nav__link">数学库</a>
+        </li>
+        <li class="md-nav__item"><a href="#id17" class="md-nav__link">常用工具</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+  </ul>
+</nav>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#id1" class="md-nav__link">背景</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#gpgpu" class="md-nav__link">GPGPU</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#gpu" class="md-nav__link">GPU异构计算</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#cuda" class="md-nav__link">CUDA编程框架</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#nvcc" class="md-nav__link">NVCC编译引擎</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#id4" class="md-nav__link">nvcc预定义宏</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id5" class="md-nav__link">支持的输入文件后缀</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id6" class="md-nav__link">常用编译选项</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id8" class="md-nav__link">一个简单的例子</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#id9" class="md-nav__link">代码示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id10" class="md-nav__link">程序解读</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id11" class="md-nav__link">编译运行</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id13" class="md-nav__link">小结</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#one-more-thing" class="md-nav__link">One More Thing</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#id15" class="md-nav__link">编译器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id16" class="md-nav__link">数学库</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id17" class="md-nav__link">常用工具</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../mpi-application/mpi-application.html" class="md-nav__link">MPI并行程序编译及运行</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../debug/debug.html" class="md-nav__link">程序调试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../intel-mkl/intel-mkl.html" class="md-nav__link">Intel MKL数值函数库</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../compile-install/compile-install.html" class="md-nav__link">应用程序的编译与安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../slurm/index.html" class="md-nav__link">Slurm作业调度系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../lsf/lsf.html" class="md-nav__link">LSF作业调度系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../latex.html" class="md-nav__link">LaTeX pdf版</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../contact.html" class="md-nav__link">联系方式</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#gpu-computing-gpu-computing--page-root" class="md-nav__link">GPU异构计算和CUDA程序简介</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">背景</a>
+        </li>
+        <li class="md-nav__item"><a href="#gpgpu" class="md-nav__link">GPGPU</a>
+        </li>
+        <li class="md-nav__item"><a href="#gpu" class="md-nav__link">GPU异构计算</a>
+        </li>
+        <li class="md-nav__item"><a href="#cuda" class="md-nav__link">CUDA编程框架</a>
+        </li>
+        <li class="md-nav__item"><a href="#nvcc" class="md-nav__link">NVCC编译引擎</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">nvcc预定义宏</a>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">支持的输入文件后缀</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">常用编译选项</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">一个简单的例子</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id9" class="md-nav__link">代码示例</a>
+        </li>
+        <li class="md-nav__item"><a href="#id10" class="md-nav__link">程序解读</a>
+        </li>
+        <li class="md-nav__item"><a href="#id11" class="md-nav__link">编译运行</a>
+        </li>
+        <li class="md-nav__item"><a href="#id13" class="md-nav__link">小结</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#one-more-thing" class="md-nav__link">One More Thing</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id15" class="md-nav__link">编译器</a>
+        </li>
+        <li class="md-nav__item"><a href="#id16" class="md-nav__link">数学库</a>
+        </li>
+        <li class="md-nav__item"><a href="#id17" class="md-nav__link">常用工具</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="gpucuda">
+<h1 id="gpu-computing-gpu-computing--page-root">GPU异构计算和CUDA程序简介<a class="headerlink" href="#gpu-computing-gpu-computing--page-root" title="此标题的永久链接">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">Author<span class="colon">:</span></dt>
+<dd class="field-odd"><p>吴超，中国科大超级计算中心</p>
+</dd>
+</dl>
+<section id="id1">
+<h2 id="id1">背景<a class="headerlink" href="#id1" title="此标题的永久链接">¶</a></h2>
+<p>近年来，随着人工智能、高性能数据分析和金融分析等计算密集型领域的兴起，传统通用计算已经无法满足对计算性能的需求，异构计算越来越引起学术界和产业界的重视。</p>
+<p>异构计算是指采用不同类型的指令集和体系架构的计算单元组成系统的计算方式。相比传统CPU，异构计算可以实现更高的效率和更低的延迟。目前的异构计算引擎主要有图形处理器（GPU，Graphics Processing Unit）、现场可编程门阵列（FPGA，Field Programming Gate Array）、专用集成电路（ASIC）等。</p>
+<p>当前的通用CPU设计得已经很复杂，配有几十个核心，运行频率高达几GHz，每个核心有自己的独立缓存。通常CPU已具备一级、二级、三级缓存。而GPU是目前科研领域比较常用的硬件计算工具。GPU的计算核心数通常是CPU的上百倍，运行频率尽管比CPU的低，但是核心数量多，整体性能好。所以，GPU比较适合计算密集型应用，比如视频处理、人工智能等，现在传统的科学计算、工程计算等也开始越来越适合在GPU上运行。相比来说，CPU的缺点就是太通用了，数据读写、计算、逻辑等各种功能都得照顾，反而影响了计算性能。</p>
+</section>
+<section id="gpgpu">
+<h2 id="gpgpu">GPGPU<a class="headerlink" href="#gpgpu" title="此标题的永久链接">¶</a></h2>
+<p>通用图形处理器（GPGPU，General Purpose Graphics Processing Unit）最早由NVIDIA公司的Mark J. Harris于2002年提出。基于图形渲染管线的流水线特征，GPU本质上是一个可同时处理多个计算任务的硬件加速器。由于GPU中包含了大量的计算资源，Mark J. Harris自2002年就开始尝试在GPU上做通用并行计算方面的研究。在此阶段，由于架构及编程平台的限制，研究人员采用将目标计算算法转换为图形运算算法的方式，使用GPU来实现通用并行计算需求。</p>
+<p>NVIDIA公司提出Tesla统一渲染架构以及CUDA（Compute Unified Device Architecture，计算统一设备架构）编程模型后，NVIDIA公司的GPU开始了对通用并行计算的全面支持。在CUDA提出近两年之后，开放计算语言标准OpenCL 1.0发布，这标志着利用GPU进行通用并行计算已基本成熟。目前市场上应用甚广的GPU芯片除了完成高质量的图形渲染之外，通用并行计算也已经成为一个主流应用。GPGPU在各个方面得到了不同GPU厂家为GPU通用计算提供的编程模型与平台，如CUDA和OpenCL，这些编程模型在C/C++基础之上做了面向大规模通用并行计算的语法扩展，为程序员提供了更好的、面向GPU的编程接口。</p>
+<p>GPGPU通常由成百上千个架构相对简易的基本运算单元组成。在这些基本运算单元中，一般不提供复杂的诸如分支预测、寄存器重命名、乱序执行等处理器设计技术来提高单个处理单元性能，而是采用极简的流水线进行设计。每个基本运算单元可同时执行一至多个线程，并由GPGPU中相应的调度器控制。GPGPU作为一个通用的众核处理器，凭借着丰富的高性能计算资源以及高带宽的数据传输能力在通用计算领域占据了重要的席位。虽然各个GPGPU厂商的芯片架构各不相同，但几乎都是采用众核处理器阵列架构，在一个GPU芯片中包含成百上千个处理核心，以获得更高的计算性能和更大的数据带宽。</p>
+<p>GPU中执行的线程对应的程序通常成为内核（kernel），这与操作系统中的内核是完全不同的两个概念。除此之外，GPU中执行的线程与CPU或者操作系统中定义的线程也有所区别，GPU中的线程相对而言更为简单，所包含的内容也更为简洁。在GPU众核架构中，多个处理核心通常被组织成一个线程组调度执行单位，线程以组的方式被调度在执行单元中执行，如NVIDIA的流多处理器、AMD的SIMD执行单元。同一个线程组中的线程执行相同的程序指令，并以同步的方式执行，每个线程处理不同的数据，实现数据级并行处理。不同GPU架构对线程组的命名各不一样，如NVIDIA将线程组称为warp，AMD将线程组称为wavefront。线程组中包含的线程数量各不相同，从4个到128个不等。除此以为，线程组的组织执行模式也各不相同，常见的执行模式有SIMT（Single Instruction Multiple Threads，单指令多线程）执行模式和SIMD（Single Instruction Multiple Data，单指令流多数据流）执行模式两种。</p>
+<p>在一个GPU程序中，避免不了对数据的加载和存储，同时也避免不了条件分支跳转指令。这两类指令通常会引起程序以不可预测的情况执行。对于前者，在第一级高速缓存命中缺失的情况下，指令的执行周期将不可预测。为了避免执行单元因为数据加载或者存储原因而造成运算资源的浪费，GPU的每个执行单元通常设置线程组缓冲区，以支持同时执行多个线程组。线程组之间的调度由线程组硬件调度器承担，与软件调度器不同的是，硬件调度过程一般为零负载调度。在执行单元中，即将执行的线程组首先被调度到缓冲区中，以队列的方式组织，当线程组被调度执行时，调度器从线程组队列中选择一个准备好的线程组启动执行。采用这种线程调度执行方式，可有效解决指令之间由于长延时操作所引起的停顿问题，更高效的应用执行单元中的计算资源。对于后者，在线程级并行执行过程中，条件分支指令的执行特点决定了程序执行的实际效率。无论是SIMD执行模式或是SIMT执行模式，当一组线程均执行相同的代码路径时可获得最佳性能。若一组线程中的每个线程各自执行不同的代码路径，为了确保所有线程执行的正确性，线程组中的多线程指令发送单元将串行地发送所有的指令代码，代码的执行效率将受到严重的影响。GPU架构采用各种控制方法来提高条件分支指令的执行效率。</p>
+<p>背景知识大部分内容引自 <a class="footnote-reference brackets" href="#id19" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>。</p>
+</section>
+<section id="gpu">
+<h2 id="gpu">GPU异构计算<a class="headerlink" href="#gpu" title="此标题的永久链接">¶</a></h2>
+<p>CPU-GPU协同是实现高性能计算的必要条件，称为CPU-GPU异构计算（HC，Heterogeneous Computing）。它通过将应用程序的计算密集型部分卸载到GPU来提供更高的性能，而其余代码仍然在CPU上运行，能智能地结合CPU和GPU的最佳特性以实现高计算增益，旨在将每个应用程序的需求与CPU/GPU架构的优势相匹配，并避免两个处理单元的空闲时间。需要新的优化技术来充分发挥HC的潜力并朝着百亿级性能的目标迈进。</p>
+<p>了解CPU和GPU之间差异的一种简单方法是比较它们处理任务的方式。CPU由几个针对顺序串行处理优化的内核组成，而GPU具有大规模并行架构，由数千个更小、更高效的内核组成，旨在同时处理多个任务。</p>
+<p>在GPU上解决计算问题原则上类似于使用多个CPU解决问题。手头的任务必须拆分为小任务，其中每个任务由单个GPU内核执行。GPU内核之间的通信由GPU芯片上的内部寄存器和内存处理。CUDA或OpenCL等特殊编程语言不是使用消息传递进行编程，而是提供主机CPU之间的数据交换和同步GPU内核的机制。</p>
+<p>一个现代超级计算系统实际上可能由大量节点组成，每个节点包含2到32颗常规CPU以及1到16个GPU。通常还会有一个高速网络和一个数据存储系统。该系统的软件可以使用传统编程语言（如C/C++、Fortran等）的组合编写，结合用于CPU并行化的消息传递系统以及用于GPU的CUDA或OpenCL。所有这些组件都必须进行调整和优化，以实现整个系统的最佳性能。</p>
+</section>
+<section id="cuda">
+<h2 id="cuda">CUDA编程框架<a class="headerlink" href="#cuda" title="此标题的永久链接">¶</a></h2>
+<p>CUDA是由NVIDIA公司推行的一套并行编程框架，目前只有NVIDIA的GPU支持该框架，其开发语言主要为CUDA C。作为一种GPU的并行开发语言，CUDA的API涉及设备管理、存储管理、数据传输、线程管理、事件管理等功能。</p>
+<p>CUDA的存储模型主要分为全局存储（global memory）、局部存储（local memory）、共享存储（shared memory）、常量存储（constant memory）和纹理存储（texture memory）等存储类型。不同的存储类型，其存储容量、可见程度、读写速度差异巨大，需要在程序设计中根据各自特点和应用问题的需求合理调配。</p>
+<p>CUDA的编程模型和执行模型按照层次结构分层设计。CUDA的执行模型由3个层级组成，最基础的执行单位是线程（thread），多个线程组成一个线程块（block），多个线程块形成线程网格（grid）。</p>
+<p>CUDA编程模型作为一个异构模型，其中使用了CPU和GPU。在CUDA中，主机（host）指的是CPU及其存储器，设备（device）是指GPU及其存储器。在主机上运行的代码可以管理主机和设备上的内存，还可以启动在设备上执行的内核函数（kernel）。这些内核由许多GPU线程并行执行。</p>
+<p>鉴于CUDA编程模型的异构性， CUDA C程序的典型操作序列是：</p>
+<ol class="arabic simple">
+<li><p>声明并分配主机和设备内存。</p></li>
+<li><p>初始化主机数据。</p></li>
+<li><p>将数据从主机传输到设备。</p></li>
+<li><p>执行一个或多个内核。</p></li>
+<li><p>将结果从设备传输到主机。</p></li>
+</ol>
+<p>对于更多的CUDA编程细节可以在NVIDIA官网CUDA开发者页面 <a class="footnote-reference brackets" href="#id20" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> 找到详细的资料，读者可以自行查阅。</p>
+</section>
+<section id="nvcc">
+<h2 id="nvcc">NVCC编译引擎<a class="headerlink" href="#nvcc" title="此标题的永久链接">¶</a></h2>
+<p>CUDA应用程序的源代码由传统的C++主机代码和GPU设备函数混合组成。CUDA编译过程将设备函数与主机代码分开，使用专有的NVIDIA编译器和汇编器编译设备函数，使用可用的C++主机编译器编译主机代码，之后将编译过的GPU函数嵌入到主机对象（object）文件。在链接阶段，向最终生成的可运行二进制文件添加特定的CUDA运行时库函数，如支持远程SPMD过程调用的运行时库函数、显式GPU操作的运行时库函数（如分配GPU内存缓冲区，主机与设备之间的数据传输等）。</p>
+<p>编译过程涉及每个CUDA源文件的拆分、编译、预处理和合并步骤。为了将上述复杂的编译过程向开发人员隐藏，NVIDIA公司设计了CUDA编译器引擎程序nvcc。nvcc接受一系列常规编译器选项，例如宏定义和头文件、函数库路径设置，支持编译过程的组合。所有非CUDA编译步骤都被转发到nvcc支持的主机C++编译器，编译选项到主机C++编译选项的转换也由nvcc自动完成。</p>
+<section id="id4">
+<h3 id="id4">nvcc预定义宏<a class="headerlink" href="#id4" title="此标题的永久链接">¶</a></h3>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>预定义宏</p></th>
+<th class="head"><p>含义</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>__NVCC__</p></td>
+<td><p>编译C/C++/CUDA源文件时预定义</p></td>
+</tr>
+<tr class="row-odd"><td><p>__CUDACC__</p></td>
+<td><p>编译CUDA源文件时预定义</p></td>
+</tr>
+<tr class="row-even"><td><p>__CUDACC_VER_MAJOR__</p></td>
+<td><p>NVCC主版本号</p></td>
+</tr>
+<tr class="row-odd"><td><p>__CUDACC_VER_MINOR__</p></td>
+<td><p>NVCC次版本号</p></td>
+</tr>
+<tr class="row-even"><td><p>__CUDACC_VER_BUILD__</p></td>
+<td><p>NVCC编译版本号</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id5">
+<h3 id="id5">支持的输入文件后缀<a class="headerlink" href="#id5" title="此标题的永久链接">¶</a></h3>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>输入文件后缀</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>.cu</p></td>
+<td><p>CUDA源文件，包含主机代码和设备函数</p></td>
+</tr>
+<tr class="row-odd"><td><p>.c</p></td>
+<td><p>C源文件</p></td>
+</tr>
+<tr class="row-even"><td><p>.cc, .cxx, .cpp</p></td>
+<td><p>C++源文件</p></td>
+</tr>
+<tr class="row-odd"><td><p>.o, .obj</p></td>
+<td><p>目标文件（object file）</p></td>
+</tr>
+<tr class="row-even"><td><p>.a, .lib</p></td>
+<td><p>库文件（library file）</p></td>
+</tr>
+<tr class="row-odd"><td><p>.res</p></td>
+<td><p>资源文件（resource file）</p></td>
+</tr>
+<tr class="row-even"><td><p>.so</p></td>
+<td><p>共享目标文件（shared object file）</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id6">
+<h3 id="id6">常用编译选项<a class="headerlink" href="#id6" title="此标题的永久链接">¶</a></h3>
+<p>1.文件和路径配置</p>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>选项</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>-o file</p></td>
+<td><p>配置输出文件名和路径</p></td>
+</tr>
+<tr class="row-odd"><td><p>-l library,…</p></td>
+<td><p>配置链接阶段链接的库文件</p></td>
+</tr>
+<tr class="row-even"><td><p>-D def,…</p></td>
+<td><p>定义预处理阶段使用的宏</p></td>
+</tr>
+<tr class="row-odd"><td><p>-U def,…</p></td>
+<td><p>取消宏定义</p></td>
+</tr>
+<tr class="row-even"><td><p>-I path,…</p></td>
+<td><p>配置头文件搜索路径</p></td>
+</tr>
+<tr class="row-odd"><td><p>-L path,…</p></td>
+<td><p>配置库文件搜索路径</p></td>
+</tr>
+<tr class="row-even"><td><p>-cudart {none|shared|static}</p></td>
+<td><p>配置CUDA运行时库的类型，默认使用静态（static）</p></td>
+</tr>
+<tr class="row-odd"><td><p>-cudadevrt {none|static}</p></td>
+<td><p>配置CUDA设备运行时库的类型，默认使用静态（static）</p></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="2">
+<li><p>编译器/链接器选项</p></li>
+</ol>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>选项</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>-pg</p></td>
+<td><p>生成供gprof使用的可执行代码</p></td>
+</tr>
+<tr class="row-odd"><td><p>-g</p></td>
+<td><p>编译带调试信息的主机代码</p></td>
+</tr>
+<tr class="row-even"><td><p>-G</p></td>
+<td><p>编译带调试信息的设备代码</p></td>
+</tr>
+<tr class="row-odd"><td><p>-O level</p></td>
+<td><p>指定主机代码的优化级别</p></td>
+</tr>
+<tr class="row-even"><td><p>-dopt kind</p></td>
+<td><p>允许设备端代码优化。当不指定-G选项时，设备端代码优化是默认的行为</p></td>
+</tr>
+<tr class="row-odd"><td><p>-shared</p></td>
+<td><p>生成共享库</p></td>
+</tr>
+<tr class="row-even"><td><p>-x {c|c++|cu}</p></td>
+<td><p>显式指定待编译的输入文件的编程语言，而不是由编译器根据文件后缀自动判断</p></td>
+</tr>
+<tr class="row-odd"><td><p>-std {c++03|c++11|c++14|c++17}</p></td>
+<td><p>指定c++标准的版本</p></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="3">
+<li><p>特定阶段编译选项</p></li>
+</ol>
+<p>下表列举了可以直接传递给nvcc封装的内部编译工具的编译选项。通过这些选项的应用，nvcc不需要具备对内部编译工具的过多细节的了解。</p>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>选项</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>-Xcompiler options,…</p></td>
+<td><p>指定直接传递给编译器/预处理器的编译选项</p></td>
+</tr>
+<tr class="row-odd"><td><p>-Xlinker options,…</p></td>
+<td><p>指定直接传递给链接器的编译选项</p></td>
+</tr>
+<tr class="row-even"><td><p>-Xarchive options,…</p></td>
+<td><p>指定直接传递给库管理器的编译选项</p></td>
+</tr>
+<tr class="row-odd"><td><p>-Xptxas options,…</p></td>
+<td><p>指定直接传递给ptxas（PTX优化汇编器）的编译选项</p></td>
+</tr>
+<tr class="row-even"><td><p>-Xnvlink options,…</p></td>
+<td><p>指定直接传递给nvlink（设备链接器）的编译选项</p></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="4">
+<li><p>GPU代码生成选项</p></li>
+</ol>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>选项</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>-arch {arch|native|all|allmajor}</p></td>
+<td><p>指定编译阶段使用的虚拟GPU类型</p></td>
+</tr>
+<tr class="row-odd"><td><p>-code code,…</p></td>
+<td><p>指定汇编优化使用的具体GPU类型</p></td>
+</tr>
+<tr class="row-even"><td><p>-use_fast_math</p></td>
+<td><p>使用快速数学计算库</p></td>
+</tr>
+</tbody>
+</table>
+<p>为了实现架构演进，NVIDIA的GPU以不同的世代（generation）发布。新一代产品在功能和/或芯片架构方面进行重大改进，同时同一代产品中的GPU型号仅在配置方面存在次要差别，对功能、性能的影响适中。不同代的GPU其应用程序的二进制兼容性是没有保证的。例如，为Fermi GPU编译的CUDA应用程序很可能无法在Kepler GPU上运行（反之亦然）。这是因为每一代的指令集和指令编码与其他世代的指令编码都不相同。同一代的GPU由于共享相同的指令集，在满足特定条件下其二进制兼容性可以得到保证。特定条件通常是指两个没有功能差异的GPU版本之间的情况（例如，当一个版本是另一个版本的缩减版），或者当一个版本在功能上完全包含在另一个版本中。后者的一个例子是基础Maxwell版本sm_52，其功能是所有其他Maxwell版本的一个子集：任何为sm_52编译的代码将可以在所有Maxwell GPU上运行。</p>
+<p>nvcc编译命令总是使用两个架构：一个虚拟的中间架构，加上一个真实的GPU架构（指定代码将运行的平台）。要使nvcc命令有效，真实架构必须是虚拟架构的实现。</p>
+<p>虚拟GPU完全由提供给应用程序的能力和特征定义。虚拟架构提供了一个通用的指令集合，并且不涉及二进制编码格式。虚拟架构列表如下：</p>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>虚拟架构（-arch参数）</p></th>
+<th class="head"><p>特征描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">compute_35</div>
+<div class="line">compute_37</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">Kepler架构支持</div>
+<div class="line">统一内存编程</div>
+<div class="line">支持动态并行</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">compute_50</div>
+<div class="line">compute_52</div>
+<div class="line">compute_53</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><br/></div>
+<div class="line">+Maxwell架构支持</div>
+<div class="line"><br/></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">compute_60</div>
+<div class="line">compute_61</div>
+<div class="line">compute_62</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><br/></div>
+<div class="line">+Pascal架构支持</div>
+<div class="line"><br/></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">compute_70</div>
+<div class="line">compute_72</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">+Volta架构支持</div>
+<div class="line"><br/></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">compute_75</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">+Turing架构支持</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">compute_80</div>
+<div class="line">compute_86</div>
+<div class="line">compute_87</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><br/></div>
+<div class="line">+Ampere架构支持</div>
+<div class="line"><br/></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>在CUDA的命名方案中，GPU被命名为sm_xy，其中x表示GPU的世代编号，y表示该世代的版本。为了便于比较GPU的能力，执行特定的命名设计规则，如果x1y1 &lt;= x2y2，那么sm_x1y1的所有非ISA相关能力都包括在sm_x2y2中。由此可见，sm_52确实是基础麦克斯韦模型，这也解释了为什么表格中的高条目总是对低条目的功能扩展（表格中用加号表示）。</p>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>真实架构（-code参数）</p></th>
+<th class="head"><p>特征描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">sm_35</div>
+<div class="line">sm_37</div>
+<div class="line"><br/></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">Kepler架构支持</div>
+<div class="line">统一内存编程</div>
+<div class="line">支持动态并行</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">sm_50</div>
+<div class="line">sm_52</div>
+<div class="line">sm_53</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><br/></div>
+<div class="line">+Maxwell架构支持</div>
+<div class="line"><br/></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">sm_60</div>
+<div class="line">sm_61</div>
+<div class="line">sm_62</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><br/></div>
+<div class="line">+Pascal架构支持</div>
+<div class="line"><br/></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">sm_70</div>
+<div class="line">sm_72</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">+Volta架构支持</div>
+<div class="line"><br/></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">sm_75</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">+Turing架构支持</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">sm_80</div>
+<div class="line">sm_86</div>
+<div class="line">sm_87</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><br/></div>
+<div class="line">+Ampere架构支持</div>
+<div class="line"><br/></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>本节介绍了CUDA的nvcc编译引擎，并列举了nvcc一些基础和常用的编译选项。关于nvcc完整的介绍请参考官方指南NVIDIA CUDA Compiler Driver NVCC <a class="footnote-reference brackets" href="#id21" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>。</p>
+</section>
+</section>
+<section id="id8">
+<h2 id="id8">一个简单的例子<a class="headerlink" href="#id8" title="此标题的永久链接">¶</a></h2>
+<section id="id9">
+<h3 id="id9">代码示例<a class="headerlink" href="#id9" title="此标题的永久链接">¶</a></h3>
+<p>下面介绍一个简单的CUDA C程序例子，演示如何在瀚海22上编译运行CUDA代码。</p>
+<p>例子展示的是两个向量相加的CUDA代码 <code class="docutils literal notranslate"><span class="pre">add.cu</span></code> 。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdlib.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cuda_runtime.h&gt;</span>
+
+<span class="n">__global__</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">add</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="n">z</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="o">*</span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">20</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">z</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">d_x</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">d_y</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">d_z</span><span class="p">;</span>
+<span class="w">  </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+<span class="w">  </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+<span class="w">  </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+
+<span class="w">  </span><span class="n">cudaMalloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">d_x</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+<span class="w">  </span><span class="n">cudaMalloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">d_y</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+<span class="w">  </span><span class="n">cudaMalloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">d_z</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">()</span><span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="n">RAND_MAX</span><span class="p">;</span>
+<span class="w">        </span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">()</span><span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="n">RAND_MAX</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">d_x</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">),</span><span class="w"> </span><span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
+<span class="w">  </span><span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">d_y</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">),</span><span class="w"> </span><span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">add</span><span class="o">&lt;&lt;&lt;</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">255</span><span class="p">)</span><span class="o">/</span><span class="mi">256</span><span class="p">,</span><span class="w"> </span><span class="mi">256</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">d_x</span><span class="p">,</span><span class="w"> </span><span class="n">d_y</span><span class="p">,</span><span class="w"> </span><span class="n">d_z</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="w"> </span><span class="n">d_z</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">),</span><span class="w"> </span><span class="n">cudaMemcpyDeviceToHost</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">maxError</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0f</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="n">maxError</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">maxError</span><span class="p">,</span><span class="w"> </span><span class="n">fabs</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+<span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">"Max error: %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">maxError</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">cudaFree</span><span class="p">(</span><span class="n">d_x</span><span class="p">);</span>
+<span class="w">  </span><span class="n">cudaFree</span><span class="p">(</span><span class="n">d_y</span><span class="p">);</span>
+<span class="w">  </span><span class="n">cudaFree</span><span class="p">(</span><span class="n">d_z</span><span class="p">);</span>
+<span class="w">  </span><span class="n">free</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+<span class="w">  </span><span class="n">free</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
+<span class="w">  </span><span class="n">free</span><span class="p">(</span><span class="n">z</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>函数 <code class="docutils literal notranslate"><span class="pre">add</span></code> 是在GPU上并行运行的内核， <code class="docutils literal notranslate"><span class="pre">main</span></code> 函数是宿主代码。</p>
+</section>
+<section id="id10">
+<h3 id="id10">程序解读<a class="headerlink" href="#id10" title="此标题的永久链接">¶</a></h3>
+<p>main函数声明3个数组。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">z</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">d_x</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">d_y</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">d_z</span><span class="p">;</span>
+<span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+<span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+<span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+
+<span class="n">cudaMalloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">d_x</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+<span class="n">cudaMalloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">d_y</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+<span class="n">cudaMalloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">d_z</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>指针x、y和z分别指向使用 <strong>malloc</strong> 分配的主机内存空间，d_x、d_y和d_z指针分别指向使用CUDA运行时API <strong>cudaMalloc</strong> 函数分配的设备存储空间。
+CUDA中的主机和设备有独立的内存空间，这两个空间都可以从主机代码进行管理。</p>
+<p>为了初始化设备数组，使用 <strong>cudaMemcpy</strong> 将数据从x和y复制到相应的设备数组d_x和d_y，它的工作方式与标准的C <strong>memcpy</strong> 函数一样，只是增加了第四个参数，指定拷贝的方向。
+在这里，我们使用 <em>cudaMemcpyHostToDevice</em> 指定第一个（目标）参数是设备指针，第二个（源）参数是主机指针。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">d_x</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">),</span><span class="w"> </span><span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
+<span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">d_y</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">),</span><span class="w"> </span><span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>add内核由以下语句启动：</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">add</span><span class="o">&lt;&lt;&lt;</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">256-1</span><span class="p">)</span><span class="o">/</span><span class="mi">256</span><span class="p">,</span><span class="w"> </span><span class="mi">256</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">d_x</span><span class="p">,</span><span class="w"> </span><span class="n">d_y</span><span class="p">,</span><span class="w"> </span><span class="n">d_z</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><strong>&lt;&lt;&lt;</strong> 和 <strong>&gt;&gt;&gt;</strong> 符号之间的信息是执行配置，指示有多少设备线程并行执行内核。在CUDA中，软件中有一个线程层次结构，它模仿线程处理器在GPU上的分组方式。执行配置中的第一个参数指定网格中线程块的数量，第二个参数指定线程块中的线程数。线程块和网格可以通过为这些参数传递dim3（一个由CUDA用x、y和z成员定义的简单结构）值来生成一维、二维或三维的线程块和网格。对于add这个示例，只需要一维线程组，所以我们只传递整数。在本例中，我们使用包含256个线程的线程块启动内核，并使用“上整计算”来确定处理数组全部N个元素所需的线程块数（(N+256-1)/256）。</p>
+<p>由于数组的元素数有不能被线程块大小整除的可能，内核代码必须检查内存访问是否越界。</p>
+<p>在运行内核之后，使用 <strong>cudaMemcpy</strong> （拷贝方向： <em>cudaMemcpyDeviceToHost</em> ），从d_z指向的设备数组复制到z指向的主机数组，将结果返回给主机。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="w"> </span><span class="n">d_z</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">),</span><span class="w"> </span><span class="n">cudaMemcpyDeviceToHost</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>程序的最后，使用 <strong>cudaFree()</strong> 和 <strong>free()</strong> 分别清理设备端和主机端申请的内存。</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">cudaFree</span><span class="p">(</span><span class="n">d_x</span><span class="p">);</span>
+<span class="n">cudaFree</span><span class="p">(</span><span class="n">d_y</span><span class="p">);</span>
+<span class="n">cudaFree</span><span class="p">(</span><span class="n">d_z</span><span class="p">);</span>
+<span class="n">free</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+<span class="n">free</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
+<span class="n">free</span><span class="p">(</span><span class="n">z</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="id11">
+<h3 id="id11">编译运行<a class="headerlink" href="#id11" title="此标题的永久链接">¶</a></h3>
+<p>接下来以瀚海22超级计算系统使用Slurm作业调度系统的交互式任务为例，演示CUDA程序在超算系统上编译运行的一般方法。</p>
+<ul class="simple">
+<li><p>首先在 <strong>登录节点</strong> ，利用 <strong>module</strong> 命令载入合适的CUDA版本。本例中，在 <strong>登录节点</strong> 运行命令 <strong>module avail</strong> 确认系统中已安装的CUDA版本，选择符合自身需求的版本，如cuda/11.7.1_515.65.01装载（ <strong>module load cuda/x.x.x</strong> , x.x.x指版本号）：</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/hanhai22-module.png"><img alt="../_images/hanhai22-module.png" src="../_images/hanhai22-module.png" style="width: 100%;"/></a>
+<ul class="simple">
+<li><p>（可选操作）使用 <strong>nvcc –version</strong> 命令可以查看确认当前环境载入的CUDA版本：</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/hanhai22-nvcc.png"><img alt="../_images/hanhai22-nvcc.png" src="../_images/hanhai22-nvcc.png" style="width: 100%;"/></a>
+<ul class="simple">
+<li><p>接着，使用 <strong>nvcc</strong> 命令编译CUDA程序，编译选项的含义可参考上节“NVCC编译引擎”：</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/hanhai22-build.png"><img alt="../_images/hanhai22-build.png" src="../_images/hanhai22-build.png" style="width: 100%;"/></a>
+<ul class="simple">
+<li><p>然后，使用 <strong>salloc</strong> 命令向Slurm系统申请交互式任务。 <strong>salloc</strong> 命令选项及Slurm系统可参考本手册的“Slurm作业调度系统” <a class="footnote-reference brackets" href="#id22" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>：</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/hanhai22-salloc.png"><img alt="../_images/hanhai22-salloc.png" src="../_images/hanhai22-salloc.png" style="width: 100%;"/></a>
+<ul class="simple">
+<li><p>至此，已完成在 <strong>登录节点</strong> 的工作（CUDA程序的编译和Slurm交互式任务的提交）。我们转入 <strong>计算节点</strong> 。</p></li>
+<li><p>使用SSH命令免密登入 <strong>计算节点</strong> （计算节点的主机名称由salloc命令的输出确定）。</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/hanhai22-ssh_gnode.png"><img alt="../_images/hanhai22-ssh_gnode.png" src="../_images/hanhai22-ssh_gnode.png" style="width: 100%;"/></a>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>由于瀚海22系统的登录节点和计算节点的 <em>/home</em> 目录都挂载共享存储对应目录，所以两者的 <em>/home</em> 目录内容相同。</p>
+</div>
+<ul class="simple">
+<li><p>在 <strong>计算节点</strong> 使用 <strong>module load</strong> 载入与登录节点一致的CUDA版本。然后运行已编译好的程序，完成计算。</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/hanhai22-cuadd.png"><img alt="../_images/hanhai22-cuadd.png" src="../_images/hanhai22-cuadd.png" style="width: 100%;"/></a>
+</section>
+<section id="id13">
+<h3 id="id13">小结<a class="headerlink" href="#id13" title="此标题的永久链接">¶</a></h3>
+<p>本小节的简单例子用于展示瀚海22超级计算系统上CUDA程序的编译运行（交互式）的一般流程。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>使用 <strong>salloc</strong> （交互式）提交任务是为了向初学者展示登录节点和计算节点的区别，并不是瀚海22的常规作业调度方式。瀚海22超级计算系统上的正式作业请通过编写计算脚本并以 <strong>sbatch</strong> 提交的方式实现资源的申请和计算的执行。</p>
+</div>
+<p>Naive加法计算没有考虑如何充分利用GPU的计算资源和数据带宽。对性能优化感兴趣，希望充分利用GPU的计算资源的读者可以进一步阅读NVIDIA关于CUDA编程的进阶读物 <a class="footnote-reference brackets" href="#id23" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>。</p>
+</section>
+</section>
+<section id="one-more-thing">
+<h2 id="one-more-thing">One More Thing<a class="headerlink" href="#one-more-thing" title="此标题的永久链接">¶</a></h2>
+<p>瀚海22超级计算系统系统预装了NVIDIA HPC SDK（nvhpc），方便用户充分利用GPU计算资源，实现科学计算应用和性能优化等工作。</p>
+<p>NVIDIA HPC SDK是NVIDIA公司提供的一个包含编译器、函数库和软件工具的软件包，包含了用于方便用户开发、增强程序性能和可移植性的一系列工具。NVIDIA HPC SDK C、C++和Fortran编译器支持使用标准C++和Fortran、OpenACC指令和CUDA对HPC建模和模拟应用程序进行GPU加速。GPU加速的数学库使普通HPC算法的性能最大化，优化的通信库使基于标准的多GPU和可扩展系统编程成为可能。性能剖析和调试工具简化了HPC应用程序的移植和优化，而容器化工具则使得在企业内部或在云端的部署变得容易。HPC SDK支持NVIDIA GPU和运行Linux的Arm、OpenPOWER或x86-64 CPU，为用户提供了构建NVIDIA GPU加速的HPC应用程序所需的工具。</p>
+<section id="id15">
+<h3 id="id15">编译器<a class="headerlink" href="#id15" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>nvc：nvc是一个用于NVIDIA GPU和AMD、Intel、OpenPOWER和Arm CPU的C语言编译器。nvc支持ISO C11，支持用OpenACC进行GPU编程，并支持用OpenACC和OpenMP进行多核CPU编程。</p></li>
+<li><p>nvc++：nvc++是一个针对NVIDIA GPU和AMD、Intel、OpenPOWER和Arm CPU的C++语言编译器。它为目标处理器调用C++编译器、汇编器和链接器，选项来自其命令行参数。nvc++支持ISO C++17，支持使用C++17并行算法、OpenACC和OpenMP的GPU和多核CPU编程。</p></li>
+<li><p>nvfortran：nvfortran是一个用于NVIDIA GPU和AMD、Intel、OpenPOWER和Arm CPU的Fortran编译器。nvfortran支持ISO Fortran 2003/2008的许多特性，支持使用CUDA Fortran进行GPU编程，以及使用ISO Fortran并行语言特性、OpenACC和OpenMP进行GPU和多核CPU编程。</p></li>
+<li><p>nvcc：nvcc是用于NVIDIA GPU的CUDA C和CUDA C++编译器驱动程序。nvcc接受一系列传统的编译器选项，例如用于定义宏和include/library路径，以及用于引导编译过程。nvcc为NVIDIA GPU生成优化代码，并驱动支持AMD、Intel、OpenPOWER和Arm CPU的主机编译器。</p></li>
+</ul>
+</section>
+<section id="id16">
+<h3 id="id16">数学库<a class="headerlink" href="#id16" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>cuBLAS：cuBLAS库提供了基本线性代数子程序（BLAS，Basic Linear Algebra Subprograms）的GPU加速实现。cuBLAS利用针对NVIDIA GPU高度优化的行业标准BLAS API加速AI和HPC应用。cuBLAS库包含用于分批操作、跨多个GPU执行以及混合和低精度执行的扩展。</p></li>
+<li><p>cuTENSOR：cuTENSOR库是第一个由GPU加速的张量线性代数库，提供张量收缩、还原和元素运算。cuTENSOR用于加速深度学习训练和推理、计算机视觉、量子化学和计算物理等领域的应用。</p></li>
+<li><p>cuSPARSE：cuSPARSE库为稀疏矩阵提供了GPU加速的基本线性代数子程序，其功能可用于建立GPU加速的求解器。cuSPARSE被从事机器学习、计算流体力学、地震勘探和计算科学等应用的工程师和科学家广泛使用。</p></li>
+<li><p>cuSOLVER：cuSOLVER库提供了针对NVIDIA GPU高度优化的密集和稀疏因式分解、线性求解器和eigensolvers。cuSOLVER用于加速科学计算和数据科学等不同领域的应用，并拥有针对混合精度张量加速和跨多个GPU执行的扩展。</p></li>
+<li><p>cuFFT：cuFFT库提供了针对NVIDIA GPU高度优化的快速傅里叶变换（FFT，Fast Fourier Transform）实现。cuFFT被用于建立跨学科的商业和研究应用，如深度学习、计算机视觉、计算物理、分子动力学、量子化学以及地震和医学成像，并具有跨多个GPU执行的扩展。</p></li>
+<li><p>cuRAND：cuRAND库是一个随机数发生器的GPU设备端实现。</p></li>
+</ul>
+</section>
+<section id="id17">
+<h3 id="id17">常用工具<a class="headerlink" href="#id17" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>CUDA-GDB：用于调试CUDA应用程序的NVIDIA工具软件。</p></li>
+<li><p>Nsight Compute：NVIDIA Nsight Compute是面向CUDA应用程序的下一代交互式内核分析器。它通过一个用户界面和命令行工具提供详细的性能指标和API调试。</p></li>
+<li><p>Nsight System：NVIDIA Nsight System是一款全系统性能分析工具，旨在实现应用程序算法的可视化。有助于识别优化和调整机会，以便在CPU和GPU上高效扩展应用程序。</p></li>
+</ul>
+<p>NVIDIA HPC SDK高性能计算工具包的完整介绍请参考 <a class="footnote-reference brackets" href="#id24" id="id18" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>。</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id19" role="note">
+<span class="label"><span class="fn-bracket">[</span><a href="#id2" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p>陈国良, 吴俊敏. 并行计算机体系结构（第2版）[M]. 北京: 高等教育出版社, 2021.</p>
+</aside>
+<aside class="footnote brackets" id="id20" role="note">
+<span class="label"><span class="fn-bracket">[</span><a href="#id3" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p>cuda-toolkit
+网址：<a class="reference external" href="https://developer.nvidia.com/cuda-toolkit">https://developer.nvidia.com/cuda-toolkit</a></p>
+</aside>
+<aside class="footnote brackets" id="id21" role="note">
+<span class="label"><span class="fn-bracket">[</span><a href="#id7" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p>NVIDIA CUDA Compiler Driver NVCC
+网址：<a class="reference external" href="https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html">https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html</a></p>
+</aside>
+<aside class="footnote brackets" id="id22" role="note">
+<span class="label"><span class="fn-bracket">[</span><a href="#id12" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
+<p>Slurm作业调度系统
+网址：<a class="reference external" href="http://scc.ustc.edu.cn/zlsc/user_doc/html/slurm/index.html">http://scc.ustc.edu.cn/zlsc/user_doc/html/slurm/index.html</a></p>
+</aside>
+<aside class="footnote brackets" id="id23" role="note">
+<span class="label"><span class="fn-bracket">[</span><a href="#id14" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
+<p>CUDA C++ Programming Guide
+网址：<a class="reference external" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html</a></p>
+</aside>
+<aside class="footnote brackets" id="id24" role="note">
+<span class="label"><span class="fn-bracket">[</span><a href="#id18" role="doc-backlink">6</a><span class="fn-bracket">]</span></span>
+<p>NVIDIA HPC SDK
+网址：<a class="reference external" href="https://developer.nvidia.com/hpc-sdk">https://developer.nvidia.com/hpc-sdk</a></p>
+</aside>
+</aside>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../compiler/gnu.html" title="GNU C/C++ Fortran编译器"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> GNU C/C++ Fortran编译器 </span>
+              </div>
+            </a>
+          
+          
+            <a href="../mpi-application/mpi-application.html" title="MPI并行程序编译及运行"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> MPI并行程序编译及运行 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2021, 中国科大超级计算中心.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

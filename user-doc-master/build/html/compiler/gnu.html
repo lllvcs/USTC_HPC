@@ -1,0 +1,702 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>GNU C/C++ Fortran编译器 &#8212; 中国科大超级计算中心用户使用文档 2021-03 文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="GPU异构计算和CUDA程序简介" href="../gpu-computing/gpu-computing.html" />
+    <link rel="prev" title="PGI C/C++ Fortran编译器" href="pgi.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=#4000FF data-md-color-accent=light-blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#compiler/gnu" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="中国科大超级计算中心用户使用文档 2021-03 文档"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../_static/logo.png" height="26"
+                   alt="中国科大超级计算中心用户使用文档 2021-03 文档 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">中国科大超算中心用户使用手册</span>
+          <span class="md-header-nav__topic"> GNU C/C++ Fortran编译器 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://git.ustc.edu.cn/scc/user-doc" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    手册源码git
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../"versions.json"",
+        target_loc = "../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">中国科大超级计算中心用户使用文档 2021-03 文档</a></li>
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">Intel、PGI及GNU C/C++ Fortran编译器介绍</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="中国科大超级计算中心用户使用文档 2021-03 文档" class="md-nav__button md-logo">
+      
+        <img src="../_static/logo.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="中国科大超级计算中心用户使用文档 2021-03 文档">中国科大超算中心用户使用手册</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://git.ustc.edu.cn/scc/user-doc" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    手册源码git
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../preface.html" class="md-nav__link">前言</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../introduction/index.html" class="md-nav__link">现有超级计算系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../login-ftp/login-ftp.html" class="md-nav__link">用户登录与文件传输</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../module-environment/module-environment.html" class="md-nav__link">设置编译及运行环境</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../serial-compiling/serial-compiling.html" class="md-nav__link">串行及OpenMP程序编译及运行</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="index.html" class="md-nav__link">Intel、PGI及GNU C/C++ Fortran编译器介绍</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="intel.html" class="md-nav__link">Intel C/C++ Fortran编译器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="pgi.html" class="md-nav__link">PGI C/C++ Fortran编译器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> GNU C/C++ Fortran编译器 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">GNU C/C++ Fortran编译器</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#compiler-gnu--page-root" class="md-nav__link">GNU C/C++ Fortran编译器</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">GNU C/C++ Fortran编译器简介</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">编译错误</a>
+        </li>
+        <li class="md-nav__item"><a href="#gnu-c-c-gcc" class="md-nav__link">GNU C/C++编译器GCC重要编译选项</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">控制文件类型的选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#c-c" class="md-nav__link">C/C++语言选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#fortran" class="md-nav__link">Fortran语言选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">警告选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">调试选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">优化选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id9" class="md-nav__link">预处理选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id11" class="md-nav__link">链接选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#i386x86-64" class="md-nav__link">i386和x86-64平台相关选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id13" class="md-nav__link">约定成俗选项</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+  </ul>
+</nav>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#id1" class="md-nav__link">GNU C/C++ Fortran编译器简介</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id2" class="md-nav__link">编译错误</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#gnu-c-c-gcc" class="md-nav__link">GNU C/C++编译器GCC重要编译选项</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../gpu-computing/gpu-computing.html" class="md-nav__link">GPU异构计算和CUDA程序简介</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../mpi-application/mpi-application.html" class="md-nav__link">MPI并行程序编译及运行</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../debug/debug.html" class="md-nav__link">程序调试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../intel-mkl/intel-mkl.html" class="md-nav__link">Intel MKL数值函数库</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../compile-install/compile-install.html" class="md-nav__link">应用程序的编译与安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../slurm/index.html" class="md-nav__link">Slurm作业调度系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../lsf/lsf.html" class="md-nav__link">LSF作业调度系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../latex.html" class="md-nav__link">LaTeX pdf版</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../contact.html" class="md-nav__link">联系方式</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#compiler-gnu--page-root" class="md-nav__link">GNU C/C++ Fortran编译器</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">GNU C/C++ Fortran编译器简介</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">编译错误</a>
+        </li>
+        <li class="md-nav__item"><a href="#gnu-c-c-gcc" class="md-nav__link">GNU C/C++编译器GCC重要编译选项</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">控制文件类型的选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#c-c" class="md-nav__link">C/C++语言选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#fortran" class="md-nav__link">Fortran语言选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">警告选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">调试选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">优化选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id9" class="md-nav__link">预处理选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id11" class="md-nav__link">链接选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#i386x86-64" class="md-nav__link">i386和x86-64平台相关选项</a>
+        </li>
+        <li class="md-nav__item"><a href="#id13" class="md-nav__link">约定成俗选项</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="gnu-c-c-fortran">
+<h1 id="compiler-gnu--page-root">GNU C/C++ Fortran编译器<a class="headerlink" href="#compiler-gnu--page-root" title="此标题的永久链接">¶</a></h1>
+<section id="id1">
+<h2 id="id1">GNU C/C++ Fortran编译器简介<a class="headerlink" href="#id1" title="此标题的永久链接">¶</a></h2>
+<p><a class="reference external" href="http://gcc.gnu.org/">GNU C/C++ Fortran(GCC)编译器</a> 为系统自带的编译器，当前自带的版本为4.8.5，还装有9.2.0等。默认为4.8.5版本，用户无需特殊设置即可使用。GNU编译器编译C、C++源程序的命令分别 <code class="docutils literal notranslate"><span class="pre">gcc</span></code> 和 <code class="docutils literal notranslate"><span class="pre">g++</span></code> ； <code class="docutils literal notranslate"><span class="pre">gfortran</span></code> 可以直接编译Fortran 77、90源程序。</p>
+</section>
+<section id="id2">
+<h2 id="id2">编译错误<a class="headerlink" href="#id2" title="此标题的永久链接">¶</a></h2>
+<p>C/C++程序编译时错误信息类似：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">netlog</span><span class="o">.</span><span class="n">c</span><span class="p">:</span> <span class="n">In</span> <span class="n">function</span> <span class="s1">'main'</span><span class="p">:</span>
+<span class="n">netlog</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">84</span><span class="p">:</span><span class="mi">7</span><span class="p">:</span> <span class="n">error</span><span class="p">:</span> <span class="s1">'for'</span> <span class="n">loop</span> <span class="n">initial</span> <span class="n">declarations</span> <span class="n">are</span> <span class="n">only</span> <span class="n">allowed</span> <span class="ow">in</span> <span class="n">C99</span> <span class="n">mode</span>
+<span class="n">netlog</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">84</span><span class="p">:</span><span class="mi">7</span><span class="p">:</span> <span class="n">note</span><span class="p">:</span> <span class="n">use</span> <span class="n">option</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c99</span> <span class="ow">or</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">gnu99</span> <span class="n">to</span> <span class="nb">compile</span> <span class="n">your</span> <span class="n">code</span>
+</pre></div>
+</div>
+<p>编译错误的格式为：</p>
+<ul class="simple">
+<li><p>源文件名: 函数中</p></li>
+<li><p>源文件名:行数:列数:错误类型:具体说明</p></li>
+<li><p>源文件名:行数:列数:注解:解决办法</p></li>
+</ul>
+<p>Fortran程序编译时错误信息类似：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NOlihm</span><span class="o">.</span><span class="n">f90</span><span class="p">:</span><span class="mf">146.14</span><span class="p">:</span>
+
+  <span class="n">n2nd</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  <span class="n">npr</span><span class="o">=</span><span class="mi">0</span>
+           <span class="mi">1</span>
+<span class="n">Error</span><span class="p">:</span> <span class="n">Symbol</span> <span class="s1">'npr'</span> <span class="n">at</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="n">has</span> <span class="n">no</span> <span class="n">IMPLICIT</span> <span class="nb">type</span>
+</pre></div>
+</div>
+<p>编译错误的格式为：</p>
+<ul class="simple">
+<li><p>源文件名:行数:列数:</p></li>
+<li><p>源文件代码</p></li>
+<li><p>1指示出错位置</p></li>
+<li><p>错误类型: 具体说明</p></li>
+</ul>
+</section>
+<section id="gnu-c-c-gcc">
+<h2 id="gnu-c-c-gcc">GNU C/C++编译器GCC重要编译选项<a class="headerlink" href="#gnu-c-c-gcc" title="此标题的永久链接">¶</a></h2>
+<p>GNU编译器GCC是Linux系统自带的编译器，系统自带的版本为4.8.5，另外还装有9.2.0等，选项非常多，下面仅仅是列出一些针对4.8.5本人认为常用的重要选项，建议仔细看GCC相关资料。</p>
+<p>建议仔细查看编译器手册中关于程序优化的部分，多加测试，选择适合自己程序的编译选项以提高性能。</p>
+<section id="id3">
+<h3 id="id3">控制文件类型的选项<a class="headerlink" href="#id3" title="此标题的永久链接">¶</a></h3>
+<ul>
+<li><p>-x language：明确指定而非让编译器判断输入文件的类型。language可为：</p>
+<ul class="simple">
+<li><p>c、c-header、c-cpp-output</p></li>
+<li><p>c++、c++-header、c++-cpp-output</p></li>
+<li><p>objective-c、objective-c-header、objective-c-cpp-output</p></li>
+<li><p>objective-c++、objective-c++-header、objective-c++-cpp-output</p></li>
+<li><p>assembler、assembler-with-cpp</p></li>
+<li><p>ada</p></li>
+<li><p>f95、f95-cpp-input</p></li>
+<li><p>java</p></li>
+<li><p>treelang</p></li>
+</ul>
+<p>当language为none时，禁止任何明确指定的类型，其类型由文件名后缀设定。</p>
+</li>
+<li><p>-c：仅编译成对象文件（.o文件），并不进行链接。</p></li>
+<li><p>-o file：指定生成的文件名。</p></li>
+<li><p>-v：详细模式，显示在每个命令执行前显示其命令行。</p></li>
+<li><p>-###：显示编译器、汇编器、链接器的调用信息但并不进行实际编译，在脚本中可以用于捕获驱动器生成的命令行。</p></li>
+<li><p>–help：显示帮助信息。</p></li>
+<li><p>–target-help：显示目标平台的帮助信息。</p></li>
+<li><p>–version：显示编译器版本信息。</p></li>
+</ul>
+</section>
+<section id="c-c">
+<span id="cc-2"></span><h3 id="c-c">C/C++语言选项<a class="headerlink" href="#c-c" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-ansi：C模式时，支持所有ISO C90指令。在C++模式时，去除与ISO
+C++冲突的GNU扩展。</p></li>
+<li><p>-std<em>=val</em>：控制语言标准，可以为c89、iso9899:1990、iso9899:199409、c99、c9x、iso9899:1999、iso9899:199x、gnu89、gnu99、gnu9x、c++98、gnu++98。</p></li>
+<li><p>-B：在源文件中允许C++风格的注释，指的是以//开始到行尾内容为注释。除非指定-C选项，否则这些注释被去除。</p></li>
+<li><p>-c8x或-c89：对C源文件采用C89标准。</p></li>
+<li><p>-c9x或-c99：对C源文件采用C99标准。</p></li>
+</ul>
+</section>
+<section id="fortran">
+<span id="fortran-2"></span><h3 id="fortran">Fortran语言选项<a class="headerlink" href="#fortran" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-fconvert<em>=conversion</em>：指定对无格式Fortran数据文件表示方式，其值可以为：native，默认值；swap，在输入输出时从大端（big-endian）到小端（little-endian）交换比特，或者相反；big-endian，用大端方式读写；little-endian，用小端方式读写。</p></li>
+<li><p>-ff2c：与<code class="docutils literal notranslate"><span class="pre">g77</span></code>和<code class="docutils literal notranslate"><span class="pre">f2c</span></code>命令生成的代码兼容。</p></li>
+<li><p>-ffree-form和-ffixed-form：声明源文件是自由格式还是固定格式，默认从Fortran
+90起的源文件为自由格式，之前的Fortran 77等的源文件为固定格式。</p></li>
+<li><p>-fdefault-double-8：设置DOUBLE PRECISION类型为8比特。</p></li>
+<li><p>-fdefault-integer-8：设置INTEGER和LOGICAL类型为8比特。</p></li>
+<li><p>-fdefault-real-8：设置REAL类型为8比特。</p></li>
+<li><p>-fno-backslash：将反斜线()当作正常字符（非转义符）处理。</p></li>
+<li><p>-fno-underscoring：不在名字后添加_。注意：<code class="docutils literal notranslate"><span class="pre">gfortran</span></code>默认行为与<code class="docutils literal notranslate"><span class="pre">g77</span></code>和<code class="docutils literal notranslate"><span class="pre">f2c</span></code>不兼容，为了兼容需要加-ff2c选项。除非使用者了解与现有系统环境的集成，否则不建议使用-fno-underscoring选项。</p></li>
+<li><p>-ffixed-line-length-<em>n</em>：设置固定格式源代码的行宽为n。</p></li>
+<li><p>-ffree-line-length-<em>n</em>：设置自由格式源代码的行宽为n。</p></li>
+<li><p>-fimplicit-none：禁止变量的隐式声明，所有变量都需要显式声明。</p></li>
+<li><p>-fmax-identifier-length=<em>n</em>：设置名称的最大字符长度为n，Fortran 95和200x的长度分别为31和65。</p></li>
+<li><p>-fno-automatic：将每个程序单元的本地变量和数组声明具有SAVE属性。</p></li>
+<li><p>-fcray-pointer：支持Cray指针扩展。</p></li>
+<li><p>-fopenmp：编译OpenMP并行程序。</p></li>
+<li><p>-M<em>dir</em>和-J<em>dir</em>：指定编译时保存生成的模块文件目录。</p></li>
+<li><p>-fsecond-underscore：默认<code class="docutils literal notranslate"><span class="pre">gfortran</span></code>对外部函数名添加一个_，如果使用此选项，那么将添加两个_。此选项当使用-fno-underscoring选项时无效。此选项当使用-ff2c时默认启用。</p></li>
+<li><p>-std<em>=val</em>：指明Fortran标准，val可以为f95、f2003、legacy。</p></li>
+<li><p>-funderscoring：对外部函数名没有_的加_，以与一些Fortran编译器兼容。</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3 id="id4">警告选项<a class="headerlink" href="#id4" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-fsyntax-only：仅仅检查代码的语法错误，并不进行其它操作。</p></li>
+<li><p>-w：编译时不显示任何警告，只显示错误。</p></li>
+<li><p>-Wfatal-errors：遇到第一个错误就停止，而不尝试继续运行显示更多错误信息。</p></li>
+</ul>
+</section>
+<section id="id5">
+<span id="id6"></span><h3 id="id5">调试选项<a class="headerlink" href="#id5" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-g：包含调试信息。</p></li>
+<li><p>-ggdb：包含利用gbd调试时所需要的信息。</p></li>
+</ul>
+</section>
+<section id="id7">
+<span id="id8"></span><h3 id="id7">优化选项<a class="headerlink" href="#id7" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-O<em>[level]</em>：设置优化级别。优化级别level可以设置为0、1、2、3、s。</p></li>
+</ul>
+</section>
+<section id="id9">
+<span id="id10"></span><h3 id="id9">预处理选项<a class="headerlink" href="#id9" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-C：预处理时保留C源文件中的注释。</p></li>
+<li><p>-D <em>name</em>：预处理时定义宏name的值为1。</p></li>
+<li><p>-D <em>name=def</em>：预处理时定义name为def。</p></li>
+<li><p>-U <em>name</em>：预处理时去除的任何name初始定义。</p></li>
+<li><p>-undef：不预定义系统或GCC声明的宏，但标准预定义的宏仍旧被定义。</p></li>
+<li><p>-dD：显示源文件中定义的宏及其值到标准输出。</p></li>
+<li><p>-dI：显示预处理中包含的所有文件，包括文件名和定义时的行号信息。</p></li>
+<li><p>-dM：显示预处理时源文件中定义的宏及其值，包括定义时文件名和行号。</p></li>
+<li><p>-dN：与-dD类似，但只显示源文件中定义的宏，而不显示宏值。</p></li>
+<li><p>-E：预处理各.c文件，将结果发给标准输出，不进行编译、汇编或链接。</p></li>
+<li><p>-I<em>dir</em>：指明头文件的搜索路径。</p></li>
+<li><p>-M：打印make的依赖关系到标准输出。</p></li>
+<li><p>-MD：打印make的依赖关系到文件file.d，其中file是编译文件的根名字。</p></li>
+<li><p>-MM：打印make的依赖关系到标准输出，但忽略系统头文件。</p></li>
+<li><p>-MMD：打印make的依赖关系到文件file.d，其中file是编译的文件的根名字，但忽略系统头文件。</p></li>
+<li><p>-P：预处理每个文件，并保留每个file.c文件预处理后的结果到file.i。</p></li>
+</ul>
+</section>
+<section id="id11">
+<span id="id12"></span><h3 id="id11">链接选项<a class="headerlink" href="#id11" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-pie：在支持的目标上生成地址无关的可执行文件。</p></li>
+<li><p>-s：从可执行文件中去除所有符号表。</p></li>
+<li><p>-rdynamic：添加所有符号表到动态符号表中。</p></li>
+<li><p>-static：静态链接所需的库。</p></li>
+<li><p>-shared：生成共享对象文件而不是可执行文件，必须在编译每个对象文件时使用-fpic选项。</p></li>
+<li><p>-shared-libgcc：使用共享libgcc库。</p></li>
+<li><p>-static-libgcc：使用静态libgcc库。</p></li>
+<li><p>-u <em>symbol</em>：确保符号symbol未定义，强制链接一个库模块来定义它。</p></li>
+<li><p>-I<em>dir</em>：指明头文件的搜索路径。</p></li>
+<li><p>-l<em>string</em>：指明所需链接的库名，如库为libxyz.a，则可用-lxyz指定。</p></li>
+<li><p>-L<em>dir</em>：指明库的搜索路径。</p></li>
+<li><p>-B<em>dir</em>：设置寻找可执行文件、库、头文件、数据文件等路径。</p></li>
+</ul>
+</section>
+<section id="i386x86-64">
+<h3 id="i386x86-64">i386和x86-64平台相关选项<a class="headerlink" href="#i386x86-64" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-mtune<em>=cpu-type</em>：设置优化针对的CPU类型，可为：generic、core2、opteron、opteron-sse3、bdver1、bdver2等，bdver1为针对本系统AMD
+Opteron CPU的。</p></li>
+<li><p>-march<em>=cpu-type</em>：设置指令针对的CPU类型，CPU类型与上行中一样。</p></li>
+<li><p>-mieee-fp和-mno-ieee-fp：浮点操作是否严格按照IEEE标准。</p></li>
+</ul>
+</section>
+<section id="id13">
+<h3 id="id13">约定成俗选项<a class="headerlink" href="#id13" title="此标题的永久链接">¶</a></h3>
+<ul class="simple">
+<li><p>-fpic：生成地址无关的代码以用于共享库。</p></li>
+<li><p>-fPIC：如果目标机器支持，将生成地址无关的代码。</p></li>
+<li><p>-fopenmp：编译OpenMP并行程序。</p></li>
+<li><p>-fpie和-fPIE：与-fpic和-fPIC类似，但生成的地址无关代码，只能链接到可执行文件中。</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="pgi.html" title="PGI C/C++ Fortran编译器"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> PGI C/C++ Fortran编译器 </span>
+              </div>
+            </a>
+          
+          
+            <a href="../gpu-computing/gpu-computing.html" title="GPU异构计算和CUDA程序简介"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> GPU异构计算和CUDA程序简介 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2021, 中国科大超级计算中心.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

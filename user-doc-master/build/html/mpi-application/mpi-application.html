@@ -1,0 +1,1432 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>MPI并行程序编译及运行 &#8212; 中国科大超级计算中心用户使用文档 2021-03 文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="程序调试" href="../debug/debug.html" />
+    <link rel="prev" title="GPU异构计算和CUDA程序简介" href="../gpu-computing/gpu-computing.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=#4000FF data-md-color-accent=light-blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#mpi-application/mpi-application" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="中国科大超级计算中心用户使用文档 2021-03 文档"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../_static/logo.png" height="26"
+                   alt="中国科大超级计算中心用户使用文档 2021-03 文档 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">中国科大超算中心用户使用手册</span>
+          <span class="md-header-nav__topic"> MPI并行程序编译及运行 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://git.ustc.edu.cn/scc/user-doc" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    手册源码git
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../"versions.json"",
+        target_loc = "../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">中国科大超级计算中心用户使用文档 2021-03 文档</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="中国科大超级计算中心用户使用文档 2021-03 文档" class="md-nav__button md-logo">
+      
+        <img src="../_static/logo.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="中国科大超级计算中心用户使用文档 2021-03 文档">中国科大超算中心用户使用手册</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://git.ustc.edu.cn/scc/user-doc" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    手册源码git
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../preface.html" class="md-nav__link">前言</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../introduction/index.html" class="md-nav__link">现有超级计算系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../login-ftp/login-ftp.html" class="md-nav__link">用户登录与文件传输</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../module-environment/module-environment.html" class="md-nav__link">设置编译及运行环境</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../serial-compiling/serial-compiling.html" class="md-nav__link">串行及OpenMP程序编译及运行</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../compiler/index.html" class="md-nav__link">Intel、PGI及GNU C/C++ Fortran编译器介绍</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../gpu-computing/gpu-computing.html" class="md-nav__link">GPU异构计算和CUDA程序简介</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> MPI并行程序编译及运行 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">MPI并行程序编译及运行</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#mpi-application-mpi-application--page-root" class="md-nav__link">MPI并行程序编译及运行</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">简介</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">MPI并行程序的编译</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#hpc-x-scalablehpc" class="md-nav__link">HPC-X ScalableHPC工具集</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#mellanox-fabric-fabric-collective-accelerator-fca" class="md-nav__link">Mellanox Fabric集合通信加速(Fabric Collective Accelerator, FCA)</a>
+        </li>
+        <li class="md-nav__item"><a href="#x-unified-communication-x-framework-ucx" class="md-nav__link">统一通信-X架构(Unified Communication - X Framework, UCX)</a>
+        </li>
+        <li class="md-nav__item"><a href="#pgas-openshmem" class="md-nav__link">PGAS共享内存访问(OpenSHMEM)</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#open-mpi" class="md-nav__link">Open MPI库</a>
+        </li>
+        <li class="md-nav__item"><a href="#intel-mpi" class="md-nav__link">Intel MPI库</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">编译命令</a>
+        </li>
+        <li class="md-nav__item"><a href="#id9" class="md-nav__link">编译命令参数</a>
+        </li>
+        <li class="md-nav__item"><a href="#id10" class="md-nav__link">环境变量</a>
+        </li>
+        <li class="md-nav__item"><a href="#id11" class="md-nav__link">编译举例</a>
+        </li>
+        <li class="md-nav__item"><a href="#id12" class="md-nav__link">调试</a>
+        </li>
+        <li class="md-nav__item"><a href="#id13" class="md-nav__link">追踪</a>
+        </li>
+        <li class="md-nav__item"><a href="#id14" class="md-nav__link">正确性检查</a>
+        </li>
+        <li class="md-nav__item"><a href="#id15" class="md-nav__link">统计收集</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id16" class="md-nav__link">与编译器相关的编译选项</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id17" class="md-nav__link">MPI并行程序的运行</a>
+        </li></ul>
+            </nav>
+        </li>
+  </ul>
+</nav>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#id1" class="md-nav__link">简介</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id2" class="md-nav__link">MPI并行程序的编译</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#hpc-x-scalablehpc" class="md-nav__link">HPC-X ScalableHPC工具集</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#open-mpi" class="md-nav__link">Open MPI库</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#intel-mpi" class="md-nav__link">Intel MPI库</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id16" class="md-nav__link">与编译器相关的编译选项</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id17" class="md-nav__link">MPI并行程序的运行</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../debug/debug.html" class="md-nav__link">程序调试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../intel-mkl/intel-mkl.html" class="md-nav__link">Intel MKL数值函数库</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../compile-install/compile-install.html" class="md-nav__link">应用程序的编译与安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../slurm/index.html" class="md-nav__link">Slurm作业调度系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../lsf/lsf.html" class="md-nav__link">LSF作业调度系统</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../latex.html" class="md-nav__link">LaTeX pdf版</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../contact.html" class="md-nav__link">联系方式</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#mpi-application-mpi-application--page-root" class="md-nav__link">MPI并行程序编译及运行</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">简介</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">MPI并行程序的编译</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#hpc-x-scalablehpc" class="md-nav__link">HPC-X ScalableHPC工具集</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#mellanox-fabric-fabric-collective-accelerator-fca" class="md-nav__link">Mellanox Fabric集合通信加速(Fabric Collective Accelerator, FCA)</a>
+        </li>
+        <li class="md-nav__item"><a href="#x-unified-communication-x-framework-ucx" class="md-nav__link">统一通信-X架构(Unified Communication - X Framework, UCX)</a>
+        </li>
+        <li class="md-nav__item"><a href="#pgas-openshmem" class="md-nav__link">PGAS共享内存访问(OpenSHMEM)</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#open-mpi" class="md-nav__link">Open MPI库</a>
+        </li>
+        <li class="md-nav__item"><a href="#intel-mpi" class="md-nav__link">Intel MPI库</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">编译命令</a>
+        </li>
+        <li class="md-nav__item"><a href="#id9" class="md-nav__link">编译命令参数</a>
+        </li>
+        <li class="md-nav__item"><a href="#id10" class="md-nav__link">环境变量</a>
+        </li>
+        <li class="md-nav__item"><a href="#id11" class="md-nav__link">编译举例</a>
+        </li>
+        <li class="md-nav__item"><a href="#id12" class="md-nav__link">调试</a>
+        </li>
+        <li class="md-nav__item"><a href="#id13" class="md-nav__link">追踪</a>
+        </li>
+        <li class="md-nav__item"><a href="#id14" class="md-nav__link">正确性检查</a>
+        </li>
+        <li class="md-nav__item"><a href="#id15" class="md-nav__link">统计收集</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id16" class="md-nav__link">与编译器相关的编译选项</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id17" class="md-nav__link">MPI并行程序的运行</a>
+        </li></ul>
+            </nav>
+        </li>
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="mpi">
+<h1 id="mpi-application-mpi-application--page-root">MPI并行程序编译及运行<a class="headerlink" href="#mpi-application-mpi-application--page-root" title="此标题的永久链接">¶</a></h1>
+<section id="id1">
+<h2 id="id1">简介<a class="headerlink" href="#id1" title="此标题的永久链接">¶</a></h2>
+<p>本系统的通信网络由Mellanox <a class="reference external" href="https://www.mellanox.com/products/infiniband-switches/QM8700">QM8700 HDR200交换机</a>和<a class="reference external" href="https://www.mellanox.com/products/infiniband-adapters/connectx-6">ConnectX-6 HDR100网卡</a>组成的100Gbps高速计算网络及1Gbps千兆以太网两套网络组成。InfiniBand网络相比千兆以太网具有高带宽、低延迟的特点，通信性能比千兆以太网要高很多，建议使用。</p>
+<p>本系统安装有多种MPI实现，主要有：HPC-X（Mellanox官方推荐）、Intel MPI（不建议使用，特别是2019版）和Open MPI，并可与不同编译器相互配合使用，安装目录分别在 <code class="docutils literal notranslate"><span class="pre">/opt/hpcx</span></code> 、 <code class="docutils literal notranslate"><span class="pre">/opt/intel</span></code> 和 <code class="docutils literal notranslate"><span class="pre">/opt/openmpi</span></code> ，且具有不同版本的组合。</p>
+<p>用户可以运行<code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">apropos</span> <span class="pre">MPI</span></code>或<code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">avail</span></code>查看可用MPI环境，可用类似命令设置所需的MPI环境：<code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">load</span> <span class="pre">hpcx/hpcx-intel-2019.update5</span></code>，使用此命令有时需要手动加载对应的编译器等版本，比如报：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">error</span> <span class="k">while</span> <span class="n">loading</span> <span class="n">shared</span> <span class="n">libraries</span><span class="p">:</span> <span class="n">libimf</span><span class="o">.</span><span class="n">so</span><span class="p">:</span> <span class="n">cannot</span> <span class="nb">open</span> <span class="n">shared</span>
+<span class="nb">object</span> <span class="n">file</span><span class="p">:</span> <span class="n">No</span> <span class="n">such</span> <span class="n">file</span> <span class="ow">or</span> <span class="n">directory</span>
+</pre></div>
+</div>
+<p>则需要加载对应的Intel编译器，比如<code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">load</span> <span class="pre">intel/2019.update5</span></code>。</p>
+<p>Mellanox HDR是比较新的高速计算网络，老的MPI环境对其支持不好。</p>
+</section>
+<section id="id2">
+<h2 id="id2">MPI并行程序的编译<a class="headerlink" href="#id2" title="此标题的永久链接">¶</a></h2>
+<section id="hpc-x-scalablehpc">
+<h3 id="hpc-x-scalablehpc">HPC-X ScalableHPC工具集<a class="headerlink" href="#hpc-x-scalablehpc" title="此标题的永久链接">¶</a></h3>
+<p><a class="reference external" href="https://docs.mellanox.com/pages/viewpage.action?pageId=19798265">Mellanox HPC-X ScalableHPC工具集</a>是综合的软件包，含有MPI及SHMEM/PGAS通讯库。HPC-X ScalableHPC还包含这些库之上的用于提升性能和扩展性的多种加速包，包括加速点对点通信的UCX(Unified Communication X)、加速MPI/PGAS中集合操作的FCA(Fabric Collectives Accelerations)。这些全特性的、经完备测试的及打包好的工具集使得MPI和SHMEM/PGAS程序获得高性能、扩展性和效率，且保证了在Mellanox互连系统中这些通信库经过了全优化。</p>
+<p>Mellanox HPC-X ScalableHPC工具集利用了基于Mellanox硬件的加速引擎，可以最大化基于MPI和SHMEM/PGAS的应用性能。这些应用引擎是Mellanox网卡（CORE-Direct引擎，硬件标记匹配(Tag Matching)等）和交换机（如Mellanox SHARP加速引擎）解决方案的一部分。Mellanox可扩展的分层聚合和归约协议(Scalable Hierarchical Aggregation and Reduction Protocol, SHARP)技术通过将集合操作从CPU端卸载到交换机网络端，通过去除在端到端之间发送多次数据的的需要，大幅提升了MPI操作性能。这种创新性科技显著降低了MPI操作时间，释放了重要的CPU资源使其用于计算而不是通信，且降低了到达聚合节点时通过网络的数据量。</p>
+<p>HPC-X主要特性如下：</p>
+<ul class="simple">
+<li><p>完整的MPI、PGAS/SHMEM包，且含有Mellanox UCX和FCA加速引擎</p></li>
+<li><p>兼容MPI 3.2标准</p></li>
+<li><p>兼容OpenSHMEM 1.4标准</p></li>
+<li><p>从MPI进程将集合通信从CPU卸载到Mellanox网络硬件上</p></li>
+<li><p>利用底层硬件体系结构最大化提升应用程序性能</p></li>
+<li><p>针对Mellanox解决方案进行了全优化</p></li>
+<li><p>提升应用的可扩展性和资源效率</p></li>
+<li><p>支持RC、DC和UD等多种传输</p></li>
+<li><p>节点内共享内存通信</p></li>
+<li><p>带消息条带的多轨支持</p></li>
+<li><p>支持GPU-direct的CUDA</p></li>
+</ul>
+<p>HPC-X环境：</p>
+<ul class="simple">
+<li><p>HPC-X CUDA支持：</p>
+<ul>
+<li><p>HPC-X默认是对于单线程模式优化的，这支持GPU和无GPU模式。</p></li>
+<li><p>HPC-X是基于CUDA 10.1编译的，由于CUDA 10.1不支持比GCC v8新的，因此对于基于v8之后的GCC编译的，不支持CUDA。</p></li>
+</ul>
+</li>
+<li><p>HPC-X多线程支持 - hpcx-mt：</p>
+<ul>
+<li><p>该选项启用所有多线程支持。</p></li>
+</ul>
+</li>
+</ul>
+<p>HPC-X MPI是Open MPI的一种高性能实现，利用Mellanox加速能力且无缝结合了业界领先的商业和开源应用软件包进行了优化。很多用法可参考，该部分主要介绍其不同的参数设置等。</p>
+<section id="mellanox-fabric-fabric-collective-accelerator-fca">
+<h4 id="mellanox-fabric-fabric-collective-accelerator-fca">Mellanox Fabric集合通信加速(Fabric Collective Accelerator, FCA)<a class="headerlink" href="#mellanox-fabric-fabric-collective-accelerator-fca" title="此标题的永久链接">¶</a></h4>
+<p>集合通信执行全体工薪操作占用系统中所有进程/节点，因此必须执行越快越高效越好。很多应用里面都含有大量的集合通讯，普通的MPI实现那会占用大量的CPU资源及产生系统噪声。Mellanox将很多类似通信从CPU卸载到Mellanox硬件网卡适配器(HCA)和交换机上及降低噪声，这种技术称之为CORE-Direct® (Collectives Offload Resource Engine)。</p>
+<p>FCA 4.4当前支持阻塞和非阻塞的集合通信：Allgather、Allgatherv、Allreduce、AlltoAll、AlltoAllv、Barrier和Bcast。</p>
+<p><strong>采用FCA v4.x (hcoll)运行MPI</strong></p>
+<p>HPC-X默认启用FCA v4.3。</p>
+<ul>
+<li><p>采用默认FCA配置参数运行：</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-mca</span> <span class="pre">coll_hcoll_enable</span> <span class="pre">1</span> <span class="pre">-x</span> <span class="pre">HCOLL_MAIN_IB=mlx5_0:1</span> <span class="pre">&lt;...&gt;</span></code></p>
+</li>
+<li><p>采用FCA运行：</p>
+<p><code class="docutils literal notranslate"><span class="pre">oshrun</span> <span class="pre">-mca</span> <span class="pre">scoll_mpi_enable</span> <span class="pre">1</span> <span class="pre">-mca</span> <span class="pre">scoll</span> <span class="pre">basic,mpi</span> <span class="pre">-mca</span> <span class="pre">coll_hcoll_enable</span> <span class="pre">1</span> <span class="pre">&lt;...&gt;</span></code></p>
+</li>
+</ul>
+<p><strong>Open MPI中启用FCA</strong></p>
+<p>在Open MPI中启用FCA v4.4，通过下述方法显式设定模块化组件架构模块化组件架构MCA(Modular Component Architecture)参数：</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-np</span> <span class="pre">32</span> <span class="pre">-mca</span> <span class="pre">coll_hcoll_enable</span> <span class="pre">1</span> <span class="pre">-x</span> <span class="pre">coll_hcoll_np=0</span> <span class="pre">-x</span> <span class="pre">HCOLL_MAIN_IB=&lt;device_name&gt;:&lt;port_num&gt;</span> <span class="pre">./a.out</span></code></p>
+<p><strong>调整FCA v4.4配置</strong></p>
+<p>显示当前信息：</p>
+<p><code class="docutils literal notranslate"><span class="pre">/opt/mellanox/hcoll/bin/hcoll_info</span> <span class="pre">--all</span></code></p>
+<p>FCA v4.4的参数是简单的环境变量，可以通过以下方式之一设置：</p>
+<ul>
+<li><p>通过mpirun命令设置：</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">...</span> <span class="pre">-x</span> <span class="pre">HCOLL_ML_BUFFER_SIZE=65536</span></code></p>
+</li>
+<li><p>从SHELL设置：</p>
+<p><code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">HCOLL_ML_BUFFER_SIZE=65536</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">...</span></code></p>
+</li>
+</ul>
+<p><strong>选择端口及设备</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">-x</span> <span class="pre">HCOLL_MAIN_IB=&lt;device_name&gt;:&lt;port_num&gt;</span></code></p>
+<p><strong>启用卸载MPI非阻塞集合</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">-x</span> <span class="pre">HCOLL_ENABLE_NBC=1</span></code></p>
+<p>支持以下非阻塞MPI集合：</p>
+<ul class="simple">
+<li><p>MPI_Ibarrier</p></li>
+<li><p>MPI_Ibcast</p></li>
+<li><p>MPI_Iallgather</p></li>
+<li><p>MPI_Iallreduce (4b, 8b, SUM, MIN, PROD, AND, OR, LAND, LOR)</p></li>
+</ul>
+<p>注意：启用非阻塞MPI集合将在阻塞MPI集合中禁止多播聚合。</p>
+<p><strong>启用Mellanox SHARP软件加速集合</strong></p>
+<p>HPC-X支持Mellanox SHARP软件加速集合，这些集合默认是启用的。</p>
+<ul>
+<li><p>启用Mellanox SHARP加速：</p>
+<p><code class="docutils literal notranslate"><span class="pre">-x</span> <span class="pre">HCOLL_ENABLE_SHARP=1</span></code></p>
+</li>
+<li><p>禁止Mellanox SHARP加速</p>
+<p><code class="docutils literal notranslate"><span class="pre">-x</span> <span class="pre">HCOLL_ENABLE_SHARP=0</span></code></p>
+</li>
+<li><p>更改Mellanox SHARP消息阈值（默认为256）：</p>
+<p><code class="docutils literal notranslate"><span class="pre">-x</span> <span class="pre">HCOLL_BCOL_P2P_ALLREDUCE_SHARP_MAX=&lt;threshold&gt;</span></code></p>
+</li>
+</ul>
+<p><strong>HCOLL v4.4中的GPU缓存支持</strong></p>
+<p>如果CUDA运行时(runtime)是有效的，则HCOLL自动启用GPU支持。以下集合操作支持GPU缓存：</p>
+<ul class="simple">
+<li><p>MPI_Allreduce</p></li>
+<li><p>MPI_Bcast</p></li>
+<li><p>MPI_Allgather</p></li>
+</ul>
+<p>如果libhcoll的其它聚合操作API被启用GPU缓存调用，则会检查缓存类型后返回错误HCOLL_ERROR。</p>
+<p>控制参数为<code class="docutils literal notranslate"><span class="pre">HCOLL_GPU_ENABLE</span></code>，其值可为0、1和-1：</p>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>值</p></th>
+<th class="head"><p>含义</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>禁止GPU支持。不会检查用户缓存指针
+。此情形下，如用户提供在GPU上分配缓存，则这种行为是未定义的。</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>启用GPU支持。将检查缓存指针，且启用HCOLL
+GPU聚合，这是CUDA运行时有效时的默认行为。</p></td>
+</tr>
+<tr class="row-even"><td><p>-1</p></td>
+<td><p>部分
+GPU支持。将检查缓存指针，且HCOLL回退到GPU缓存情形下的运行时。</p></td>
+</tr>
+</tbody>
+</table>
+<p><em>局限性</em></p>
+<p>对于MPI_Allreduce的GPU缓存支持，不是所有(OP, DTYPE)的组合都支持：</p>
+<ul class="simple">
+<li><p>支持的操作</p>
+<ul>
+<li><p>SUM</p></li>
+<li><p>PROD</p></li>
+<li><p>MIN</p></li>
+<li><p>MAX</p></li>
+</ul>
+</li>
+<li><p>支持的类型</p>
+<ul>
+<li><p>INT8、INT16、INT32、INt64</p></li>
+<li><p>UINT8、UINT16、UINT32、UINT64</p></li>
+<li><p>FLOAT16、FLOAT32、FLOAT64</p></li>
+</ul>
+</li>
+</ul>
+<p id="id3"><strong>局限性</strong></p>
+<p>环境变量<code class="docutils literal notranslate"><span class="pre">HCOLL_ALLREDUCE_ZCOPY_TUNE=&lt;static/dynamic&gt;</span></code>（默认为dynamic）用于设置HCOLL的大数据全归约操作算法的自动化运行优化级别。如为Static，则对运行时不优化；如是dynamic，则允许HCOLL基于性能的运行时抽样自动调节算法的基数和zero-copy <a class="footnote-reference brackets" href="#id18" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> 阈值。</p>
+<p>注：由于dynamic模式可能会导致浮点数归约结果有变化，因此不应该用于要求是数值可再现的情形下，导致该问题的原因在于非固定的归约顺序。</p>
+</section>
+<section id="x-unified-communication-x-framework-ucx">
+<h4 id="x-unified-communication-x-framework-ucx">统一通信-X架构(Unified Communication - X Framework, UCX)<a class="headerlink" href="#x-unified-communication-x-framework-ucx" title="此标题的永久链接">¶</a></h4>
+<p>UCX是一种新的加速库，并且被集成到OpenMPI（作为pml层）和OpenSHMEM（作为spml层）中作为HPC-X的一部分。这是种开源的通信库，被设计为HPC应用能获得最高的性能。UCX含有广泛范围的优化，能实现在通信方面接近低级别软件开销，接近原生级别的性能。</p>
+<p>UCX支持接收端标记匹配、单边通信语义、有效内存注册和各种增强，能有效提高HPC应用的缩放性和性能。</p>
+<p>UCX支持：</p>
+<ul class="simple">
+<li><p>InfiniBand传输：</p>
+<ul>
+<li><p>不可信数据报(Unreliable Datagram, UD)</p></li>
+<li><p>可信连接(Reliable Connected, RC)</p></li>
+<li><p>动态连接(Dynamically Connected, DC)</p></li>
+<li><p>加速verbs(Accelerated verbs)</p></li>
+</ul>
+</li>
+<li><p>Shared Memory communication with support for KNEM, CMA and XPMEM</p></li>
+<li><p>RoCE</p></li>
+<li><p>TCP</p></li>
+<li><p>CUDA</p></li>
+</ul>
+<p>更多信息，请参见：<a class="reference external" href="https://github.com/openucx/ucx">https://github.com/openucx/ucx</a>、<a class="reference external" href="http://www.openucx.org/">http://www.openucx.org/</a></p>
+<p><strong>OpenMPI中使用UCX</strong></p>
+<p>UCX在Open MPI是默认的pml，在OpenSHMEM中是默认的spml，一般安装好设置号后无需用户自己设置就可使用，用户也可利用下面方式显式指定：</p>
+<ul>
+<li><p>在Open MPI中显式指定采用UCX：</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">--mca</span> <span class="pre">pml</span> <span class="pre">ucx</span> <span class="pre">--mca</span> <span class="pre">osc</span> <span class="pre">ucx</span> <span class="pre">...</span></code></p>
+</li>
+<li><p>在OpenSHMEM显示指定采用UCX：</p>
+<p><code class="docutils literal notranslate"><span class="pre">oshrun</span> <span class="pre">--mca</span> <span class="pre">spml</span> <span class="pre">ucx</span> <span class="pre">...</span></code></p>
+</li>
+</ul>
+<p><strong>调整UCX</strong></p>
+<p>检查UCX的版本：</p>
+<p><code class="docutils literal notranslate"><span class="pre">$HPCX_UCX_DIR/bin/ucx_info</span> <span class="pre">-v</span></code></p>
+<p>UCX的参数可通过下述方法之一设置：</p>
+<ul>
+<li><p>通过mpirun设置：</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-x</span> <span class="pre">UCX_RC_VERBS_RX_MAX_BUFS=128000</span> <span class="pre">&lt;...&gt;</span></code></p>
+</li>
+<li><p>通过SHELL设置：</p>
+<p><code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">UCX_RC_VERBS_RX_MAX_BUFS=128000</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">&lt;...&gt;</span></code></p>
+</li>
+<li><p>从命令行选择采用的传输：</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-mca</span> <span class="pre">pml</span> <span class="pre">ucx</span> <span class="pre">-x</span> <span class="pre">UCX_TLS=sm,rc_x</span> <span class="pre">...</span></code></p>
+<p>上述命令设置了采用pml ucx和设定其用于使用、共享内存和加速传输verbs。</p>
+</li>
+<li><p>为了提高缩放性能，可以加大DC传输时使用的网卡的DC发起者(DCI)的QPs数</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-mca</span> <span class="pre">pml</span> <span class="pre">ucx</span> <span class="pre">-x</span> <span class="pre">UCX_TLS=sm,dc_x</span> <span class="pre">-x</span> <span class="pre">UCX_DC_MLX5_NUM_DCI=16</span></code></p>
+<p>对于大规模系统，当DC传输不可用或者被禁用时，UCX将回退到UD传输。</p>
+<p>在256个连接建立后，RC传输将被禁用，该值可以利用<code class="docutils literal notranslate"><span class="pre">UCX_RC_MAX_NUM_EPS</span></code>环境变量加大。</p>
+</li>
+<li><p>设置UCX使用zero-copy时的阈值</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-mca</span> <span class="pre">pml</span> <span class="pre">ucx</span> <span class="pre">-x</span> <span class="pre">UCX_ZCOPY_THRESH=16384</span></code></p>
+<p>默认UCX会自己计算优化的该阈值，需要时可利用上面环境变量覆盖掉。</p>
+</li>
+<li><p>利用<code class="docutils literal notranslate"><span class="pre">UCX_DC_MLX5_TX_POLICY=&lt;policy&gt;</span></code>环境变量设定端点如何选择DC。策略&lt;policy&gt;可以为：</p>
+<ul class="simple">
+<li><p>dcs：端点或者采用已指定的DCI或DCI是LIFO顺序分配的，且在不在有操作需要时释放。</p></li>
+<li><p>dcs_quota：类似dcs。另外，该DCI将在发送超过一定配额时，且有端点在等待DCI时被释放。该DCI一旦完成其所有需要的操作后就被释放。该策略确保了在端点间没有饥荒。</p></li>
+<li><p>rand：每个端点被赋予一个随机选择的DCI。多个端点有可能共享相同的DCI。</p></li>
+</ul>
+</li>
+<li><p>利用UCX
+CUDA内存钩子也许在静态编译CUDA应用时不会生效，作为一个工作区，可利用下面选项扩展配置：</p>
+<p><code class="docutils literal notranslate"><span class="pre">-x</span> <span class="pre">UCX_MEMTYPE_CACHE=0</span> <span class="pre">-x</span> <span class="pre">HCOLL_GPU_CUDA_MEMTYPE_CACHE_ENABLE=0</span> <span class="pre">-x</span> <span class="pre">HCOLL_GPU_ENABLE=1</span></code></p>
+</li>
+<li><p>GPUDirectRDMA性能问题可以通过分离协议禁止：</p>
+<p><code class="docutils literal notranslate"><span class="pre">-x</span> <span class="pre">UCX_RNDV_SCHEME=get_zcopy</span></code></p>
+</li>
+<li><p>共享内存新传输协议命名为：TBD</p>
+<p>可用的共享内存传输名是：posix、sysv和xpmem</p>
+<p>sm和mm将被包含咋以上三种方法中。</p>
+<p>设备‘device’名对于共享内存传输是‘memory’（在<code class="docutils literal notranslate"><span class="pre">UCX_SHM_DEVICES</span></code>中使用）</p>
+</li>
+</ul>
+<p><strong>UCX特性</strong></p>
+<p><em>硬件标识符匹配(Tag Matching)</em></p>
+<p>从ConnectX-5起，在UCX中之前由软件负责的标识符匹配工作可以卸载到HCA。对于MPI应用发送消息时附带的数值标志符的加速对收到消息的处理，可以提高CPU利用率和降低等待消息的延迟。在标识符匹配中，由软件控制的匹配入口表称为匹配表。每个匹配入口含有一个标志符及对应一个应用缓存的指针。匹配表被用于根据消息标志引导到达的消息到特定的缓存。该传输匹配表和寻找匹配入口的动作被称为标识符匹配，该动作由HCA而不再由CPU实现。在当收到的消息被不按照到达顺序而是基于与发送者相关的数值标记使用时，非常有用。</p>
+<p>硬件标识符匹配使得省下的CPU可供其它应用使用。当前硬件标识符匹配对于加速的RC和DC传输(RC_X和DC_X)是支持的，且可以在UCX中利用下面环境参数启用：</p>
+<ul class="simple">
+<li><p>对RC_X传输： <code class="docutils literal notranslate"><span class="pre">UCX_RC_MLX5_TM_ENABLE=y</span></code></p></li>
+<li><p>对DC_X传输： <code class="docutils literal notranslate"><span class="pre">UCX_DC_MLX5_TM_ENABLE=y</span></code></p></li>
+</ul>
+<p>默认，只有消息大于一定阈值时才卸载到传输。该阈值由<code class="docutils literal notranslate"><span class="pre">UCXTM_THRESH</span></code>环境变量控制，默认是1024比特。</p>
+<p>对于硬件标识符匹配，特定阈值时，UCX也许用回弹缓冲区(bounce
+buffer)卸载内部预注册缓存代替用户缓存。该阈值由<code class="docutils literal notranslate"><span class="pre">UCX_TM_MAX_BB_SIZE</span></code>环境变变量控制，该值等于或小于分片大小，且必须大于<code class="docutils literal notranslate"><span class="pre">UCX_TM_THRESH</span></code>才能生效（默认为1024比特，即默认优化是被禁止的）。</p>
+<p><em>CUDA GPU</em></p>
+<p>HPC-X中的CUDA环境支持，使得HPC-X在针对点对点和集合函数的UCX和HCOLL通信库中使用各自NVIDIA GPU显存。</p>
+<p>系统已安装了NVIDIA peer memory，支持<a class="reference external" href="https://www.mellanox.com/products/GPUDirect-RDMA">GPUDirect
+RDMA</a>。</p>
+<p><em>片上内存(MEMIC)</em></p>
+<p>片上内存允许从UCX层发送消息时使用设备上的内存，该特性默认启用。它仅支持UCX中的rc_x和dc_x传输。</p>
+<p>控制这些特性的环境变量为：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">UCX_RC_MLX5_DM_SIZE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UCX_RC_MLX5_DM_COUNT</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UCX_DC_MLX5_DM_SIZE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UCX_DC_MLX5_DM_COUNT</span></code></p></li>
+</ul>
+<p>针对这些参数的更多信息，可以运行ucx_info工具查看：<code class="docutils literal notranslate"><span class="pre">$HPCX_UCX_DIR/bin/ucx_info</span> <span class="pre">-f</span></code>。</p>
+<p><strong>生成Open MPI/OpenSHMEM的UCX统计信息</strong></p>
+<p>为生成统计信息，需设定统计目的及触发器，它们可被选择性过滤或/和格式化。</p>
+<ul>
+<li><p>统计目的可以利用<code class="docutils literal notranslate"><span class="pre">UCX_STATS_DEST</span></code>环境变量设置，其值可以为下列之一：</p>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>空字符串</p></th>
+<th class="head"><p>不会生成统计信息</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>file:&lt;filename&gt;</p></td>
+<td><p>存到一个文件中，具有以下替换：%h: host,
+%p:pid, %c:cpu, %t: time,
+%e:exe，如文件名有%h，则自动替换为节点名</p></td>
+</tr>
+<tr class="row-odd"><td><p>stderr</p></td>
+<td><p>显示标准错误信息</p></td>
+</tr>
+<tr class="row-even"><td><p>stdout</p></td>
+<td><p>显示标准输出</p></td>
+</tr>
+<tr class="row-odd"><td><p>udp:&lt;host&gt;[:&lt;port&gt;]</p></td>
+<td><p>通过UDP协议发送到host:port</p></td>
+</tr>
+</tbody>
+</table>
+<p>比如：</p>
+<p><code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">UCX_STATS_DEST="file:ucx_%h_%e_%p.stats"</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">UCX_STATS_DEST="stdout"</span></code></p>
+</li>
+<li><p>触发器通过<code class="docutils literal notranslate"><span class="pre">UCX_STATS_TRIGGER</span></code>环境变量设置，其值可以为下述之一：</p>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>exit</p></th>
+<th class="head"><p>在程序退出前存储统计信息</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>timer:&lt;interval&gt;</p></td>
+<td><p>每隔一定时间存储统计信息</p></td>
+</tr>
+<tr class="row-odd"><td><p>signal:&lt;signo&gt;</p></td>
+<td><p>当进程收到信号时存储统计信息</p></td>
+</tr>
+</tbody>
+</table>
+<p>比如：</p>
+<p><code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">UCX_STATS_TRIGGER=exit</span></code>
+<code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">UCX_STATS_TRIGGER=timer:3.5</span></code></p>
+</li>
+<li><p>利用<code class="docutils literal notranslate"><span class="pre">UCX_STATS_FILTER</span></code>环境变量可以过滤报告中的计数器。它接受以,分割的一组匹配项以指定显示的计数器，统计概要将包含匹配的计数器，批配项的顺序是没关系的。列表中的每个表达式可以包含任何以下选项：</p>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>*</p></th>
+<th class="head"><p>匹配任意字符，包含没有（显示全部报告）</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>?</p></td>
+<td><p>匹配任意单子字符</p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p>匹配在括号中的一个字符</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p>匹配从括号中一定范围的字符</p></td>
+</tr>
+</tbody>
+</table>
+<p>关于该参数的更多信息可以参见：<a class="reference external" href="https://github.com/openucx/ucx/wiki/Statistics">https://github.com/openucx/ucx/wiki/Statistics</a>。</p>
+</li>
+<li><p>利用<code class="docutils literal notranslate"><span class="pre">UCX_STATS_FORMAT</span></code>环境参数可以控制统计的格式：</p>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>full</p></th>
+<th class="head"><p>每个计数器都将被在一个单行中显示</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>agg</p></td>
+<td><p>每个计数器将在一个单行中显示，但是将会聚合类似的计数器</p></td>
+</tr>
+<tr class="row-odd"><td><p>summary</p></td>
+<td><p>所有计数器将显示在同一行</p></td>
+</tr>
+</tbody>
+</table>
+<p>注意：统计特性只有当编译安装UCX库时打开启用统计标记的时候才生效。默认为No，即不启用。因此为了使用统计特性，请重新采用文件编译UCX，或采用debug版本的UCX，可以在$HPCX_UCX_DIR/debug中找到：</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-mca</span> <span class="pre">pml</span> <span class="pre">ucx</span> <span class="pre">-x</span> <span class="pre">LD_PRELOAD=$HPCX_UCX_DIR/debug/lib/libucp.so</span> <span class="pre">...</span></code></p>
+<p>注意：采用上面提到的重新编译的UCX将会影响性能。</p>
+</li>
+</ul>
+</section>
+<section id="pgas-openshmem">
+<h4 id="pgas-openshmem">PGAS共享内存访问(OpenSHMEM)<a class="headerlink" href="#pgas-openshmem" title="此标题的永久链接">¶</a></h4>
+<p>共享内存(SHMEM)子程序为高级并行扩展程序提供了低延迟、高带宽的通信。这些子程序在SHMEM
+API中提供了用于在协作并行进程间交换数据的编程模型。SHMEM
+API可在同一个并行程序中独自或与MPI子程序一起使用。</p>
+<p>SHMEM并行编程库是一种非常简单易用的编程模型，可以使用高效的单边通讯API为共享或分布式内存系统提供直观的全局观点接口。</p>
+<p>SHMEM程序是单程序多数据(SPMD)类型的。所有的SHMEM进程，被引用为进程单元(PEs)，同时启动且运行相同程序。通常，PEs在它们大程序中自己的子域进行计算，并且周期性与其它下次通讯依赖的PEs进行通信实现数据交换。</p>
+<p>SHMEM子程序最小化数据传输请求、最大化带宽以及最小化数据延迟（从一个PE初始化数据传输到结束时的时间周期差）。</p>
+<p>SHMEM子程序通过以下支持远程数据传输：</p>
+<ul class="simple">
+<li><p>put操作：传递数据给一个不同PE；</p></li>
+<li><p>get操作：从一个不同PE和远程指针获取数据，允许直接访问属于其它PE的数据。</p></li>
+</ul>
+<p>其它支持的操作是集合广播和归约、栅栏同步和原子内存操作(atomic memory
+operation)。原子内存操作指的是原子（不允许多个进程同时）读-更新操作，比如对远程或本地数据的获取-增加。</p>
+<p>SHMEM库实现激活消息。源处理器将数据传输到目的处理器时仅涉及一个CPU，例如，一个处理器从另外处理器内存读取数据而无需中断远程CPU，除非编程者实现了一种机制去告知这些，否则远程处理器察觉不到其内存被读写。</p>
+<p><strong>HPC-X Open MPI/OpenSHMEM</strong></p>
+<p>HPC-X Open MPI/OpenSHMEM编程库是单边通信库，支持唯一的并行编程特性集合，包括并行程序应用进程间使用的点对点和集合子程序、同步、原子操作、和共享内存范式。</p>
+<p>HPC-X OpenSHMEM基于OpenSHMEM.org协会定义的API，该库可在OFED(OpenFabrics
+RDMA for Linux stack )上运行，并可使用UCX和Mellanox
+FCA，为运行在InfiniBand上的SHMEM程序提供了史无前例的可扩展性级别。</p>
+<p><strong>运行HPC-X OpenSHMEM</strong></p>
+<p><em>采用UCX运行HPC-X OpenSHMEM</em></p>
+<p>对于HPC-X，采用spml对程序提供服务。v2.1及之后的版本的HPC-X，ucx已是默认的spml，无需特殊指定，或者也可在oshrun命令行添加<code class="docutils literal notranslate"><span class="pre">-mca</span> <span class="pre">spml</span> <span class="pre">ucx</span></code>显式指定。</p>
+<p>所有的UCX环境参数，oshrun使用时与mpirun一样，完整的列表可运行下面命令获取：</p>
+<p><code class="docutils literal notranslate"><span class="pre">$HPCX_UCX_DIR/bin/ucx_info</span> <span class="pre">-f</span></code></p>
+<p><em>采用HPC-X OpenSHMEM与MPI一起开发应用</em></p>
+<p>SHMEM编程模型提供了一种提高延迟敏感性部分的性能的方法。通常，要求采用调用shmem_put/shmem_get和shmem_barrier来代替调用MPI中的send/recv。</p>
+<p>SHMEM模型对于短消息来说可以相比传统的MPI调用能显著降低延时。对于MPI-2
+MPI_Put/MPI_Get函数，也可以考虑替换为shmem_get/shmem_put调用。</p>
+<p><em>HPC-X OpenSHMEM调整参数</em></p>
+<blockquote>
+<div><p>HPC-X OpenSHMEM采用MCA参数来调整设置用户应用运行时环境。每个参数对应一种特定函数，以下为可以改变用于应用函数的参数：</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>memheap：控制内存分配策略及阈值</p></li>
+<li><p>scoll：控制HPC-X OpenSHMEM集合API阈值及算法</p></li>
+<li><p>spml：控制HPC-X OpenSHMEM点对点传输逻辑及阈值</p></li>
+<li><p>atomic：控制HPC-X OpenSHMEM原子操作逻辑及阈值</p></li>
+<li><p>shmem：控制普通HPC-X OpenSHMEM API行为</p></li>
+</ul>
+<p>显示HPC-X OpenSHMEM参数：</p>
+<ul class="simple">
+<li><p>显示所有可用参数：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">oshmem_info</span> <span class="pre">-a</span></code></p></li>
+</ul>
+</li>
+<li><p>显示HPC-X OpenSHMEM特定参数：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">oshmem_info</span> <span class="pre">--param</span> <span class="pre">shmem</span> <span class="pre">all</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">oshmem_info</span> <span class="pre">--param</span> <span class="pre">memheap</span> <span class="pre">all</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">oshmem_info</span> <span class="pre">--param</span> <span class="pre">scoll</span> <span class="pre">all</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">oshmem_info</span> <span class="pre">--param</span> <span class="pre">spml</span> <span class="pre">all</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">oshmem_info</span> <span class="pre">--param</span> <span class="pre">atomic</span> <span class="pre">all</span></code></p></li>
+</ul>
+</li>
+</ul>
+<p>：在所有节点上运行OpenSHMEM应用或性能测试时，需要执行以下命令以释放内存：</p>
+<p><code class="docutils literal notranslate"><span class="pre">echo</span> <span class="pre">3</span> <span class="pre">&gt;</span> <span class="pre">/proc/sys/vm/drop_caches</span></code></p>
+<p><em>针对对称堆(Symmetric Heap)应用的OpenSHMEM MCA参数</em></p>
+<p>SHMEM memheap大小可以通过对oshrun命令添加<code class="docutils literal notranslate"><span class="pre">SHMEM_SYMMETRIC_HEAP_SIZE</span></code>参数来设置，默认为256M。</p>
+<p>例如，采用64M memheap来运行SHMEM：</p>
+<p><code class="docutils literal notranslate"><span class="pre">oshrun</span> <span class="pre">-x</span> <span class="pre">SHMEM_SYMMETRIC_HEAP_SIZE=64M</span> <span class="pre">-np</span> <span class="pre">512</span> <span class="pre">-mca</span> <span class="pre">mpi_paffinity_alone</span> <span class="pre">1</span> <span class="pre">\\</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">--map-by</span> <span class="pre">node</span> <span class="pre">-display-map</span> <span class="pre">-hostfile</span> <span class="pre">myhostfile</span> <span class="pre">example.exe</span></code></p>
+<p>memheap可以采用下述方法分配：</p>
+<ul class="simple">
+<li><p>sysv：system V共享内存API，目前不支持采用大页面(hugepages)分配。</p></li>
+<li><p>verbs：采用IB verbs分配子。</p></li>
+<li><p>mmap：采用mmap()分配内存。</p></li>
+<li><p>ucx： 通过UCX库分配和注册内存</p></li>
+</ul>
+<p>默认，HPC-X OpenSHMEM会自己寻找最好的分配子，优先级为verbs、sysv、mmap和ucx，也可以采用-mca sshmem &lt;name&gt;指定分配方法。</p>
+<p><em>用于强制连接生成的参数</em></p>
+<p>通常，SHMEM会在PE间消极地生成连接，一般是在第一个通信发生时。</p>
+<ul>
+<li><p>开始时就强制连接生成，设定MCA参数：</p>
+<p><code class="docutils literal notranslate"><span class="pre">-mca</span> <span class="pre">shmem_preconnect_all</span> <span class="pre">1</span></code></p>
+<p>内存注册器（如，infiniband rkeys）信息启动时会在进程间交换。</p>
+</li>
+<li><p>启用按需内存密钥(key)交换，可设置MCA参数：</p>
+<p><code class="docutils literal notranslate"><span class="pre">-mca</span> <span class="pre">shmalloc_use_modex</span> <span class="pre">0</span></code></p>
+</li>
+</ul>
+</section>
+</section>
+<section id="open-mpi">
+<span id="openmpi"></span><h3 id="open-mpi">Open MPI库<a class="headerlink" href="#open-mpi" title="此标题的永久链接">¶</a></h3>
+<div class="line-block">
+<div class="line">Open MPI <a class="footnote-reference brackets" href="#id19" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> 库是另一种非常优秀MPI实现，用户如需使用可以自己通过运行</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">load</span></code>选择加载与openmpi相关的项自己设置即可。</div>
+</div>
+<p>Open MPI的安装 <code class="docutils literal notranslate"><span class="pre">/opt/opnempi</span></code> 目录在下。</p>
+<p>Open MPI的编译命令主要为：</p>
+<ul class="simple">
+<li><p>C程序：<code class="docutils literal notranslate"><span class="pre">mpicc</span></code></p></li>
+<li><p>C++程序：<code class="docutils literal notranslate"><span class="pre">mpic++</span></code>、<code class="docutils literal notranslate"><span class="pre">mpicxx</span></code>、<code class="docutils literal notranslate"><span class="pre">mpiCC</span></code></p></li>
+<li><p>Fortran 77程序：<code class="docutils literal notranslate"><span class="pre">mpif77</span></code>、<code class="docutils literal notranslate"><span class="pre">mpif90</span></code>、<code class="docutils literal notranslate"><span class="pre">mpifort</span></code></p></li>
+<li><p>Fortran 90程序：<code class="docutils literal notranslate"><span class="pre">mpif90</span></code></p></li>
+<li><p>Fortran程序：<code class="docutils literal notranslate"><span class="pre">mpifort</span></code> <a class="footnote-reference brackets" href="#id20" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">mpifort</span></code>为1.8系列引入的编译Fortran程序的命令。</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpif77</span></code>和<code class="docutils literal notranslate"><span class="pre">mpif90</span></code>为1.6系列和1.8系列的编译Fortran程序的命令。</p>
+<p>对于MPI并行程序，对应不同类型源文件的编译命令如下：</p>
+<ul>
+<li><div class="line-block">
+<div class="line">将C语言的MPI并行程序yourprog-mpi.c编译为可执行文件yourprog-mpi：</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mpicc</span> <span class="pre">-o</span> <span class="pre">yourprog-mpi</span> <span class="pre">yourprog-mpi.c</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">将C++语言的MPI并行程序yourprog-mpi.cpp编译为可执行文件yourprog-mpi，也可换为<code class="docutils literal notranslate"><span class="pre">mpic++</span></code>或<code class="docutils literal notranslate"><span class="pre">mpiCC</span></code>：</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mpicxx</span> <span class="pre">-o</span> <span class="pre">yourprog-mpi</span> <span class="pre">yourprog-mpi.cpp</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">将Fortran
+90语言的MPI并行程序yourprog-mpi.f90编译为可执行文件yourprog-mpi：</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mpifort</span> <span class="pre">-o</span> <span class="pre">yourprog-mpi</span> <span class="pre">yourprog-mpi.f90</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">将Fortran
+77语言的MPI并行程序yourprog-mpi.f编译为可执行文件yourprog-mpi：</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mpif77</span> <span class="pre">-o</span> <span class="pre">yourprog-mpi</span> <span class="pre">yourprog-mpi.f</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">将Fortran
+90语言的MPI并行程序yourprog-mpi.f90编译为可执行文件yourprog-mpi：</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mpif90</span> <span class="pre">-o</span> <span class="pre">yourprog-mpi</span> <span class="pre">yourprog-mpi.f90</span></code></div>
+</div>
+</li>
+</ul>
+<p>编译命令的基本语法为：<code class="docutils literal notranslate"><span class="pre">\</span> <span class="pre">[-showme|-showme:compile|-showme:link]</span> <span class="pre">...</span></code></p>
+<p>编译参数可以为：</p>
+<ul class="simple">
+<li><p>–showme：显示所调用的编译器所调用编译参数等信息。</p></li>
+<li><p>–showme:compile：显示调用的编译器的参数</p></li>
+<li><p>–showme:link：显示调用的链接器的参数</p></li>
+<li><p>–showme:command：显示调用的编译命令</p></li>
+<li><p>–showme:incdirs：显示调用的编译器所使用的头文件目录，以空格分隔。</p></li>
+<li><p>–showme:libdirs：显示调用的编译器所使用的库文件目录，以空格分隔。</p></li>
+<li><p>–showme:libs：显示调用的编译器所使用的库名，以空格分隔。</p></li>
+<li><p>–showme:version：显示Open MPI的版本号。</p></li>
+</ul>
+<p>默认使用配置Open MPI时所用的编译器及其参数，可以利用环境变量来改变。环境变量格式为<code class="docutils literal notranslate"><span class="pre">OMPI_value</span></code>，其<code class="docutils literal notranslate"><span class="pre">value</span></code>可以为：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CPPFLAGS</span></code>：调用C或C++预处理器时的参数</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LDFLAGS</span></code>：调用链接器时的参数</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LIBS</span></code>：调用链接器时所添加的库</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CC</span></code>：C编译器</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CFLAGS</span></code>：C编译器参数</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CXX</span></code>：C++编译器</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CXXFLAGS</span></code>：C++编译器参数</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">F77</span></code>：Fortran 77编译器</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FFLAGS</span></code>：Fortran 77编译器参数</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FC</span></code>：Fortran 90编译器</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FCFLAGS</span></code>：Fortran 90编译器参数</p></li>
+</ul>
+</section>
+<section id="intel-mpi">
+<h3 id="intel-mpi">Intel MPI库<a class="headerlink" href="#intel-mpi" title="此标题的永久链接">¶</a></h3>
+<p>Intel MPI针对最新的Mellanox HDR有问题，不建议使用；如您的应用运行起来没问题，也可以使用。</p>
+<p>Intel MPI库 <a class="footnote-reference brackets" href="#id21" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a> 是一种多模消息传递接口(MPI)库，所安装的5.0版本Intel MPI库实现了<a class="reference external" href="http://www.mpi-forum.org/">MPI V3.0标准</a>。Intel MPI库可以使开发者采用新技术改变或升级其处理器和互联网络而无需改编软件或操作环境成为可能。主要包含以下内容：</p>
+<ul class="simple">
+<li><p>Intel
+MPI库运行时环境(RTO)：具有运行程序所需要的工具，包含多功能守护进程(MPD)、Hydra及支持的工具、共享库(.so)和文档。</p></li>
+<li><p>Intel
+MPI库开发套件(SDK)：包含所有运行时环境组件和编译工具，含编译器命令，如<code class="docutils literal notranslate"><span class="pre">mpiicc</span></code>、头文件和模块、静态库(.a)、调试库、追踪库和测试代码。</p></li>
+</ul>
+<section id="id8">
+<h4 id="id8">编译命令<a class="headerlink" href="#id8" title="此标题的永久链接">¶</a></h4>
+<p>请注意，Intel MPI与Open MPI等MPI实现不同，<code class="docutils literal notranslate"><span class="pre">mpicc</span></code>、<code class="docutils literal notranslate"><span class="pre">mpif90</span></code>和<code class="docutils literal notranslate"><span class="pre">mpifc</span></code>命令默认使用GNU编译器，如需指定使用Intel编译器等，请使用对应的<code class="docutils literal notranslate"><span class="pre">mpiicc</span></code>、<code class="docutils literal notranslate"><span class="pre">mpiicpc</span></code>和<code class="docutils literal notranslate"><span class="pre">mpiifort</span></code>命令。下表为Intel MPI编译命令及其对应关系。</p>
+<div class="docutils container" id="impi">
+<table id="id22">
+<caption><span class="caption-text">Intel MPI编译命令及其对应关系</span><a class="headerlink" href="#id22" title="此表格的永久链接">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>编译命令</p></th>
+<th class="head"><p>调用的默认编译器命令</p></th>
+<th class="head"><p>支持的语言</p></th>
+<th class="head"><p>支持的应用二进制接口</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>mpicc</p></td>
+<td><p>gcc, cc</p></td>
+<td><p>C</p></td>
+<td><p>32/64 bit</p></td>
+</tr>
+<tr class="row-even"><td><p>mpicxx</p></td>
+<td><p>g++</p></td>
+<td><p>C/C++</p></td>
+<td><p>32/64 bit</p></td>
+</tr>
+<tr class="row-odd"><td><p>mpifc</p></td>
+<td><p>gfortran</p></td>
+<td><p>Fortran77*/Fortran 95*</p></td>
+<td><p>32/64 bit</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>mpigcc</p></td>
+<td><p>gcc</p></td>
+<td><p>C</p></td>
+<td><p>32/64 bit</p></td>
+</tr>
+<tr class="row-even"><td><p>mpigxx</p></td>
+<td><p>g++</p></td>
+<td><p>C/C++</p></td>
+<td><p>32/64 bit</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>mpif77</p></td>
+<td><p>g77</p></td>
+<td><p>Fortran 77</p></td>
+<td><p>32/64 bit</p></td>
+</tr>
+<tr class="row-odd"><td><p>mpif90</p></td>
+<td><p>gfortran</p></td>
+<td><p>Fortran 95</p></td>
+<td><p>32/64 bit</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>mpiicc</p></td>
+<td><p>icc</p></td>
+<td><p>C</p></td>
+<td><p>32/64 bit</p></td>
+</tr>
+<tr class="row-even"><td><p>mpiicpc</p></td>
+<td><p>icpc</p></td>
+<td><p>C++</p></td>
+<td><p>32/64 bit</p></td>
+</tr>
+<tr class="row-odd"><td><p>mpiifort</p></td>
+<td><p>ifort</p></td>
+<td><p>Fortran77/Fortran 95</p></td>
+<td><p>32/64 bit</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>其中：</p>
+<ul class="simple">
+<li><p>ia32：IA-32架构。</p></li>
+<li><p>intel64：Intel 64(x86_64, amd64)架构。</p></li>
+<li><p>移植现有的MPI程序到Intel MPI库时，请重新编译所有源代码。</p></li>
+<li><p>如需显示某命令的简要帮助，可以不带任何参数直接运行该命令。</p></li>
+</ul>
+</section>
+<section id="id9">
+<h4 id="id9">编译命令参数<a class="headerlink" href="#id9" title="此标题的永久链接">¶</a></h4>
+<ul>
+<li><p>-mt_mpi：采用以下级别链接线程安全的MPI库：MPI_THREAD_FUNNELED, MPI_THREAD_SERIALIZED或MPI_THREAD_MULTIPLE。</p>
+<p>Intel MPI库默认使用MPI_THREAD_FUNNELED级别线程安全库。</p>
+<p>注意：</p>
+<ul class="simple">
+<li><p>如使用Intel C编译器编译时添加了-openmp、-qopenmp或-parallel参数，那么使用线程安全库。</p></li>
+<li><p>如果用Intel Fortran编译器编译时添加了如下参数，那么使用线程安全库：</p>
+<ul>
+<li><p>-openmp</p></li>
+<li><p>-qopenmp</p></li>
+<li><p>-parallel</p></li>
+<li><p>-threads</p></li>
+<li><p>-reentrancy</p></li>
+<li><p>-reentrancy threaded</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>-static_mpi：静态链接Intel MPI库，并不影响其它库的链接方式。</p></li>
+<li><p>-static：静态链接Intel MPI库，并将其传递给编译器，作为编译器参数。</p></li>
+<li><p>-config<em>=name</em>：使用的配置文件。</p></li>
+<li><p>-profile<em>=profile_name</em>：使用的MPI分析库文件。</p></li>
+<li><p>-t或-trace：链接Intel Trace Collector库。</p></li>
+<li><p>-check_mpi：链接Intel Trace Collector正确性检查库。</p></li>
+<li><p>-ilp64：打开局部ILP64支持。对于Fortran程序编译时如果使用-i8选项，那么也需要此ILP64选项。</p></li>
+<li><p>-dynamic_log：与-t组合使用链接Intel Trace Collector库。不影响其它库链接方式。</p></li>
+<li><p>-g：采用调试模式编译程序，并针对Intel MPI调试版本生成可执行程序。可查看官方手册Environment variables部分<code class="docutils literal notranslate"><span class="pre">I_MPI_DEBUG</span></code>变量查看-g参数添加的调试信息。采用调试模式时不对程序进行优化，可查看<code class="docutils literal notranslate"><span class="pre">I_MPI_LINK</span></code>获取Intel MPI调试版本信息。</p></li>
+<li><p>-link_mpi<em>=arg</em>：指定链接MPI的具体版本，具体请查看<code class="docutils literal notranslate"><span class="pre">I_MPI_LINK</span></code>获取Intel MPI版本信息。此参数将覆盖掉其它参数，如-mt_mpi、-t=log、-trace=log和-g。</p></li>
+<li><p>-O：启用编译器优化。</p></li>
+<li><p>-fast：对整个程序进行最大化速度优化。此参数强制使用静态方法链接Intel MPI库。<code class="docutils literal notranslate"><span class="pre">mpiicc</span></code>、<code class="docutils literal notranslate"><span class="pre">mpiicpc</span></code>和<code class="docutils literal notranslate"><span class="pre">mpiifort</span></code>编译命令支持此参数。</p></li>
+<li><p>-echo：显示所有编译命令脚本做的信息。</p></li>
+<li><p>-show：仅显示编译器如何链接，但不实际执行。</p></li>
+<li><p>-{cc,cxx,fc,f77,f90}<em>=compiler</em>：选择使用的编译器。如：<code class="docutils literal notranslate"><span class="pre">mpicc</span> <span class="pre">-cc=icc</span> <span class="pre">-c</span> <span class="pre">test.c</span></code>。</p></li>
+<li><p>-gcc-version<em>=nnn</em>，设置编译命令<code class="docutils literal notranslate"><span class="pre">mpicxx</span></code>和<code class="docutils literal notranslate"><span class="pre">mpiicpc</span></code>编译时采用部分GNU C++环境的版本，如nnn的值为340，表示对应GNU C++ 3.4.x。</p>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p><span class="math notranslate nohighlight">\(&lt;\)</span>nnn<span class="math notranslate nohighlight">\(&gt;\)</span>值</p></th>
+<th class="head"><p>GNU* C++版本</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>320</p></td>
+<td><p>3.2.x</p></td>
+</tr>
+<tr class="row-odd"><td><p>330</p></td>
+<td><p>3.3.x</p></td>
+</tr>
+<tr class="row-even"><td><p>340</p></td>
+<td><p>3.4.x</p></td>
+</tr>
+<tr class="row-odd"><td><p>400</p></td>
+<td><p>4.0.x</p></td>
+</tr>
+<tr class="row-even"><td><p>410</p></td>
+<td><p>4.1.x</p></td>
+</tr>
+<tr class="row-odd"><td><p>420</p></td>
+<td><p>4.2.x</p></td>
+</tr>
+<tr class="row-even"><td><p>430</p></td>
+<td><p>4.3.x</p></td>
+</tr>
+<tr class="row-odd"><td><p>440</p></td>
+<td><p>4.4.x</p></td>
+</tr>
+<tr class="row-even"><td><p>450</p></td>
+<td><p>4.5.x</p></td>
+</tr>
+<tr class="row-odd"><td><p>460</p></td>
+<td><p>4.6.x</p></td>
+</tr>
+<tr class="row-even"><td><p>470</p></td>
+<td><p>4.7.x</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p>-compchk：启用编译器设置检查，以保证调用的编译器配置正确。</p></li>
+<li><p>-v：显示版本信息。</p></li>
+</ul>
+</section>
+<section id="id10">
+<h4 id="id10">环境变量<a class="headerlink" href="#id10" title="此标题的永久链接">¶</a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">I_MPI_{CC,CXX,FC,F77,F90}_PROFILE</span></code>和<code class="docutils literal notranslate"><span class="pre">MPI{CC,CXX,FC,F77,F90}_PROFILE</span></code>：</p>
+<ul>
+<li><p>默认分析库。</p></li>
+<li><p>语法：<code class="docutils literal notranslate"><span class="pre">I_MPI_{CC,CXX,FC,F77,F90}_PROFILE=&lt;profile_name&gt;</span></code>。</p></li>
+<li><p>过时语法：<code class="docutils literal notranslate"><span class="pre">MPI{CC,CXX,FC,F77,F90}_PROFILE=&lt;profile_name&gt;</span></code>。</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">I_MPI_TRACE_PROFILE</span></code>：</p>
+<ul>
+<li><p>设定-trace参数使用的默认分析文件。</p></li>
+<li><p>语法：<code class="docutils literal notranslate"><span class="pre">I_MPI_TRACE_PROFILE=&lt;profile_name&gt;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">I_MPI_{CC,CXX,F77,F90}_PROFILE</span></code>环境变量将覆盖掉<code class="docutils literal notranslate"><span class="pre">I_MPI_TRACE_PROFILE</span></code>。</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">I_MPI_CHECK_PROFILE</span></code>：</p>
+<ul>
+<li><p>设定-check_mpi参数使用的默认分析。</p></li>
+<li><p>语法：<code class="docutils literal notranslate"><span class="pre">I_MPI_CHECK_PROFILE=&lt;profile_name&gt;</span></code>。</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">I_MPI_CHECK_COMPILER</span></code>：</p>
+<ul>
+<li><p>设定启用或禁用编译器兼容性检查。</p></li>
+<li><p>语法：<code class="docutils literal notranslate"><span class="pre">I_MPI_CHECK_COMPILER=&lt;arg&gt;</span></code>。</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;arg&gt;</span></code>为<code class="docutils literal notranslate"><span class="pre">enable</span> <span class="pre">|</span> <span class="pre">yes</span> <span class="pre">|</span> <span class="pre">on</span> <span class="pre">|</span> <span class="pre">1</span></code>时打开兼容性检查。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;arg&gt;</span></code>为<code class="docutils literal notranslate"><span class="pre">disable</span> <span class="pre">|</span> <span class="pre">no</span> <span class="pre">|</span> <span class="pre">off</span> <span class="pre">|</span> <span class="pre">0</span></code>时，关闭编译器兼容性检查，为默认值。</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">I_MPI_{CC,CXX,FC,F77,F90}</span></code>和<code class="docutils literal notranslate"><span class="pre">MPICH_{CC,CXX,FC,F77,F90}</span></code>：</p>
+<ul>
+<li><p>语法：<code class="docutils literal notranslate"><span class="pre">I_MPI_{CC,CXX,FC,F77,F90}=&lt;compiler&gt;</span></code>。</p></li>
+<li><p>过时语法：<code class="docutils literal notranslate"><span class="pre">MPICH_{CC,CXX,FC,F77,F90}=&lt;compiler&gt;</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;compiler&gt;</span></code>为编译器的编译命令名或路径。</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">I_MPI_ROOT</span></code>：</p>
+<ul>
+<li><p>设置Intel MPI库的安装目录路径。</p></li>
+<li><p>语法：<code class="docutils literal notranslate"><span class="pre">I_MPI_ROOT=&lt;path&gt;</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;path&gt;</span></code>为Intel MPI库的安装后的目录。</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VT_ROOT</span></code>：</p>
+<ul>
+<li><p>设置Intel Trace Collector的安装目录路径。</p></li>
+<li><p>语法：<code class="docutils literal notranslate"><span class="pre">VT_ROOT=&lt;path&gt;</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;path&gt;</span></code>为Intel Trace Collector的安装后的目录。</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">I_MPI_COMPILER_CONFIG_DIR</span></code>：</p>
+<ul>
+<li><p>设置编译器配置目录路径。</p></li>
+<li><p>语法：<code class="docutils literal notranslate"><span class="pre">I_MPI_COMPILER_CONFIG_DIR=&lt;path&gt;</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;path&gt;</span></code>为编译器安装后的配置目录，默认值为<code class="docutils literal notranslate"><span class="pre">&lt;installdir&gt;/&lt;arch&gt;/etc</span></code>。</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">I_MPI_LINK</span></code>：</p>
+<ul>
+<li><p>设置链接MPI库版本。</p></li>
+<li><p>语法：<code class="docutils literal notranslate"><span class="pre">I_MPI_LINK=&lt;arg&gt;</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;arg&gt;</span></code>可为：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">opt</span></code>：优化的单线程版本Intel MPI库；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">opt_mt</span></code>：优化的多线程版本Intel MPI库；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dbg</span></code>：调试的单线程版本Intel MPI库；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dbg_mt</span></code>：调试的多线程版本Intel MPI库；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log</span></code>：日志的单线程版本Intel MPI库；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_mt</span></code>：日志的多线程版本Intel MPI库。</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id11">
+<h4 id="id11">编译举例<a class="headerlink" href="#id11" title="此标题的永久链接">¶</a></h4>
+<p>对于MPI并行程序，对应不同类型源文件的编译命令如下：</p>
+<ul>
+<li><div class="line-block">
+<div class="line">调用默认C编译器将C语言的MPI并行程序yourprog-mpi.c编译为可执行文件yourprog-mpi：</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mpicc</span> <span class="pre">-o</span> <span class="pre">yourprog-mpi</span> <span class="pre">yourprog-mpi.c</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">调用Intel
+C编译器将C语言的MPI并行程序yourprog-mpi.c编译为可执行文件yourprog-mpi：</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mpiicc</span> <span class="pre">-o</span> <span class="pre">yourprog-mpi</span> <span class="pre">yourprog-mpi.cpp</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">调用Intel
+C++编译器将C++语言的MPI并行程序yourprog-mpi.cpp编译为可执行文件yourprog-mpi：</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mpiicxx</span> <span class="pre">-o</span> <span class="pre">yourprog-mpi</span> <span class="pre">yourprog-mpi.cpp</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">调用GNU Forttan编译器将Fortran
+77语言的MPI并行程序yourprog-mpi.f编译为可执行文件yourprog-mpi：</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mpif90</span> <span class="pre">-o</span> <span class="pre">yourprog-mpi</span> <span class="pre">yourprog-mpi.f</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">调用Intel Fortran编译器将Fortran
+90语言的MPI并行程序yourprog-mpi.f90编译为可执行文件yourprog-mpi：</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mpiifort</span> <span class="pre">-o</span> <span class="pre">yourprog-mpi</span> <span class="pre">yourprog-mpi.f90</span></code></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="id12">
+<h4 id="id12">调试<a class="headerlink" href="#id12" title="此标题的永久链接">¶</a></h4>
+<p>使用以下命令对Intel MPI库调用GDB调试器： <code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-gdb</span> <span class="pre">-n</span> <span class="pre">4</span> <span class="pre">./testc</span></code></p>
+<p>可以像使用GDB调试串行程序一样调试。</p>
+<p>也可以使用以下命令附着在一个运行中的作业上：</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-n</span> <span class="pre">4</span> <span class="pre">-gdba</span> <span class="pre">&lt;pid&gt;</span></code></p>
+<p>其中&lt;pid&gt;为运行中的MPI作业进程号。</p>
+<p>环境变量I_MPI_DEBUG提供一种获得MPI应用运行时信息的方式。可以设置此变量的值从0到1000，值越大，信息量越大。</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-genv</span> <span class="pre">I_MPI_DEBUG</span> <span class="pre">5</span> <span class="pre">-n</span> <span class="pre">8</span> <span class="pre">./my_application</span></code></p>
+<p>更多信息参见程序调试章节。</p>
+</section>
+<section id="id13">
+<h4 id="id13">追踪<a class="headerlink" href="#id13" title="此标题的永久链接">¶</a></h4>
+<p>使用-t或-trace选项链接调用Intel Trace Collector库生成可执行程序。此与当在mpiicc或其它编译脚本中使用-profile=vt时具有相同的效果。</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpiicc</span> <span class="pre">-trace</span> <span class="pre">test.c</span> <span class="pre">-o</span> <span class="pre">testc</span></code></p>
+<p>在环境变量VT_ROOT中包含用Intel Trace Collector库路径以便使用此选项。设置I_MPI_TRACE_PROFILE为&lt;profile_name&gt;环境变量指定另一个概要库。如设置
+I_MPI_TRACE_PROFILE为vtfs，以链接fail-safe版本的Intel Trace Collector库。</p>
+</section>
+<section id="id14">
+<h4 id="id14">正确性检查<a class="headerlink" href="#id14" title="此标题的永久链接">¶</a></h4>
+<p>使用-check_mpi选项调用Intel Trace Collector正确性检查库生成可执行程序。此与当在mpiicc或其它编译脚本中使用-profile=vtmc时具有相同的效果。</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpiicc</span> <span class="pre">-profile=vtmc</span> <span class="pre">test.c</span> <span class="pre">-o</span> <span class="pre">testc</span></code></p>
+<p>或</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpiicc</span> <span class="pre">-check_mpi</span> <span class="pre">test.c</span> <span class="pre">-o</span> <span class="pre">testc</span></code></p>
+<p>在环境变量VT_ROOT中包含用Intel Trace Collector库路径以便使用此选项。设置I_MPI_CHECK_PROFILE为&lt;profile_name&gt;环境变量指定另一个概要库。</p>
+</section>
+<section id="id15">
+<h4 id="id15">统计收集<a class="headerlink" href="#id15" title="此标题的永久链接">¶</a></h4>
+<p>如果想收集在应用使用的MPI函数统计，可以设置I_MPI_STATS环境变量的值为1到10。设置好后再运行MPI程序，则在stats.txt文件中存储统计信息。</p>
+</section>
+</section>
+<section id="id16">
+<h3 id="id16">与编译器相关的编译选项<a class="headerlink" href="#id16" title="此标题的永久链接">¶</a></h3>
+<p>MPI编译环境的编译命令实际上是调用Intel、PGI或GCC编译器进行编译，具体优化选项等，请参看Intel
+MPI、Open MPI以及Intel、PGI和GCC编译器手册。</p>
+</section>
+</section>
+<section id="id17">
+<h2 id="id17">MPI并行程序的运行<a class="headerlink" href="#id17" title="此标题的永久链接">¶</a></h2>
+<p>MPI程序最常见的并行方式类似为：<code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-n</span> <span class="pre">40</span> <span class="pre">yourmpi-prog</span></code>。</p>
+<p>在本超算系统上，MPI并行程序需结合Slurm作业调度系统的作业提交命令<code class="docutils literal notranslate"><span class="pre">sbatch</span></code>、<code class="docutils literal notranslate"><span class="pre">srun</span></code>或<code class="docutils literal notranslate"><span class="pre">salloc</span></code>等来调用作业脚本运行，请参看。</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id18" role="note">
+<span class="label"><span class="fn-bracket">[</span><a href="#id4" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p>zero copy技术就是减少不必要的内核缓冲区跟用户缓冲区间的拷贝，从而减少CPU的开销和内核态切换开销，达到性能的提升</p>
+</aside>
+<aside class="footnote brackets" id="id19" role="note">
+<span class="label"><span class="fn-bracket">[</span><a href="#id5" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p>主页：<a class="reference external" href="http://www.open-mpi.org/">http://www.open-mpi.org/</a></p>
+</aside>
+<aside class="footnote brackets" id="id20" role="note">
+<span class="label"><span class="fn-bracket">[</span><a href="#id6" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
+<p>注意为mpifort，而不是Intel MPI的mpifort</p>
+</aside>
+<aside class="footnote brackets" id="id21" role="note">
+<span class="label"><span class="fn-bracket">[</span><a href="#id7" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
+<p>主页：<a class="reference external" href="http://software.intel.com/en-us/intel-mpi-library/">http://software.intel.com/en-us/intel-mpi-library/</a></p>
+</aside>
+</aside>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../gpu-computing/gpu-computing.html" title="GPU异构计算和CUDA程序简介"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> GPU异构计算和CUDA程序简介 </span>
+              </div>
+            </a>
+          
+          
+            <a href="../debug/debug.html" title="程序调试"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> 程序调试 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2021, 中国科大超级计算中心.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

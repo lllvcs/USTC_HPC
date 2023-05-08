@@ -1,0 +1,74 @@
+\documentclass[usepdftitle=false,t,compress,aspectratio=169]{beamer}
+\usepackage{fontspec,xunicode,xltxtra,beamerthemesplit,amsmath,mathrsfs,amscd,graphicx,textcomp,listings,hyperref,txfonts}
+\usepackage[BoldFont,SlantFont,CJKchecksingle]{xeCJK} %设定让幻灯片支持中文
+\usepackage[xcolor=pst,dvips]{pstricks}
+\usepackage[raggedright,center]{subfigure}
+\usepackage[absolute,overlay]{textpos}
+\usepackage[yyyymmdd]{datetime}
+
+\newcommand{\com}[2]{{#1}{\red\it #2}}
+%\newcommand{\fl}[1]{{\it\color{blue}{#1}}}
+\newcommand{\mail}[1]{\href{mailto:#1}{#1}}
+%\lstset{upquote=true,frameround=fttt,flexiblecolumns=true,lineskip=0.5ex,tabsize=4}
+\lstset{upquote=true,frameround=fttt,flexiblecolumns=true,columns=fullflexible,showtabs=true,tabsize=4,lineskip=0.5ex,literate=*{-}{-}1}
+\newcommand{\fl}[1]{\lstinline[flexiblecolumns=true,columns=fullflexible,escapechar=`,tabsize=4,basicstyle={\color{blue}\itshape}]^#1^}
+\lstnewenvironment{CT}[1][]{\lstset{language=c,frame=trl,basicstyle=\small,#1}}{}
+\lstnewenvironment{CB}[1][]{\lstset{language=c,frame=rbl,basicstyle=\small,#1}}{}
+\lstnewenvironment{CC}[1][]{\lstset{language=c,frame=single,basicstyle=\small,#1}}{}
+\lstnewenvironment{IDL}[1][]{\lstset{language=IDL,frame=single,basicstyle=\small,#1}}{}
+\lstnewenvironment{F}[1][]{\lstset{language=[77]Fortran,frame=single,basicstyle=\tiny,#1}}{}
+\lstnewenvironment{FT}[1][]{\lstset{language=[77]Fortran,frame=trl,basicstyle=\tiny,#1}}{}
+\lstnewenvironment{FB}[1][]{\lstset{language=[77]Fortran,frame=brl,basicstyle=\tiny,#1}}{}
+\lstnewenvironment{FS}[1][]{\lstset{frame=trBL,flexiblecolumns=true,stringstyle=\ttfamily,fontadjust,showspaces=true,showtabs=true,#1}}{}
+\lstnewenvironment{SHT}[1][]{\lstset{language=sh,frame=trL,#1}}{}
+\lstnewenvironment{SHB}[1][]{\lstset{language=sh,frame=rBL,#1}}{}
+\lstnewenvironment{SH}[1][]{\lstset{language=sh,frame=trBL,flexiblecolumns=true,columns=fullflexible,stringstyle=\ttfamily,fontadjust,showspaces=true,showtabs=true,#1}}{}
+\setlength{\fboxrule}{0pt}
+\newcommand{\out}[2][0]{\fbox{\parbox{#1\textwidth}{#2}}}
+%\lstnewenvironment{SH}[1][]{\lstset{language=sh,frame=trBL,flexiblecolumns=true,columns=fullflexible,stringstyle=\ttfamily,fontadjust,showspaces=true,showtabs=true,tab=\rightarrowfill,#1}}{}
+%\lstnewenvironment{SH}[1][]{\lstset{language=sh,frame=tb,frameround=fttt,#1,flexiblecolumns=true}}{}
+\lstnewenvironment{OUT}[1][]{\lstset{flexiblecolumns=false,frame=tb,showspaces=false,showtabs=false,#1}}{}
+\lstnewenvironment{AWK}{\lstset{tabsize=4,language=Awk,frame=trBL,showspaces=true,showtabs=true}}{}
+\newcommand{\LE}[1]{\lstinline[upquote=true,tabsize=4,basicstyle=\color{blue}]!#1!}
+\newcommand{\LS}[1]{\lstinline[showtabs=true,flexiblecolumns=true,tabsize=4,basicstyle={\color{red}\itshape}]^#1^}
+\newcommand{\env}[1]{\lstinline[escapechar=`,tabsize=4,basicstyle={\itshape}]^#1^}
+
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+\usetheme{Madrid}
+\usefonttheme{serif}
+\useinnertheme{rounded}
+
+\setmainfont{Times New Roman}
+\setromanfont{Times New Roman}
+\setCJKmainfont{AR PL SungtiL GB}
+\setCJKfamilyfont{song}{AR PL SungtiL GB}
+\CJKsetecglue{}
+
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip=0pt plus 1pt minus 0.1pt
+
+\graphicspath{{fig/}}
+
+%\logo{\includegraphics[width=0.1\textwidth]{qibebt}}
+%\iffalse
+\newcommand{\MyLogo}{
+	\begin{textblock}{13.1}(148.5,0.0)
+		\includegraphics[width=0.745\textwidth]{ustc_logo}
+	\end{textblock}
+}
+
+\newcommand*\oldmacro{}%
+\let\oldmacro\insertshorttitle%
+\renewcommand*\insertshorttitle{%
+  \MyLogo
+  \oldmacro\hfill%
+}
+%\fi
+
+%\beamertemplateshadingbackground{blue!5}{yellow!10}
+
+\renewcommand\figurename{图}
+\renewcommand\contentsname{目录}
+\renewcommand{\tablename}{表}
+\renewcommand{\today}{\number\year-\number\month-\number\day}
